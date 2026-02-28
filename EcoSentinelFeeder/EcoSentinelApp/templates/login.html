@@ -1,0 +1,245 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso — EcoSentinel Feeder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'EcoSentinelApp/login.css' %}" />
+    <link rel="shortcut icon" href="{% static 'images/EcoSentinelIcon.ico'%}" />
+  </head>
+  <body>
+    <!-- Page -->
+    <div class="page">
+      <!-- LEFT — BRAND -->
+      <div class="brand-side">
+        <div class="brand-tag">Panel de administración</div>
+
+        <div class="brand-logo">
+          Eco
+          <em>Sentinel</em>
+          <span class="sub">Feeder · Sistema de alimentación inteligente</span>
+        </div>
+
+        <p class="brand-desc">
+          Monitorea en tiempo real el estado de cada dispensador, recibe
+          alertas, revisa el historial de eventos y gestiona la red de feeders
+          desde un solo lugar.
+        </p>
+
+        <div class="brand-stats">
+          <div class="bs-item">
+            <span class="bs-val tc" id="stat-animals">142</span>
+            <span class="bs-label">Animales hoy</span>
+          </div>
+          <div class="bs-item">
+            <span class="bs-val sg">3/4</span>
+            <span class="bs-label">En línea</span>
+          </div>
+          <div class="bs-item">
+            <span class="bs-val sk">94%</span>
+            <span class="bs-label">Precisión IA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — LOGIN -->
+      <div class="login-side">
+        <div class="login-card">
+          <div class="login-eyebrow">Acceso restringido</div>
+
+          <h1 class="login-title">
+            Bienvenido
+            <br />
+            de vuelta
+          </h1>
+          <p class="login-sub">
+            Ingresa tus credenciales para acceder al panel de administración.
+          </p>
+
+          <!-- Error -->
+          <div class="error-msg" id="error-msg">
+            <span>⚠</span>
+            <span id="error-text">
+              Credenciales incorrectas. Intenta de nuevo.
+            </span>
+          </div>
+
+          <!-- Form -->
+          <div class="form-field">
+            <label class="field-label" for="email">Usuario o correo</label>
+            <input
+              class="field-input"
+              type="text"
+              id="email"
+              placeholder="admin@ecosentinel.mx"
+              autocomplete="username"
+              oninput="clearError()"
+            />
+          </div>
+
+          <div class="form-field">
+            <label class="field-label" for="password">Contraseña</label>
+            <div class="pass-wrap">
+              <input
+                class="field-input"
+                type="password"
+                id="password"
+                placeholder="••••••••••"
+                autocomplete="current-password"
+                oninput="clearError()"
+                onkeydown="handleKey(event)"
+              />
+              <button
+                class="pass-toggle"
+                type="button"
+                onclick="togglePass()"
+                id="toggleBtn"
+              >
+                VER
+              </button>
+            </div>
+          </div>
+
+          <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+            <span id="btn-text">Ingresar al panel</span>
+          </button>
+
+          <div class="form-footer">
+            <a class="forgot-link" onclick="showForgot()">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <hr class="form-divider" />
+
+          <div class="security-note">
+            🔒 Acceso exclusivo para personal autorizado. Esta plataforma no
+            está disponible al público.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="page-footer">
+      <span>© 2025 EcoSentinel Feeder · Panel interno</span>
+      <div class="pf-right">
+        <a href="/">Sitio público</a>
+        <a href="mailto:contacto@ecosentinel.mx">Soporte</a>
+      </div>
+    </div>
+
+    <script>
+      // ══════════════════════════════════════════════
+      //  🔌 FUNCIÓN QUE CONECTARÁS A TU BACKEND
+      // ══════════════════════════════════════════════
+
+      /**
+       * [🔌 DATOS REALES] handleLogin()
+       * Sustituye el bloque interior con tu llamada real a la API.
+       *
+       * Ejemplo con fetch:
+       *   const res = await fetch('/api/auth/login', {
+       *     method: 'POST',
+       *     headers: { 'Content-Type': 'application/json' },
+       *     body: JSON.stringify({ email, password })
+       *   });
+       *   if (res.ok) window.location.href = '/dashboard';
+       *   else showError('Credenciales incorrectas.');
+       */
+      async function handleLogin() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const btn = document.getElementById("loginBtn");
+        const btnText = document.getElementById("btn-text");
+
+        if (!email || !password) {
+          showError("Por favor completa todos los campos.");
+          if (!email) document.getElementById("email").classList.add("error");
+          if (!password)
+            document.getElementById("password").classList.add("error");
+          return;
+        }
+
+        btn.classList.add("loading");
+        btnText.textContent = "Verificando…";
+
+        try {
+          // 🔌 Llama a Django Auth
+          const res = await fetch("/api/auth/login/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: email, password }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            // ✅ Login exitoso
+            btnText.textContent = "✓ Acceso concedido";
+            btn.style.background = "var(--sage)";
+            setTimeout(() => (window.location.href = data.redirect), 400);
+          } else {
+            // ❌ Credenciales incorrectas
+            btn.classList.remove("loading");
+            btnText.textContent = "Ingresar al panel";
+            showError(data.error || "Credenciales incorrectas.");
+            document.getElementById("email").classList.add("error");
+            document.getElementById("password").classList.add("error");
+          }
+        } catch (err) {
+          btn.classList.remove("loading");
+          btnText.textContent = "Ingresar al panel";
+          showError("Error de conexión. Intenta de nuevo.");
+          console.error(err);
+        }
+      }
+
+      // ══════════════════════════════════════════════
+      //  🎨 FUNCIONES PURAMENTE ESTÉTICAS / DE UI
+      // ══════════════════════════════════════════════
+
+      // [🎨 ESTÉTICA] Mostrar/ocultar contraseña
+      function togglePass() {
+        const input = document.getElementById("password");
+        const btn = document.getElementById("toggleBtn");
+        if (input.type === "password") {
+          input.type = "text";
+          btn.textContent = "OCULTAR";
+        } else {
+          input.type = "password";
+          btn.textContent = "VER";
+        }
+      }
+
+      // [🎨 ESTÉTICA] Mostrar error
+      function showError(msg) {
+        const box = document.getElementById("error-msg");
+        document.getElementById("error-text").textContent = msg;
+        box.classList.add("visible");
+      }
+
+      // [🎨 ESTÉTICA] Limpiar error al escribir
+      function clearError() {
+        document.getElementById("error-msg").classList.remove("visible");
+        document.getElementById("email").classList.remove("error");
+        document.getElementById("password").classList.remove("error");
+      }
+
+      // [🎨 ESTÉTICA] Enter para enviar
+      function handleKey(e) {
+        if (e.key === "Enter") handleLogin();
+      }
+
+      // [🎨 ESTÉTICA] Modal olvidé contraseña (placeholder)
+      function showForgot() {
+        alert("Contacta a tu administrador: contacto@ecosentinel.mx");
+      }
+    </script>
+  </body>
+</html>

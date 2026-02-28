@@ -1,0 +1,2488 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — EcoSentinel Feeder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+      :root {
+        --cream: #fdf8f0;
+        --warm-white: #fffcf7;
+        --warm-white2: #fff9f2;
+        --sage: #7a9e7e;
+        --sage-light: #a8c5ac;
+        --sage-dark: #4d7a52;
+        --terracotta: #c97b4b;
+        --terracotta-light: #e8a97a;
+        --sky: #a8c8e8;
+        --sky-dark: #5a9bc0;
+        --charcoal: #2d3a2e;
+        --mid: #5a6b5b;
+        --light-mid: #8a9f8b;
+        --border: #e2d9cc;
+        --border2: #d4c9ba;
+
+        --ok: #4d8c52;
+        --ok-bg: rgba(77, 140, 82, 0.1);
+        --warn: #b86a1a;
+        --warn-bg: rgba(184, 106, 26, 0.1);
+        --danger: #c03030;
+        --danger-bg: rgba(192, 48, 48, 0.1);
+
+        --sidebar-w: 236px;
+        --topbar-h: 60px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--cream);
+        color: var(--charcoal);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ════════════════════════════
+   SIDEBAR
+════════════════════════════ */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--warm-white);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        overflow: hidden;
+      }
+
+      .sidebar-logo {
+        padding: 24px 22px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      .logotype {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        color: var(--sage-dark);
+        letter-spacing: 0.02em;
+        display: block;
+        text-decoration: none;
+      }
+      .logotype span {
+        color: var(--terracotta);
+        font-style: italic;
+      }
+      .logo-sub {
+        font-size: 0.6rem;
+        color: var(--light-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.13em;
+        margin-top: 3px;
+        display: block;
+      }
+
+      .sidebar-section-label {
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--light-mid);
+        padding: 18px 22px 8px;
+        font-weight: 500;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding-bottom: 8px;
+        overflow-y: auto;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 22px;
+        font-size: 0.82rem;
+        color: var(--light-mid);
+        cursor: pointer;
+        transition: all 0.18s;
+        border-left: 2px solid transparent;
+        text-decoration: none;
+        user-select: none;
+      }
+      .nav-item:hover {
+        color: var(--charcoal);
+        background: rgba(122, 158, 126, 0.06);
+      }
+      .nav-item.active {
+        color: var(--sage-dark);
+        border-left-color: var(--sage-dark);
+        background: rgba(77, 122, 82, 0.07);
+        font-weight: 500;
+      }
+      .nav-item .ni-icon {
+        font-size: 0.95rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .nav-badge {
+        margin-left: auto;
+        background: var(--danger);
+        color: white;
+        font-size: 0.58rem;
+        font-weight: 500;
+        padding: 2px 6px;
+        border-radius: 100px;
+        min-width: 18px;
+        text-align: center;
+      }
+
+      .sidebar-feeders {
+        border-top: 1px solid var(--border);
+        padding: 10px 0 6px;
+      }
+
+      .feeder-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 22px;
+        font-size: 0.78rem;
+        color: var(--light-mid);
+        cursor: pointer;
+        transition: all 0.18s;
+        border-left: 2px solid transparent;
+      }
+      .feeder-nav-item:hover {
+        color: var(--charcoal);
+        background: rgba(122, 158, 126, 0.06);
+      }
+      .fn-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .fn-dot.online {
+        background: var(--ok);
+        box-shadow: 0 0 6px rgba(77, 140, 82, 0.4);
+      }
+      .fn-dot.warn {
+        background: var(--terracotta);
+      }
+      .fn-dot.offline {
+        background: var(--border2);
+      }
+
+      .sidebar-user {
+        border-top: 1px solid var(--border);
+        padding: 14px 22px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--sage-light),
+          var(--sage-dark)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+        color: white;
+      }
+      .user-name {
+        font-size: 0.8rem;
+        color: var(--charcoal);
+        font-weight: 500;
+        line-height: 1.2;
+      }
+      .user-role {
+        font-size: 0.65rem;
+        color: var(--light-mid);
+      }
+
+      /* ════════════════════════════
+   MAIN
+════════════════════════════ */
+      .main {
+        margin-left: var(--sidebar-w);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* TOPBAR */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(253, 248, 240, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        height: var(--topbar-h);
+        padding: 0 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .page-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        color: var(--charcoal);
+        font-weight: 400;
+      }
+      .last-sync {
+        font-size: 0.7rem;
+        color: var(--light-mid);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .sync-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--ok);
+        animation: pulse 2s ease infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.45;
+          transform: scale(0.72);
+        }
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .tb-btn {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        color: var(--mid);
+        padding: 7px 14px;
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.77rem;
+        cursor: pointer;
+        transition: all 0.18s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .tb-btn:hover {
+        border-color: var(--border2);
+        color: var(--charcoal);
+      }
+      .tb-btn.primary {
+        background: var(--terracotta);
+        border-color: var(--terracotta);
+        color: white;
+      }
+      .tb-btn.primary:hover {
+        background: #b56835;
+      }
+
+      .notif-btn {
+        position: relative;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: border-color 0.18s;
+      }
+      .notif-btn:hover {
+        border-color: var(--terracotta);
+      }
+      .notif-dot {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--danger);
+        border: 1.5px solid var(--cream);
+      }
+
+      /* CONTENT */
+      .content {
+        padding: 24px 28px 48px;
+        flex: 1;
+      }
+
+      /* ── SECTION TABS — show/hide */
+      .page-section {
+        display: none;
+      }
+      .page-section.active {
+        display: block;
+      }
+
+      /* ── KPI CARDS */
+      .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .kpi-card {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px 22px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          box-shadow 0.2s,
+          border-color 0.2s;
+      }
+      .kpi-card:hover {
+        box-shadow: 0 6px 24px rgba(45, 58, 46, 0.08);
+        border-color: var(--border2);
+      }
+      .kpi-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 72px;
+        height: 72px;
+        border-radius: 72px 0 16px 0;
+        opacity: 0.07;
+      }
+      .kpi-card.tc::after {
+        background: var(--terracotta);
+      }
+      .kpi-card.sg::after {
+        background: var(--sage-dark);
+      }
+      .kpi-card.sk::after {
+        background: var(--sky-dark);
+      }
+      .kpi-card.dn::after {
+        background: var(--danger);
+      }
+
+      .kpi-label {
+        font-size: 0.63rem;
+        text-transform: uppercase;
+        letter-spacing: 0.13em;
+        color: var(--light-mid);
+        font-weight: 500;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .kpi-value {
+        font-family: "Playfair Display", serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 7px;
+      }
+      .kpi-value.tc {
+        color: var(--terracotta);
+      }
+      .kpi-value.sg {
+        color: var(--sage-dark);
+      }
+      .kpi-value.sk {
+        color: var(--sky-dark);
+      }
+      .kpi-value.dn {
+        color: var(--danger);
+      }
+
+      .kpi-change {
+        font-size: 0.7rem;
+        color: var(--light-mid);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .kpi-change .up {
+        color: var(--ok);
+      }
+      .kpi-change .down {
+        color: var(--danger);
+      }
+
+      /* ── MAP + LIST ROW */
+      .map-feeders-row {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .card {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .card-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--warm-white2);
+      }
+      .card-title {
+        font-family: "Playfair Display", serif;
+        font-size: 0.97rem;
+        color: var(--charcoal);
+        font-weight: 400;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .card-sub {
+        font-size: 0.68rem;
+        color: var(--light-mid);
+        margin-top: 1px;
+      }
+      .card-action {
+        font-size: 0.68rem;
+        color: var(--terracotta);
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: opacity 0.2s;
+      }
+      .card-action:hover {
+        opacity: 0.7;
+      }
+
+      /* MAP */
+      .map-body {
+        height: 340px;
+        background: #eef4ee;
+        position: relative;
+        overflow: hidden;
+      }
+      .map-svg {
+        width: 100%;
+        height: 100%;
+        opacity: 0.6;
+      }
+
+      /* Pins */
+      .feeder-pin {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        z-index: 10;
+      }
+      .pin-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        border: 2.5px solid;
+        transition: transform 0.2s;
+        position: relative;
+      }
+      .feeder-pin:hover .pin-circle {
+        transform: scale(1.15);
+      }
+      .pin-circle.online {
+        background: rgba(77, 140, 82, 0.12);
+        border-color: var(--ok);
+      }
+      .pin-circle.warn {
+        background: rgba(201, 123, 75, 0.12);
+        border-color: var(--terracotta);
+      }
+      .pin-circle.offline {
+        background: rgba(90, 107, 91, 0.08);
+        border-color: var(--light-mid);
+      }
+      .pin-pulse {
+        position: absolute;
+        inset: -7px;
+        border-radius: 50%;
+        border: 1.5px solid;
+        animation: pinPulse 2.3s ease infinite;
+        pointer-events: none;
+      }
+      .pin-pulse.online {
+        border-color: var(--ok);
+      }
+      .pin-pulse.warn {
+        border-color: var(--terracotta);
+      }
+      @keyframes pinPulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        100% {
+          transform: scale(1.8);
+          opacity: 0;
+        }
+      }
+      .pin-label {
+        position: absolute;
+        top: 44px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 3px 9px;
+        font-size: 0.62rem;
+        white-space: nowrap;
+        color: var(--charcoal);
+        box-shadow: 0 2px 8px rgba(45, 58, 46, 0.1);
+      }
+      .pin-tooltip {
+        position: absolute;
+        bottom: 52px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        padding: 10px 14px;
+        font-size: 0.71rem;
+        white-space: nowrap;
+        color: var(--charcoal);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 20;
+        box-shadow: 0 8px 28px rgba(45, 58, 46, 0.14);
+      }
+      .feeder-pin:hover .pin-tooltip {
+        opacity: 1;
+      }
+      .tt-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 3px;
+        line-height: 1.5;
+      }
+      .tt-row:last-child {
+        margin-bottom: 0;
+      }
+
+      /* FEEDER LIST */
+      .feeder-list-item {
+        padding: 13px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        cursor: pointer;
+        transition: background 0.16s;
+      }
+      .feeder-list-item:last-child {
+        border-bottom: none;
+      }
+      .feeder-list-item:hover {
+        background: rgba(122, 158, 126, 0.05);
+      }
+
+      .fli-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .fli-name {
+        font-family: "Playfair Display", serif;
+        font-size: 0.92rem;
+        color: var(--charcoal);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .fli-location {
+        font-size: 0.68rem;
+        color: var(--light-mid);
+      }
+
+      .status-badge {
+        font-size: 0.6rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        padding: 2px 8px;
+        border-radius: 100px;
+      }
+      .status-badge.online {
+        background: var(--ok-bg);
+        color: var(--ok);
+        border: 1px solid rgba(77, 140, 82, 0.2);
+      }
+      .status-badge.warn {
+        background: var(--warn-bg);
+        color: var(--warn);
+        border: 1px solid rgba(184, 106, 26, 0.2);
+      }
+      .status-badge.offline {
+        background: rgba(90, 107, 91, 0.06);
+        color: var(--light-mid);
+        border: 1px solid var(--border);
+      }
+
+      .mini-gauges {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 7px;
+      }
+      .mg-label {
+        font-size: 0.57rem;
+        color: var(--light-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 4px;
+      }
+      .mg-bar {
+        height: 5px;
+        background: var(--border);
+        border-radius: 100px;
+        overflow: hidden;
+      }
+      .mg-fill {
+        height: 100%;
+        border-radius: 100px;
+        transition: width 1s ease;
+      }
+      .mg-fill.good {
+        background: var(--sage);
+      }
+      .mg-fill.warn {
+        background: var(--terracotta-light);
+      }
+      .mg-fill.danger {
+        background: var(--danger);
+      }
+      .mg-fill.sky {
+        background: var(--sky-dark);
+      }
+      .mg-val {
+        font-size: 0.66rem;
+        color: var(--charcoal);
+        margin-top: 3px;
+        font-weight: 500;
+      }
+
+      /* ── FEEDER DETAIL CARDS */
+      .feeders-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 22px;
+        max-width: 520px;
+        margin-left: 10px;
+      }
+      .feeder-card {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+      }
+      .feeder-card:hover {
+        box-shadow: 0 6px 24px rgba(45, 58, 46, 0.07);
+      }
+      .feeder-card.offline-card {
+        opacity: 0.65;
+      }
+
+      .fc-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--warm-white2);
+      }
+      .fc-id {
+        font-size: 0.6rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--light-mid);
+        margin-bottom: 2px;
+      }
+      .fc-name {
+        font-family: "Playfair Display", serif;
+        font-size: 0.97rem;
+        color: var(--charcoal);
+      }
+      .fc-location {
+        font-size: 0.68rem;
+        color: var(--light-mid);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 1px;
+      }
+      .fc-header-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 5px;
+      }
+      .fc-last-seen {
+        font-size: 0.63rem;
+        color: var(--light-mid);
+      }
+
+      .fc-body {
+        padding: 16px 20px;
+      }
+
+      .gauges-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .gauge-item {
+        text-align: center;
+      }
+      .gauge-label {
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--light-mid);
+        margin-bottom: 9px;
+      }
+
+      .gauge-ring-wrap {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 7px;
+      }
+      .gauge-ring-wrap svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .gauge-track {
+        fill: none;
+        stroke: var(--border);
+        stroke-width: 7;
+      }
+      .gauge-fill {
+        fill: none;
+        stroke-width: 7;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1.2s ease;
+      }
+      .gauge-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--charcoal);
+      }
+
+      .fc-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+        text-align: center;
+      }
+      .fc-stat .sv {
+        font-family: "Playfair Display", serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--charcoal);
+        line-height: 1;
+        display: block;
+      }
+      .fc-stat .sl {
+        font-size: 0.6rem;
+        color: var(--light-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 3px;
+      }
+
+      /* ── CHARTS */
+      .charts-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .chart-body {
+        padding: 20px;
+      }
+
+      /* ── BOTTOM */
+      .bottom-row {
+        display: grid;
+        grid-template-columns: 1fr 1.6fr;
+        gap: 14px;
+      }
+
+      /* Notifications */
+      .notif-placeholder {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 280px;
+      }
+      .notif-slot {
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        animation: slideIn 0.35s ease;
+      }
+      .notif-type-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+      .ns-title {
+        font-size: 0.79rem;
+        color: var(--charcoal);
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .ns-desc {
+        font-size: 0.71rem;
+        color: var(--mid);
+        line-height: 1.55;
+      }
+      .ns-time {
+        font-size: 0.63rem;
+        color: var(--light-mid);
+        margin-top: 4px;
+      }
+
+      .notif-empty {
+        flex: 1;
+        border: 1.5px dashed var(--border2);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 20px;
+        text-align: center;
+      }
+      .notif-empty-icon {
+        font-size: 1.8rem;
+        opacity: 0.35;
+      }
+      .notif-empty-text {
+        font-size: 0.78rem;
+        color: var(--light-mid);
+        line-height: 1.6;
+      }
+
+      /* History table */
+      .history-body {
+        padding: 0;
+        overflow-x: auto;
+      }
+      .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.77rem;
+      }
+      .history-table th {
+        text-align: left;
+        padding: 9px 18px;
+        font-size: 0.59rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--light-mid);
+        font-weight: 500;
+        border-bottom: 1px solid var(--border);
+        background: var(--warm-white2);
+        white-space: nowrap;
+      }
+      .history-table td {
+        padding: 10px 18px;
+        border-bottom: 1px solid var(--border);
+        color: var(--charcoal);
+        vertical-align: middle;
+      }
+      .history-table tr:last-child td {
+        border-bottom: none;
+      }
+      .history-table tr:hover td {
+        background: rgba(122, 158, 126, 0.04);
+      }
+      .ht-feeder {
+        font-size: 0.63rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--light-mid);
+      }
+      .ht-species {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.74rem;
+        padding: 2px 8px;
+        border-radius: 100px;
+      }
+      .ht-species.perro {
+        background: rgba(201, 123, 75, 0.1);
+        color: var(--terracotta);
+        border: 1px solid rgba(201, 123, 75, 0.2);
+      }
+      .ht-species.gato {
+        background: rgba(90, 155, 192, 0.1);
+        color: var(--sky-dark);
+        border: 1px solid rgba(90, 155, 192, 0.2);
+      }
+      .ht-species.alerta {
+        background: var(--danger-bg);
+        color: var(--danger);
+        border: 1px solid rgba(192, 48, 48, 0.2);
+      }
+      .ht-conf {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .conf-bar {
+        height: 4px;
+        flex: 1;
+        background: var(--border);
+        border-radius: 100px;
+        max-width: 55px;
+        overflow: hidden;
+      }
+      .conf-fill {
+        height: 100%;
+        border-radius: 100px;
+        background: var(--sage);
+      }
+      .history-filters {
+        display: flex;
+        gap: 5px;
+      }
+      .hf-btn {
+        background: var(--cream);
+        border: 1px solid var(--border);
+        color: var(--light-mid);
+        padding: 4px 10px;
+        border-radius: 7px;
+        font-size: 0.64rem;
+        cursor: pointer;
+        transition: all 0.16s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .hf-btn.active,
+      .hf-btn:hover {
+        border-color: var(--terracotta);
+        color: var(--terracotta);
+        background: rgba(201, 123, 75, 0.06);
+      }
+
+      /* ── SECTION DIVIDER */
+      .section-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 6px 0 16px;
+      }
+      .sd-label {
+        font-family: "Playfair Display", serif;
+        font-size: 0.88rem;
+        color: var(--light-mid);
+        font-style: italic;
+        white-space: nowrap;
+        margin-left: 15px;
+      }
+      .sd-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ── PLACEHOLDER SECTION */
+      .placeholder-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 420px;
+        gap: 16px;
+        opacity: 0.5;
+        text-align: center;
+      }
+      .placeholder-section .ph-icon {
+        font-size: 3rem;
+      }
+      .placeholder-section .ph-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.3rem;
+        color: var(--charcoal);
+      }
+      .placeholder-section .ph-sub {
+        font-size: 0.8rem;
+        color: var(--mid);
+      }
+
+      /* ── ANIMATIONS */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── SCROLLBAR */
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border2);
+        border-radius: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <!--
+      [🔌 PRODUCCIÓN] Cambia el href="/" por la ruta real de tu app.
+      Si tienes logo SVG/PNG, reemplaza el texto con un <img>.
+    -->
+        <a href="/" class="logotype">
+          Eco
+          <span>Sentinel</span>
+          Feeder
+        </a>
+        <span class="logo-sub">Panel de administración</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">General</div>
+        <!--
+      Cada nav-item tiene data-section="ID" que corresponde al
+      <section id="section-ID"> en el contenido. El JS de abajo
+      muestra/oculta la sección correcta al hacer clic.
+    -->
+        <a class="nav-item active" data-section="resumen">
+          <span class="ni-icon">📊</span>
+          Resumen
+        </a>
+        <a class="nav-item" data-section="mapa">
+          <span class="ni-icon">🗺️</span>
+          Mapa
+        </a>
+        <a class="nav-item" data-section="analitica">
+          <span class="ni-icon">📈</span>
+          Analítica
+        </a>
+
+        <div class="sidebar-section-label">Dispositivos</div>
+        <a class="nav-item" data-section="feeders">
+          <span class="ni-icon">🐾</span>
+          Todos los feeders
+        </a>
+        <a class="nav-item" data-section="alertas">
+          <span class="ni-icon">🔔</span>
+          Alertas
+          <span class="nav-badge" id="badge-alertas">0</span>
+        </a>
+        <a class="nav-item" data-section="historial">
+          <span class="ni-icon">🕘</span>
+          Historial
+        </a>
+
+        <div class="sidebar-section-label">Sistema</div>
+        <a class="nav-item" data-section="donaciones">
+          <span class="ni-icon">💚</span>
+          Donaciones
+        </a>
+        <a class="nav-item" data-section="configuracion">
+          <span class="ni-icon">⚙️</span>
+          Configuración
+        </a>
+      </nav>
+
+      <div class="sidebar-feeders">
+        <div class="sidebar-section-label">Feeders activos</div>
+        <!--
+      [🔌 PRODUCCIÓN] Este bloque lo genera renderFeeders().
+      En producción se pintará dinámicamente desde tu API.
+      Por ahora solo hay 1 feeder de demostración.
+    -->
+        <div id="sidebar-feeder-list"><div class="feeder-nav-item"><span class="skel skel-text" style="width:140px"></span></div></div>
+      </div>
+
+      <div class="sidebar-user">
+        <!--
+      [🔌 PRODUCCIÓN] Cambia "A" / "Admin" / "Operaciones · EcoSentinel"
+      con los datos reales del usuario autenticado (JWT, sesión, etc.).
+    -->
+        <div class="user-avatar">A</div>
+        <div>
+          <div class="user-name">Admin</div>
+          <div class="user-role">Operaciones · EcoSentinel</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <!--
+        [🔌 PRODUCCIÓN] El texto de page-title se actualiza automáticamente
+        al cambiar de sección via switchSection(). No necesitas tocarlo a mano.
+      -->
+          <div class="page-title" id="page-title">Resumen general</div>
+          <div class="last-sync">
+            <div class="sync-dot loading" id="sync-dot"></div>
+            <!--
+          [🔌 PRODUCCIÓN] Actualiza este texto con la hora real del último
+          mensaje recibido de tu WebSocket / polling.
+          Ej: document.getElementById('last-sync-text').textContent = 'hace ' + delta + ' s';
+        -->
+            <span id="last-sync-text">Conectando…</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="tb-btn" id="refreshBtn" onclick="refreshData()">
+            🔄 Actualizar
+          </button>
+          <button class="tb-btn danger-btn" onclick="openDeleteModal()">
+            🗑️ Borrar datos
+          </button>
+          <div
+            class="notif-btn"
+            onclick="switchSection('alertas')"
+            title="Ver alertas"
+          >
+            🔔
+            <div class="notif-dot" id="topbar-notif-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <!-- ══════════════════════════════════════
+         SECCIÓN: RESUMEN (activa por defecto)
+    ══════════════════════════════════════ -->
+        <section id="section-resumen" class="page-section active">
+          <!-- KPIs -->
+          <div class="kpi-row">
+            <div class="kpi-card tc">
+              <div class="kpi-label">🐾 Animales hoy</div>
+              <!--
+            [🔌 PRODUCCIÓN] Se actualiza con renderFeeders(). No editar a mano.
+            Valor inicial es el placeholder de la demo.
+          -->
+              <div class="kpi-value tc" id="kpi-animals"><span class="skel skel-kpi"></span></div>
+              <div class="kpi-change" id="kpi-animals-sub"><span class="skel skel-text" style="width:90px"></span></div>
+            </div>
+            <div class="kpi-card sg">
+              <div class="kpi-label">⚖️ Alimento dispensado</div>
+              <div class="kpi-value sg" id="kpi-food"><span class="skel skel-kpi"></span></div>
+              <div class="kpi-change" id="kpi-food-sub"><span class="skel skel-text" style="width:90px"></span></div>
+            </div>
+            <div class="kpi-card sk">
+              <div class="kpi-label">📡 Feeders en línea</div>
+              <!--
+            [🔌 PRODUCCIÓN] Se actualiza con renderFeeders().
+            Actualmente: 1 feeder total.
+          -->
+              <div class="kpi-value sk" id="kpi-online"><span class="skel skel-kpi"></span></div>
+              <div class="kpi-change" id="kpi-online-sub"><span class="skel skel-text" style="width:90px"></span></div>
+            </div>
+            <div class="kpi-card dn">
+              <div class="kpi-label">⚠️ Alertas activas</div>
+              <div class="kpi-value dn" id="kpi-alerts"><span class="skel skel-kpi"></span></div>
+              <div class="kpi-change" id="kpi-alerts-sub"><span class="skel skel-text" style="width:90px"></span></div>
+            </div>
+          </div>
+
+          <!-- MAP + LIST -->
+          <div class="map-feeders-row">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">🗺️ Posición de feeders</div>
+                  <div class="card-sub" id="mapNameID">{{ location|default:"Ubicación no disponible" }}</div>
+                </div>
+                <span class="card-action"><a class="nav-item" data-section="mapa">Ver completo</a></span>
+              </div>
+              <div class="map-body" style="padding: 0">
+                <div id="feeder-map" style="width: 100%; height: 340px; z-index: 1;"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">📡 Estado rápido</div>
+                <span class="card-action">Gestionar</span>
+              </div>
+              <div class="feeder-list" id="feeder-quick-list">
+                <div class="skel-feeder-item">
+                  <span class="skel skel-text" style="width:80%;margin-bottom:8px;display:block"></span>
+                  <span class="skel skel-text" style="width:60%;display:block"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEEDER DETAIL CARDS -->
+          <div class="section-divider">
+            <div class="sd-label">Detalle por dispositivo</div>
+            <div class="sd-line"></div>
+          </div>
+          <div class="feeders-grid" id="feeders-detail-grid">
+            <div class="feeder-card">
+              <div class="fc-header">
+                <div><span class="skel skel-text" style="width:50px;margin-bottom:6px"></span><span class="skel skel-text" style="width:120px;height:1rem;display:block"></span></div>
+                <span class="skel skel-text" style="width:60px;height:1.2rem"></span>
+              </div>
+              <div class="fc-body">
+                <div class="gauges-row" style="justify-items:center">
+                  <span class="skel skel-circle"></span>
+                  <span class="skel skel-circle"></span>
+                  <span class="skel skel-circle"></span>
+                  <span class="skel skel-circle"></span>
+                </div>
+                <div class="fc-stats-row" style="margin-top:14px">
+                  <span class="skel skel-text" style="width:40px;height:1.5rem;margin:auto"></span>
+                  <span class="skel skel-text" style="width:40px;height:1.5rem;margin:auto"></span>
+                  <span class="skel skel-text" style="width:40px;height:1.5rem;margin:auto"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHARTS -->
+          <div class="section-divider">
+            <div class="sd-label">Analítica del día</div>
+            <div class="sd-line"></div>
+          </div>
+          <div class="charts-row">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">📈 Eventos de dispensación</div>
+                  <!--
+                [🔌 PRODUCCIÓN] Cambia "todos los feeders" si manejas varios.
+              -->
+                  <div class="card-sub">Últimas 12 horas · ESF-001</div>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center">
+                  <span
+                    style="
+                      font-size: 0.64rem;
+                      color: var(--light-mid);
+                      display: flex;
+                      align-items: center;
+                      gap: 5px;
+                    "
+                  >
+                    <span
+                      style="
+                        width: 10px;
+                        height: 3px;
+                        background: var(--terracotta);
+                        display: inline-block;
+                        border-radius: 2px;
+                      "
+                    ></span>
+                    Perros
+                  </span>
+                  <span
+                    style="
+                      font-size: 0.64rem;
+                      color: var(--light-mid);
+                      display: flex;
+                      align-items: center;
+                      gap: 5px;
+                    "
+                  >
+                    <span
+                      style="
+                        width: 10px;
+                        height: 3px;
+                        background: var(--sky-dark);
+                        display: inline-block;
+                        border-radius: 2px;
+                      "
+                    ></span>
+                    Gatos
+                  </span>
+                </div>
+              </div>
+              <div class="chart-body">
+                <canvas id="dispensingChart" height="180"></canvas>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">🐾 Distribución de especies</div>
+                  <div class="card-sub">Hoy · total 142 eventos</div>
+                </div>
+              </div>
+              <div
+                class="chart-body"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 24px;
+                "
+              >
+                <canvas
+                  id="speciesChart"
+                  width="140"
+                  height="140"
+                  style="flex-shrink: 0"
+                ></canvas>
+                <div style="display: flex; flex-direction: column; gap: 14px">
+                  <div>
+                    <div
+                      style="
+                        font-size: 0.62rem;
+                        color: var(--light-mid);
+                        text-transform: uppercase;
+                        letter-spacing: 0.1em;
+                        margin-bottom: 1px;
+                      "
+                    >
+                      Perros
+                    </div>
+                    <div
+                      style="
+                        font-family: &quot;Playfair Display&quot;, serif;
+                        font-size: 1.6rem;
+                        color: var(--terracotta);
+                        line-height: 1;
+                      "
+                      id="species-dogs"
+                    >
+                      <span id="species-dogs">—</span>
+                    </div>
+                    
+                  </div>
+                  <div>
+                    <div
+                      style="
+                        font-size: 0.62rem;
+                        color: var(--light-mid);
+                        text-transform: uppercase;
+                        letter-spacing: 0.1em;
+                        margin-bottom: 1px;
+                      "
+                    >
+                      Gatos
+                    </div>
+                    <div
+                      style="
+                        font-family: &quot;Playfair Display&quot;, serif;
+                        font-size: 1.6rem;
+                        color: var(--sky-dark);
+                        line-height: 1;
+                      "
+                      id="species-cats"
+                    >
+                      <span id="species-cats">—</span>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 22px">
+            <div class="card-header">
+              <div>
+                <div class="card-title">📅 Tendencia semanal</div>
+                <div class="card-sub">
+                  Animales alimentados por día · últimos 7 días
+                </div>
+              </div>
+              <div style="display: flex; gap: 5px">
+                <button class="hf-btn active">7D</button>
+                <button class="hf-btn">30D</button>
+                <button class="hf-btn">90D</button>
+              </div>
+            </div>
+            <div class="chart-body">
+              <canvas id="trendChart" height="120"></canvas>
+            </div>
+          </div>
+
+          <!-- NOTIFICATIONS + HISTORY -->
+          <div class="section-divider">
+            <div class="sd-label">Notificaciones e historial</div>
+            <div class="sd-line"></div>
+          </div>
+          <div class="bottom-row">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  🔔 Notificaciones
+                  <span
+                    id="notif-badge"
+                    style="
+                      background: var(--danger);
+                      color: white;
+                      font-size: 0.58rem;
+                      padding: 2px 7px;
+                      border-radius: 100px;
+                      font-family: &quot;DM Sans&quot;, sans-serif;
+                      font-weight: 500;
+                      display: none;
+                    "
+                  >
+                    0
+                  </span>
+                </div>
+                <span class="card-action">Marcar todas</span>
+              </div>
+              <div class="notif-placeholder" id="notif-list-resumen">
+                <div class="notif-empty">
+                  <div class="notif-empty-icon">📭</div>
+                  <div class="notif-empty-text">
+                    Sin alertas activas. Las notificaciones de ESF-001
+                    aparecerán aquí en tiempo real.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">🕘 Historial de eventos</div>
+                <div class="history-filters">
+                  <button class="hf-btn active">Todos</button>
+                  <button class="hf-btn">🐕</button>
+                  <button class="hf-btn">🐈</button>
+                  <button class="hf-btn">⚠️</button>
+                </div>
+              </div>
+              <div class="history-body">
+                <table class="history-table">
+                  <thead>
+                    <tr>
+                      <th>Hora</th>
+                      <th>Feeder</th>
+                      <th>Evento</th>
+                      <th>Cantidad</th>
+                      <th>Confianza</th>
+                    </tr>
+                  </thead>
+                  <tbody id="history-body">
+                    <tr class="skel-row"><td colspan="5"><span class="skel skel-text" style="width:100%;display:block;height:.8rem"></span></td></tr>
+                    <tr class="skel-row"><td colspan="5"><span class="skel skel-text" style="width:90%;display:block;height:.8rem"></span></td></tr>
+                    <tr class="skel-row"><td colspan="5"><span class="skel skel-text" style="width:95%;display:block;height:.8rem"></span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- /section-resumen -->
+
+        <!-- ══════════════════════════════════════
+         SECCIÓN: MAPA
+    ══════════════════════════════════════ -->
+        <section id="section-mapa" class="page-section">
+          <div class="card" style="overflow: hidden">
+            <div class="card-header">
+              <div>
+                <div class="card-title">🗺️ Mapa de dispositivos</div>
+                <div class="card-sub">EcoSentinel · CDMX</div>
+              </div>
+            </div>
+            <div id="real-map" style="height: 560px"></div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+         SECCIÓN: ANALÍTICA
+    ══════════════════════════════════════ -->
+        <section id="section-analitica" class="page-section">
+          <div class="placeholder-section">
+            <div class="ph-icon">📈</div>
+            <div class="ph-title">Analítica avanzada</div>
+            <div class="ph-sub">
+              Agrega aquí gráficas de largo plazo, exportación CSV,
+              comparativas, etc.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+         SECCIÓN: TODOS LOS FEEDERS
+    ══════════════════════════════════════ -->
+        <section id="section-feeders" class="page-section">
+          <div class="placeholder-section">
+            <div class="ph-icon">🐾</div>
+            <div class="ph-title">Gestión de feeders</div>
+            <div class="ph-sub">
+              Lista completa de dispositivos, configuración individual y
+              remotos.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+         SECCIÓN: ALERTAS (tab dedicado)
+    ══════════════════════════════════════ -->
+        <section id="section-alertas" class="page-section">
+          <div class="section-divider" style="margin-top: 0">
+            <div class="sd-label">Centro de alertas</div>
+            <div class="sd-line"></div>
+          </div>
+          <div style="max-width: 640px">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  🔔 Notificaciones activas
+                  <span
+                    id="notif-badge-alertas"
+                    style="
+                      background: var(--danger);
+                      color: white;
+                      font-size: 0.58rem;
+                      padding: 2px 7px;
+                      border-radius: 100px;
+                      font-family: &quot;DM Sans&quot;, sans-serif;
+                      font-weight: 500;
+                      display: none;
+                    "
+                  >
+                    0
+                  </span>
+                </div>
+                <span class="card-action" onclick="clearNotifications()">
+                  Marcar todas
+                </span>
+              </div>
+              <!--
+            [🔌 PRODUCCIÓN] Este contenedor recibe notificaciones via
+            addNotification(). El mismo objeto se muestra aquí Y en el
+            panel de resumen, ya que ambos comparten el store interno.
+          -->
+              <div
+                class="notif-placeholder"
+                id="notif-list-alertas"
+                style="min-height: 400px"
+              >
+                <div class="notif-empty">
+                  <div class="notif-empty-icon">📭</div>
+                  <div class="notif-empty-text">
+                    Sin alertas activas para ESF-001. Las notificaciones de
+                    batería baja, comida agotada, errores de sensor y
+                    detecciones no deseadas aparecerán aquí en tiempo real.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+         SECCIÓN: HISTORIAL (tab dedicado)
+    ══════════════════════════════════════ -->
+        <section id="section-historial" class="page-section">
+          <div class="section-divider" style="margin-top: 0">
+            <div class="sd-label">Historial de eventos</div>
+            <div class="sd-line"></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">🕘 Eventos recientes · ESF-001</div>
+                <div class="card-sub">Del Valle · registros en tiempo real</div>
+              </div>
+              <div class="history-filters">
+                <button class="hf-btn active">Todos</button>
+                <button class="hf-btn">🐕</button>
+                <button class="hf-btn">🐈</button>
+                <button class="hf-btn">⚠️</button>
+              </div>
+            </div>
+            <div class="history-body">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Hora</th>
+                    <th>Feeder</th>
+                    <th>Evento</th>
+                    <th>Cantidad</th>
+                    <th>Confianza</th>
+                  </tr>
+                </thead>
+                <!--
+              [🔌 PRODUCCIÓN] Comparte el mismo tbody #history-body del resumen.
+              Ambas vistas leen los mismos datos — no hay duplicado de registros.
+              Si prefieres tablas independientes, da un id distinto y ajusta
+              addHistoryEvent() para insertar en ambas.
+            -->
+                <tbody id="history-body-extended">
+                  <tr>
+                    <td>14:32</td>
+                    <td>
+                      <div class="ht-feeder">ESF-001</div>
+                      <div style="font-size: 0.68rem; color: var(--light-mid)">
+                        Del Valle
+                      </div>
+                    </td>
+                    <td><span class="ht-species perro">🐕 Perro</span></td>
+                    <td>85 g</td>
+                    <td>
+                      <div class="ht-conf">
+                        <div class="conf-bar">
+                          <div class="conf-fill" style="width: 96%"></div>
+                        </div>
+                        <span>96%</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>13:55</td>
+                    <td>
+                      <div class="ht-feeder">ESF-001</div>
+                      <div style="font-size: 0.68rem; color: var(--light-mid)">
+                        Del Valle
+                      </div>
+                    </td>
+                    <td><span class="ht-species alerta">⚠️ Humano</span></td>
+                    <td>—</td>
+                    <td>
+                      <div class="ht-conf">
+                        <div class="conf-bar">
+                          <div
+                            class="conf-fill"
+                            style="width: 99%; background: var(--danger)"
+                          ></div>
+                        </div>
+                        <span>99%</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>13:29</td>
+                    <td>
+                      <div class="ht-feeder">ESF-001</div>
+                      <div style="font-size: 0.68rem; color: var(--light-mid)">
+                        Del Valle
+                      </div>
+                    </td>
+                    <td><span class="ht-species gato">🐈 Gato</span></td>
+                    <td>60 g</td>
+                    <td>
+                      <div class="ht-conf">
+                        <div class="conf-bar">
+                          <div class="conf-fill" style="width: 93%"></div>
+                        </div>
+                        <span>93%</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>12:48</td>
+                    <td>
+                      <div class="ht-feeder">ESF-001</div>
+                      <div style="font-size: 0.68rem; color: var(--light-mid)">
+                        Del Valle
+                      </div>
+                    </td>
+                    <td><span class="ht-species perro">🐕 Perro</span></td>
+                    <td>85 g</td>
+                    <td>
+                      <div class="ht-conf">
+                        <div class="conf-bar">
+                          <div class="conf-fill" style="width: 97%"></div>
+                        </div>
+                        <span>97%</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+         SECCIÓN: DONACIONES
+    ══════════════════════════════════════ -->
+        <section id="section-donaciones" class="page-section">
+          <div class="placeholder-section">
+            <div class="ph-icon">💚</div>
+            <div class="ph-title">Donaciones</div>
+            <div class="ph-sub">
+              Integra aquí tu módulo de donaciones, reportes de patrocinadores y
+              métricas de impacto.
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════
+         SECCIÓN: CONFIGURACIÓN
+    ══════════════════════════════════════ -->
+        <section id="section-configuracion" class="page-section">
+          <div class="placeholder-section">
+            <div class="ph-icon">⚙️</div>
+            <div class="ph-title">Configuración</div>
+            <!--
+          [🔌 PRODUCCIÓN] Aquí van: URL de API/WebSocket, intervalos de polling,
+          umbrales de alerta por nivel (batería < X%, comida < Y%),
+          tokens de acceso, datos del feeder, etc.
+        -->
+            <div class="ph-sub">
+              URL del API, WebSocket, umbrales de alerta, tokens y datos de
+              perfil.
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- /content -->
+    </div>
+    <!-- /main -->
+
+
+    <script>
+// ═══════════════════════════════════════════════
+//  SKELETON CSS — inyectado via JS para no tocar el <style>
+// ═══════════════════════════════════════════════
+(function(){
+  const s = document.createElement('style');
+  s.textContent = `
+    @keyframes shimmer {
+      0%   { background-position: -600px 0 }
+      100% { background-position:  600px 0 }
+    }
+    .skel {
+      display: inline-block;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #ede8e0 25%, #f5f1ea 50%, #ede8e0 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+    .skel-kpi  { width:70px; height:2.4rem; border-radius:8px; vertical-align:middle; }
+    .skel-text { height:.75rem; border-radius:4px; vertical-align:middle; }
+    .skel-circle { width:64px; height:64px; border-radius:50%; display:block; }
+    .skel-feeder-item { padding:14px 20px; display:flex; flex-direction:column; gap:8px; }
+    .skel-row td { padding:12px 18px; }
+    .sync-dot.loading { background: var(--terracotta); animation: pulse .9s ease infinite; }
+    .sync-dot.error   { background: var(--danger);    animation: none; }
+    .error-banner { background:var(--danger-bg); border:1px solid rgba(192,48,48,.25); border-radius:10px;
+      padding:10px 16px; margin-bottom:18px; font-size:.78rem; color:var(--danger);
+      display:none; align-items:center; gap:8px; }
+    .error-banner.visible { display:flex; }
+    .esf-popup .leaflet-popup-content-wrapper {
+      border-radius:14px; border:1px solid #e2d9cc;
+      box-shadow:0 8px 28px rgba(45,58,46,.13); padding:0;
+      font-family:'DM Sans',sans-serif;
+    }
+    .esf-popup .leaflet-popup-content { margin:14px 16px; }
+    .esf-popup .leaflet-popup-tip-container { display:none; }
+    .esf-popup .leaflet-popup-close-button { color:#8a9f8b !important; top:8px !important; right:10px !important; }
+    .danger-btn { color:var(--danger) !important; border-color:rgba(192,48,48,.3) !important; }
+    .danger-btn:hover { background:var(--danger-bg) !important; border-color:var(--danger) !important; }
+    #delete-confirm-input:focus { border-color:var(--danger); }
+    #delete-confirm-btn.ready { background:var(--danger) !important; border-color:var(--danger) !important; cursor:pointer !important; }
+  `;
+  document.head.appendChild(s);
+})();
+
+// ── Inyectar error banner en el DOM ──────────────────────────────
+(function(){
+  const content = document.querySelector('.content');
+  if (!content) return;
+  const b = document.createElement('div');
+  b.className = 'error-banner';
+  b.id = 'error-banner';
+  b.innerHTML = '⚠️ <span id="error-text">Error de conexión</span>';
+  content.insertBefore(b, content.firstChild);
+})();
+
+
+// ═══════════════════════════════════════════════
+//  NAVEGACIÓN POR SECCIONES
+// ═══════════════════════════════════════════════
+const SECTION_TITLES = {
+  resumen:'Resumen general', mapa:'Mapa de dispositivos',
+  analitica:'Analítica', feeders:'Todos los feeders',
+  alertas:'Centro de alertas', historial:'Historial de eventos',
+  donaciones:'Donaciones', configuracion:'Configuración',
+};
+
+function switchSection(id) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('section-' + id)?.classList.add('active');
+  document.querySelector(`.nav-item[data-section="${id}"]`)?.classList.add('active');
+  document.getElementById('page-title').textContent = SECTION_TITLES[id] || id;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (id === 'mapa') setTimeout(initMapFull, 60);
+}
+document.querySelectorAll('.nav-item[data-section]').forEach(el =>
+  el.addEventListener('click', () => switchSection(el.dataset.section))
+);
+
+
+// ═══════════════════════════════════════════════
+//  NOTIFICACIONES
+// ═══════════════════════════════════════════════
+const notifStore = [];
+
+function renderNotifications() {
+  const colors = { danger:'var(--danger)', warn:'var(--terracotta)', ok:'var(--ok)' };
+  const count = notifStore.length;
+  const empty = `<div class="notif-empty">
+    <div class="notif-empty-icon">📭</div>
+    <div class="notif-empty-text">Sin alertas activas. Batería, comida, agua y errores aparecerán aquí.</div>
+  </div>`;
+
+  // Badges
+  const bs = document.getElementById('badge-alertas');
+  if (bs) { bs.textContent = count; bs.style.display = count > 0 ? 'inline-block' : 'none'; }
+  ['notif-badge','notif-badge-alertas'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = count; el.style.display = count > 0 ? 'inline-block' : 'none'; }
+  });
+  document.getElementById('topbar-notif-dot').style.display = count > 0 ? 'block' : 'none';
+
+  ['notif-list-resumen','notif-list-alertas'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = count === 0 ? empty : '';
+    notifStore.forEach(n => {
+      const d = document.createElement('div');
+      d.className = 'notif-slot';
+      d.innerHTML = `<div class="notif-type-dot" style="background:${colors[n.type]||colors.warn}"></div>
+        <div><div class="ns-title">${n.title}</div><div class="ns-desc">${n.description}</div>
+        <div class="ns-time">${n.time} · ${n.location}</div></div>`;
+      el.appendChild(d);
+    });
+  });
+}
+
+function clearNotifications() { notifStore.length = 0; renderNotifications(); }
+function addNotification(notif) { notifStore.unshift(notif); renderNotifications(); }
+
+
+// ═══════════════════════════════════════════════
+//  FUNCIONES DE RENDER — reciben datos del API
+// ═══════════════════════════════════════════════
+
+function renderFeeders(feeders) {
+  let animals=0, kg=0, online=0, alerts=0;
+  feeders.forEach(f => {
+    animals += (f.dogsToday||0) + (f.catsToday||0);
+    kg      += ((f.dogsToday||0)*85 + (f.catsToday||0)*60) / 1000;
+    if (f.status === 'online') online++;
+    else alerts++;
+  });
+
+  // KPIs
+  document.getElementById('kpi-animals').textContent   = animals;
+  document.getElementById('kpi-food').textContent      = kg.toFixed(1) + ' kg';
+  document.getElementById('kpi-online').innerHTML      =
+    `${online} <span style="font-size:1.1rem;color:var(--light-mid)">/ ${feeders.length}</span>`;
+  document.getElementById('kpi-alerts').textContent    = alerts;
+  const _animalsEl = document.getElementById('kpi-animals-sub'); if(_animalsEl) _animalsEl.innerHTML = animals > 0
+    ? '<span class="up">↑ activo</span>&nbsp;hoy' : 'Sin registros hoy';
+  const _alertsEl = document.getElementById('kpi-alerts-sub'); if(_alertsEl) _alertsEl.textContent = alerts > 0
+    ? feeders.filter(f=>f.status!=='online').map(f=>f.id).join(' · ')
+    : 'Sin alertas';
+  const _foodSubEl = document.getElementById('kpi-food-sub'); if(_foodSubEl) _foodSubEl.textContent = kg > 0 ? 'dispensado hoy' : 'Sin registros hoy';
+  const _onlineSubEl = document.getElementById('kpi-online-sub'); if(_onlineSubEl) _onlineSubEl.textContent = online === feeders.length ? 'Todos en línea' : online + ' de ' + feeders.length + ' activos';
+
+  // Sidebar list
+  document.getElementById('sidebar-feeder-list').innerHTML = feeders.map(f =>
+    `<div class="feeder-nav-item">
+      <div class="fn-dot ${f.status}"></div>${f.id} — ${f.name}
+    </div>`
+  ).join('');
+
+  // Estado rápido
+  const gc = v => v < 20 ? 'danger' : v < 40 ? 'warn' : 'good';
+  const _fql = document.getElementById('feeder-quick-list'); if(_fql) _fql.innerHTML = feeders.map(f => `
+    <div class="feeder-list-item">
+      <div class="fli-header">
+        <div class="fli-name">${f.id}
+          <span class="status-badge ${f.status}">${
+            f.status==='online'?'En línea':f.status==='warn'?'⚠ Alerta':'Sin conexión'
+          }</span>
+        </div>
+      </div>
+      <div class="fli-location">📍 ${f.name} · ${f.lastSync}</div>
+      <div class="mini-gauges">
+        <div><div class="mg-label">🔋 Bat.</div><div class="mg-bar"><div class="mg-fill ${gc(f.battery)}" style="width:${f.battery}%"></div></div><div class="mg-val">${f.battery}%</div></div>
+        <div><div class="mg-label">🐕</div><div class="mg-bar"><div class="mg-fill ${gc(f.foodDog)}" style="width:${f.foodDog}%"></div></div><div class="mg-val">${f.foodDog}%</div></div>
+        <div><div class="mg-label">🐈</div><div class="mg-bar"><div class="mg-fill ${gc(f.foodCat)}" style="width:${f.foodCat}%"></div></div><div class="mg-val">${f.foodCat}%</div></div>
+        <div><div class="mg-label">💧</div><div class="mg-bar"><div class="mg-fill sky" style="width:${f.water}%"></div></div><div class="mg-val">${f.water}%</div></div>
+      </div>
+    </div>`).join('');
+
+
+  // Nombre en el map 
+    let MapName = document.getElementById("mapNameID"); if(MapName) MapName.innerHTML = feeders.map(f =>{
+      return  `${f.location}`;
+    }).join('');
+
+
+  // Cards de detalle con gauges SVG dinámicos
+  const pct = v => Math.round(163.4 * (1 - v/100));
+  const _fdg = document.getElementById('feeders-detail-grid'); if(_fdg) _fdg.innerHTML = feeders.map(f => {
+    const sBat = f.battery<20?'#c03030':f.battery<40?'#c97b4b':'#4d7a52';
+    const sDog = f.foodDog<20?'#c03030':'#c97b4b';
+    const sCat = f.foodCat<20?'#c03030':'#5a9bc0';
+    return `<div class="feeder-card ${f.status==='offline'?'offline-card':''}">
+      <div class="fc-header">
+        <div>
+          <div class="fc-id">${f.id}</div>
+          <div class="fc-name">${f.name}</div>
+          <div class="fc-location">📍 ${f.location}</div>
+        </div>
+        <div class="fc-header-right">
+          <span class="status-badge ${f.status}">${f.status==='online'?'En línea':f.status==='warn'?'⚠ Alerta':'Sin conexión'}</span>
+          <div class="fc-last-seen">Sync: ${f.lastSync}</div>
+        </div>
+      </div>
+      <div class="fc-body">
+        <div class="gauges-row">
+          <div class="gauge-item"><div class="gauge-label">Batería</div>
+            <div class="gauge-ring-wrap"><svg viewBox="0 0 64 64"><circle class="gauge-track" cx="32" cy="32" r="26"/><circle class="gauge-fill" cx="32" cy="32" r="26" stroke="${sBat}" stroke-dasharray="163.4" stroke-dashoffset="${pct(f.battery)}"/></svg>
+            <div class="gauge-text" style="color:${f.battery<20?'var(--danger)':'inherit'}">${f.battery}%</div></div></div>
+          <div class="gauge-item"><div class="gauge-label">🐕 Comida</div>
+            <div class="gauge-ring-wrap"><svg viewBox="0 0 64 64"><circle class="gauge-track" cx="32" cy="32" r="26"/><circle class="gauge-fill" cx="32" cy="32" r="26" stroke="${sDog}" stroke-dasharray="163.4" stroke-dashoffset="${pct(f.foodDog)}"/></svg>
+            <div class="gauge-text" style="color:${f.foodDog<20?'var(--danger)':'inherit'}">${f.foodDog}%</div></div></div>
+          <div class="gauge-item"><div class="gauge-label">🐈 Comida</div>
+            <div class="gauge-ring-wrap"><svg viewBox="0 0 64 64"><circle class="gauge-track" cx="32" cy="32" r="26"/><circle class="gauge-fill" cx="32" cy="32" r="26" stroke="${sCat}" stroke-dasharray="163.4" stroke-dashoffset="${pct(f.foodCat)}"/></svg>
+            <div class="gauge-text" style="color:${f.foodCat<20?'var(--danger)':'inherit'}">${f.foodCat}%</div></div></div>
+          <div class="gauge-item"><div class="gauge-label">💧 Agua</div>
+            <div class="gauge-ring-wrap"><svg viewBox="0 0 64 64"><circle class="gauge-track" cx="32" cy="32" r="26"/><circle class="gauge-fill" cx="32" cy="32" r="26" stroke="#a8c8e8" stroke-dasharray="163.4" stroke-dashoffset="${pct(f.water)}"/></svg>
+            <div class="gauge-text">${f.water}%</div></div></div>
+        </div>
+        <div class="fc-stats-row">
+          <div class="fc-stat"><span class="sv">${f.dogsToday??'—'}</span><span class="sl">Perros hoy</span></div>
+          <div class="fc-stat"><span class="sv">${f.catsToday??'—'}</span><span class="sl">Gatos hoy</span></div>
+          <div class="fc-stat"><span class="sv">${f.aiAccuracy??'—'}${f.aiAccuracy?'%':''}</span><span class="sl">Precisión IA</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Actualizar pins del mapa
+  _refreshMapPins(feeders);
+  _lastFeeders = feeders;
+}
+
+function addHistoryEvent(ev) {
+  const row = `
+    <td>${ev.time}</td>
+    <td><div class="ht-feeder">${ev.feederId}</div><div style="font-size:.68rem;color:var(--light-mid)">${ev.feederName}</div></td>
+    <td><span class="ht-species ${ev.species}">${ev.emoji} ${ev.label}</span></td>
+    <td>${ev.grams > 0 ? ev.grams + ' g' : '—'}</td>
+    <td><div class="ht-conf"><div class="conf-bar"><div class="conf-fill" style="width:${ev.confidence}%${ev.species==='alerta'?';background:var(--danger)':''}"></div></div><span>${ev.confidence}%</span></div></td>`;
+  ['history-body','history-body-extended'].forEach(id => {
+    const tbody = document.getElementById(id);
+    if (!tbody) return;
+    // Quitar skeletons si existen
+    tbody.querySelectorAll('.skel-row').forEach(r => r.remove());
+    const tr = document.createElement('tr');
+    tr.style.animation = 'slideIn .35s ease';
+    tr.innerHTML = row;
+    tbody.insertBefore(tr, tbody.firstChild);
+    while (tbody.children.length > 20) tbody.removeChild(tbody.lastChild);
+  });
+}
+
+function updateCharts(dispensa, species, trend) {
+  if (dispensa && dispensa.labels.length) {
+    dispensingChart.data.labels           = dispensa.labels;
+    dispensingChart.data.datasets[0].data = dispensa.dogs;
+    dispensingChart.data.datasets[1].data = dispensa.cats;
+    dispensingChart.update();
+  }
+  if (species) {
+    speciesChart.data.datasets[0].data = [species.dogs, species.cats];
+    speciesChart.update();
+    const dogsEl = document.getElementById('species-dogs');
+    const catsEl = document.getElementById('species-cats');
+    if (dogsEl) dogsEl.textContent = species.dogs;
+    if (catsEl) catsEl.textContent = species.cats;
+  }
+  if (trend && trend.labels.length) {
+    trendChart.data.labels              = trend.labels;
+    trendChart.data.datasets[0].data    = trend.dogs;
+    trendChart.data.datasets[1].data    = trend.cats;
+    trendChart.update();
+  }
+}
+
+
+// ═══════════════════════════════════════════════
+//  SYNC CON DJANGO
+// ═══════════════════════════════════════════════
+
+function _setSyncStatus(state, text) {
+  const dot = document.getElementById('sync-dot');
+  dot.className = 'sync-dot' + (state==='error'?' error':state==='loading'?' loading':'');
+  document.getElementById('last-sync-text').textContent = text;
+}
+
+function _showError(msg) {
+  const b = document.getElementById('error-banner');
+  if (!b) return;
+  document.getElementById('error-text').textContent = msg;
+  b.classList.add('visible');
+  setTimeout(() => b.classList.remove('visible'), 7000);
+}
+
+// GET /api/dashboard/ → feeders + gráficas
+async function syncDashboard() {
+  _setSyncStatus('loading', 'Sincronizando…');
+  try {
+    const res = await fetch('/api/dashboard/', {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    renderFeeders(data.feeders);
+    updateCharts(data.charts.dispensa, data.charts.species, data.charts.trend);
+
+    // Generar alertas automáticas si algún feeder está en warn
+    data.feeders.forEach(f => {
+      if (f.status === 'warn' && f.alertMessage) {
+        const ya = notifStore.find(n => n.title.includes(f.id));
+        if (!ya) addNotification({
+          type:'warn',
+          title:`${f.id} — ${f.alertMessage}`,
+          description:`Niveles bajos detectados. Batería: ${f.battery}% · Comida 🐕: ${f.foodDog}% · Comida 🐈: ${f.foodCat}%`,
+          time:'Ahora', location: f.name,
+        });
+      }
+    });
+
+    _setSyncStatus('ok', 'Última sync: ' + new Date().toLocaleTimeString('es-MX'));
+
+  } catch(err) {
+    _setSyncStatus('error', 'Error de conexión');
+    _showError('No se pudo conectar con el servidor — ' + err.message);
+    console.error('[syncDashboard]', err);
+  }
+}
+
+// GET /api/history/?limit=20 → tabla de historial
+async function syncHistory() {
+  try {
+    const res = await fetch('/api/history/?limit=20', {
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    // Limpiar tablas (skeletons y filas viejas)
+    ['history-body','history-body-extended'].forEach(id => {
+      const tb = document.getElementById(id);
+      if (tb) tb.innerHTML = '';
+    });
+
+    if (data.events.length === 0) {
+      ['history-body','history-body-extended'].forEach(id => {
+        const tb = document.getElementById(id);
+        if (tb) tb.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados aún.</td></tr>`;
+      });
+      return;
+    }
+    data.events.forEach(addHistoryEvent);
+
+  } catch(err) {
+    console.error('[syncHistory]', err);
+  }
+}
+
+function refreshData() {
+  const btn = document.getElementById('refreshBtn');
+  btn.textContent = '⏳ Actualizando…';
+  btn.disabled = true;
+  Promise.all([syncDashboard(), syncHistory()]).finally(() => {
+    btn.textContent = '🔄 Actualizar';
+    btn.disabled = false;
+  });
+}
+
+
+// ═══════════════════════════════════════════════
+//  MAPA LEAFLET
+// ═══════════════════════════════════════════════
+let _mapSmall = null, _mapFull = null, _mapMarkers = [], _lastFeeders = [];
+const _SC = { online:'#4d8c52', warn:'#c97b4b', offline:'#8a9f8b' };
+const _SL = { online:'● En línea', warn:'⚠ Alerta', offline:'✕ Sin conexión' };
+
+function _mkIcon(color) {
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:38px;height:38px;background:white;border:2.5px solid ${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 14px rgba(0,0,0,.18)">🐾</div>`,
+    iconSize:[38,38], iconAnchor:[19,19], popupAnchor:[0,-22],
+  });
+}
+function _mkPopup(f) {
+  const c = _SC[f.status]||_SC.offline;
+  return `<div style="font-family:'DM Sans',sans-serif;padding:4px 2px;min-width:190px">
+    <div style="font-size:.58rem;text-transform:uppercase;letter-spacing:.13em;color:#8a9f8b">${f.id}</div>
+    <div style="font-size:.97rem;font-weight:500;color:#2d3a2e;margin:3px 0 10px">${f.name}</div>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.75rem;color:#5a6b5b">
+      <span>🔋 Batería</span> <b style="color:${f.battery<20?'#c03030':'#2d3a2e'}">${f.battery}%</b>
+      <span>🐕 Comida</span>  <b style="color:${f.foodDog<20?'#c03030':'#2d3a2e'}">${f.foodDog}%</b>
+      <span>🐈 Comida</span>  <b style="color:${f.foodCat<20?'#c03030':'#2d3a2e'}">${f.foodCat}%</b>
+      <span>💧 Agua</span>    <b>${f.water}%</b>
+    </div>
+    <div style="margin-top:9px;padding-top:8px;border-top:1px solid #e2d9cc;font-size:.68rem;color:${c};font-weight:500">
+      ${_SL[f.status]} <span style="color:#8a9f8b;font-weight:300;margin-left:8px">${f.lastSync}</span>
+    </div>
+  </div>`;
+}
+
+function _addPins(map, feeders) {
+  feeders.forEach(f => {
+    if (!f.lat || !f.lng) return;
+    const m = L.marker([f.lat,f.lng], { icon:_mkIcon(_SC[f.status]||_SC.offline) })
+      .addTo(map)
+      .bindPopup(_mkPopup(f), { maxWidth:230, className:'esf-popup' });
+    _mapMarkers.push({ id:f.id, marker:m, map });
+  });
+}
+
+// Mapa pequeño del resumen — se inicia al cargar la página
+function initMapSmall() {
+  if (_mapSmall) return;
+  _mapSmall = L.map('feeder-map', {
+    center:[25.6728356714816,-100.25332267854714], zoom:15,
+    zoomControl:true, scrollWheelZoom:false,
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    { attribution:'© CartoDB', maxZoom:19 }).addTo(_mapSmall);
+}
+
+// Mapa completo de la sección Mapa — lazy init
+function initMap() {
+  if (_mapFull) { _mapFull.invalidateSize(); return; }
+  _mapFull = L.map('real-map', {
+    center:[25.6728356714816,-100.25332267854714], zoom:13,
+    zoomControl:true,
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
+    { attribution:'© CartoDB', maxZoom:19 }).addTo(_mapFull);
+  if (_lastFeeders.length) _addPins(_mapFull, _lastFeeders);
+}
+
+function initMapFull() { initMap(); }
+
+function _refreshMapPins(feeders) {
+  if (!_mapSmall) return;
+  _mapMarkers.filter(m=>m.map===_mapSmall).forEach(m=>m.marker.remove());
+  _mapMarkers = _mapMarkers.filter(m=>m.map!==_mapSmall);
+  _addPins(_mapSmall, feeders);
+
+  if (_mapFull) {
+    _mapMarkers.filter(m=>m.map===_mapFull).forEach(m=>m.marker.remove());
+    _mapMarkers = _mapMarkers.filter(m=>m.map!==_mapFull);
+    _addPins(_mapFull, feeders);
+  }
+}
+
+
+// ═══════════════════════════════════════════════
+//  CHART.JS
+// ═══════════════════════════════════════════════
+Chart.defaults.color       = '#8a9f8b';
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size   = 11;
+const TC='#c97b4b', SK='#5a9bc0', MUTED='rgba(226,217,204,0.6)';
+const TT={ backgroundColor:'white', borderColor:'#e2d9cc', borderWidth:1, titleColor:'#2d3a2e', bodyColor:'#5a6b5b', padding:10 };
+
+const dispensingChart = new Chart(document.getElementById('dispensingChart').getContext('2d'), {
+  type:'bar',
+  data:{ labels:[], datasets:[
+    { label:'Perros', data:[], backgroundColor:'rgba(201,123,75,0.65)', borderRadius:5, borderSkipped:false },
+    { label:'Gatos',  data:[], backgroundColor:'rgba(90,155,192,0.55)', borderRadius:5, borderSkipped:false },
+  ]},
+  options:{ responsive:true, maintainAspectRatio:true,
+    plugins:{ legend:{ display:false }, tooltip:{ ...TT } },
+    scales:{ x:{ grid:{ color:MUTED }, border:{ display:false } },
+             y:{ grid:{ color:MUTED }, border:{ display:false }, ticks:{ precision:0 } } }
+  }
+});
+
+const speciesChart = new Chart(document.getElementById('speciesChart').getContext('2d'), {
+  type:'doughnut',
+  data:{ labels:['Perros','Gatos'], datasets:[{ data:[0,0],
+    backgroundColor:['rgba(201,123,75,0.8)','rgba(90,155,192,0.75)'],
+    borderColor:['#c97b4b','#5a9bc0'], borderWidth:1.5, hoverOffset:6 }]
+  },
+  options:{ responsive:false, cutout:'70%', plugins:{ legend:{ display:false }, tooltip:{ ...TT } } }
+});
+
+const trendCtx = document.getElementById('trendChart').getContext('2d');
+const gDog = trendCtx.createLinearGradient(0,0,0,180);
+gDog.addColorStop(0,'rgba(201,123,75,0.22)'); gDog.addColorStop(1,'rgba(201,123,75,0)');
+const gCat = trendCtx.createLinearGradient(0,0,0,180);
+gCat.addColorStop(0,'rgba(90,155,192,0.18)'); gCat.addColorStop(1,'rgba(90,155,192,0)');
+
+const trendChart = new Chart(trendCtx, {
+  type:'line',
+  data:{ labels:[], datasets:[
+    { label:'Perros', data:[], borderColor:TC, backgroundColor:gDog, borderWidth:2, pointRadius:4, pointBackgroundColor:TC, pointBorderColor:'white', pointBorderWidth:2, tension:.4, fill:true },
+    { label:'Gatos',  data:[], borderColor:SK, backgroundColor:gCat, borderWidth:2, pointRadius:4, pointBackgroundColor:SK, pointBorderColor:'white', pointBorderWidth:2, tension:.4, fill:true },
+  ]},
+  options:{ responsive:true, maintainAspectRatio:true,
+    plugins:{
+      legend:{ display:true, position:'top', align:'end', labels:{ boxWidth:10, boxHeight:3, padding:16, usePointStyle:true, pointStyle:'line', color:'#8a9f8b' } },
+      tooltip:{ ...TT, mode:'index', intersect:false },
+    },
+    scales:{ x:{ grid:{ color:MUTED }, border:{ display:false } },
+             y:{ grid:{ color:MUTED }, border:{ display:false }, ticks:{ precision:0 } } },
+    interaction:{ mode:'index', intersect:false },
+  }
+});
+
+// Filtros de historial
+document.querySelectorAll('.history-filters .hf-btn, .card-header .hf-btn').forEach(btn =>
+  btn.addEventListener('click', () => {
+    btn.closest('.history-filters, .card-header').querySelectorAll('.hf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  })
+);
+
+// IntersectionObserver para reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 80);
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+
+// ═══════════════════════════════════════════════
+//  ARRANQUE
+// ═══════════════════════════════════════════════
+initMapSmall();           // mapa del resumen
+renderNotifications();    // paneles de alertas vacíos
+syncDashboard();          // carga inicial de feeders + gráficas
+syncHistory();            // carga inicial del historial
+
+// Polling: datos cada 30s, historial cada 15s
+setInterval(syncDashboard, 30_000);
+setInterval(syncHistory,   15_000);
+
+// ═══════════════════════════════════════════════
+//  MODAL — BORRAR TODOS LOS DATOS
+// ═══════════════════════════════════════════════
+function openDeleteModal() {
+  const modal = document.getElementById('delete-modal');
+  modal.style.display = 'flex';
+  document.getElementById('delete-confirm-input').value = '';
+  document.getElementById('delete-confirm-btn').disabled = true;
+  document.getElementById('delete-confirm-btn').classList.remove('ready');
+  setTimeout(() => document.getElementById('delete-confirm-input').focus(), 100);
+}
+
+function closeDeleteModal() {
+  document.getElementById('delete-modal').style.display = 'none';
+}
+
+function checkDeleteInput() {
+  const val = document.getElementById('delete-confirm-input').value.trim().toLowerCase();
+  const btn = document.getElementById('delete-confirm-btn');
+  if (val === 'aceptar') {
+    btn.disabled = false;
+    btn.classList.add('ready');
+  } else {
+    btn.disabled = true;
+    btn.classList.remove('ready');
+  }
+}
+
+async function executeDelete() {
+  const btn = document.getElementById('delete-confirm-btn');
+  btn.textContent = 'Borrando…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/data/delete-all/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': _getCookie('csrftoken') },
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    closeDeleteModal();
+
+    // Limpiar UI inmediatamente
+    ['history-body','history-body-extended'].forEach(id => {
+      const tb = document.getElementById(id);
+      if (tb) tb.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
+    });
+    notifStore.length = 0;
+    renderNotifications();
+
+    // Recargar datos frescos
+    await Promise.all([syncDashboard(), syncHistory()]);
+
+    _setSyncStatus('ok', 'Datos eliminados · ' + new Date().toLocaleTimeString('es-MX'));
+
+  } catch(err) {
+    btn.textContent = 'Borrar todo';
+    btn.disabled = false;
+    btn.classList.add('ready');
+    _showError('No se pudieron borrar los datos — ' + err.message);
+    console.error('[executeDelete]', err);
+  }
+}
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('delete-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeDeleteModal();
+});
+
+// Cerrar con Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDeleteModal();
+});
+
+function _getCookie(name) {
+  const v = document.cookie.match('(^|;)\s*' + name + '\s*=\s*([^;]+)');
+  return v ? v.pop() : '';
+}
+    </script>
+  
+<!-- MODAL BORRAR DATOS -->
+<div id="delete-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(45,58,46,0.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center">
+  <div style="background:var(--warm-white);border:1px solid var(--border);border-radius:20px;padding:36px 40px;max-width:440px;width:90%;box-shadow:0 24px 64px rgba(45,58,46,0.22);animation:slideIn .25s ease">
+    <div style="font-size:2rem;margin-bottom:12px">⚠️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--charcoal);margin-bottom:8px">Borrar todos los datos</div>
+    <p style="font-size:.82rem;color:var(--mid);line-height:1.65;margin-bottom:20px">
+      Esta acción eliminará <strong>permanentemente</strong> todos los registros de detecciones, historial de status y eventos del servidor. No se puede deshacer.
+    </p>
+    <p style="font-size:.78rem;color:var(--light-mid);margin-bottom:10px">Escribe <strong style="color:var(--danger);font-weight:600">aceptar</strong> para confirmar:</p>
+    <input
+      id="delete-confirm-input"
+      type="text"
+      placeholder="aceptar"
+      autocomplete="off"
+      oninput="checkDeleteInput()"
+      style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--charcoal);background:var(--cream);outline:none;transition:border-color .2s;margin-bottom:18px"
+    />
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="closeDeleteModal()" style="background:var(--cream);border:1px solid var(--border);color:var(--mid);padding:9px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;transition:all .18s">Cancelar</button>
+      <button id="delete-confirm-btn" onclick="executeDelete()" disabled
+        style="background:var(--border2);border:1px solid var(--border2);color:white;padding:9px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:not-allowed;transition:all .2s;font-weight:500">
+        Borrar todo
+      </button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
