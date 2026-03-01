@@ -1,403 +1,573 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Donar — EcoSentinel Feeder</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'EcoSentinelApp/donar.css' %}">
-<link rel="shortcut icon" href="images/EcoSentinelIcon.ico" />
-</head>
-<body>
-
-<!-- NAV -->
-<nav>
-  <a href="/" class="logo">Eco<span>Sentinel</span> Feeder</a>
-  <a href="/" class="nav-back">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    Volver
-  </a>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="page-badge">♥ Página de donación</div>
-  <h1>Cada peso alimenta<br>una vida <em>real</em></h1>
-  <p>Tu aportación va directo al alimento, mantenimiento y expansión de los dispensadores. Sin burocracia, con reporte mensual público.</p>
-
-  <div class="impact-counters">
-    <div class="counter-item">
-      <span class="cnum">142</span>
-      <span class="clabel">Animales hoy</span>
-    </div>
-    <div class="counter-item">
-      <span class="cnum">1.4kg</span>
-      <span class="clabel">Alimento dispensado</span>
-    </div>
-    <div class="counter-item">
-      <span class="cnum">94%</span>
-      <span class="clabel">Precisión IA</span>
-    </div>
-  </div>
-</div>
-
-<!-- DONATE CARD -->
-<div class="donate-wrap">
-  <div class="donate-card">
-
-    <!-- Tabs -->
-    <div class="card-tabs">
-      <button class="tab-btn active" onclick="switchTab('online', this)">💳 En línea</button>
-      <button class="tab-btn" onclick="switchTab('qr', this)">📱 QR</button>
-      <button class="tab-btn" onclick="switchTab('alimento', this)">🥣 Alimento</button>
-    </div>
-
-    <!-- ── TAB ONLINE ── -->
-    <div class="tab-panel active" id="tab-online">
-
-      <!-- Frequency -->
-      <div class="freq-toggle">
-        <button class="freq-btn active" id="freq-once" onclick="setFreq('once')">Una sola vez</button>
-        <button class="freq-btn" id="freq-monthly" onclick="setFreq('monthly')">♻️ Mensual</button>
-      </div>
-
-      <div class="amounts-label">Selecciona un monto</div>
-
-      <!-- Pills -->
-      <div class="pill-grid">
-        <button class="pill" onclick="selectPill(this, 50)">
-          $50
-          <span class="pill-impact">1 día · 1 animal</span>
-        </button>
-        <button class="pill" onclick="selectPill(this, 100)">
-          $100
-          <span class="pill-impact">2 días · 2 animales</span>
-        </button>
-        <button class="pill active" onclick="selectPill(this, 200)">
-          $200
-          <span class="pill-impact">1 semana · 1 feeder</span>
-        </button>
-        <button class="pill" onclick="selectPill(this, 500)">
-          $500
-          <span class="pill-impact">1 mes · operación</span>
-        </button>
-        <button class="pill" onclick="selectPill(this, 1000)">
-          $1,000
-          <span class="pill-impact">Instala 1 feeder</span>
-        </button>
-        <button class="pill" onclick="selectPill(this, 2500)">
-          $2,500
-          <span class="pill-impact">3 feeders nuevos</span>
-        </button>
-        <button class="pill-otro" id="pill-otro" onclick="toggleOtro(this,'custom')">
-        ✏️ Otro monto
-        </button>
-      </div>
-
-      <!-- Otro monto pill -->
-      
-
-
-      <!-- CTA -->
-      <a href="https://pay.ecosentinel.mx/donar?amt=200" class="btn-donate-main" id="mainDonateBtn" target="_blank">
-        ♥ Donar <span id="mainDonateAmt">$200</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donar — EcoSentinel Feeder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'EcoSentinelApp/donar.css' %}" />
+    <link rel="shortcut icon" href="{% static 'images/EcoSentinelIcon.ico' %}" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <a href="/" class="logo">
+        Eco
+        <span>Sentinel</span>
+        Feeder
       </a>
-      <p class="secure-note">🔒 Pago seguro · Recibirás comprobante por correo</p>
+      <a href="/" class="nav-back">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+        Volver
+      </a>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="page-badge">♥ Página de donación</div>
+      <h1>
+        Cada peso alimenta
+        <br />
+        una vida
+        <em>real</em>
+      </h1>
+      <p>
+        Tu aportación va directo al alimento, mantenimiento y expansión de los
+        dispensadores. Sin burocracia, con reporte mensual público.
+      </p>
+
+      <div class="impact-counters">
+        <div class="counter-item">
+          <span class="cnum">142</span>
+          <span class="clabel">Animales hoy</span>
+        </div>
+        <div class="counter-item">
+          <span class="cnum">1.4kg</span>
+          <span class="clabel">Alimento dispensado</span>
+        </div>
+        <div class="counter-item">
+          <span class="cnum">94%</span>
+          <span class="clabel">Precisión IA</span>
+        </div>
+      </div>
     </div>
 
-    <!-- ── TAB QR ── -->
-    <div class="tab-panel" id="tab-qr">
-      <div class="qr-tab-content">
-        <p>Abre la cámara de tu teléfono y apunta al código. Serás redirigido directamente a la página de pago. También encontrarás este QR pegado en cada dispensador instalado.</p>
-
-        <div class="qr-wrap">
-          <img src="qrDonate.png" style="width: 200px;">
+    <!-- DONATE CARD -->
+    <div class="donate-wrap">
+      <div class="donate-card">
+        <!-- Tabs -->
+        <div class="card-tabs">
+          <button class="tab-btn active" onclick="switchTab('online', this)">
+            💳 En línea
+          </button>
+          <button class="tab-btn" onclick="switchTab('qr', this)">📱 QR</button>
+          <button class="tab-btn" onclick="switchTab('alimento', this)">
+            🥣 Alimento
+          </button>
         </div>
 
-        <div class="qr-url-pill">🔗 ecosentinel.mx/donar</div>
-        <div class="qr-platform-row">
-          <span class="qr-chip">📱 iOS</span>
-          <span class="qr-chip">🤖 Android</span>
-          <span class="qr-chip">⚡ Instantáneo</span>
+        <!-- ── TAB ONLINE ── -->
+        <div class="tab-panel active" id="tab-online">
+          <!-- Frequency -->
+          <div class="freq-toggle">
+            <button
+              class="freq-btn active"
+              id="freq-once"
+              onclick="setFreq('once')"
+            >
+              Una sola vez
+            </button>
+            <button
+              class="freq-btn"
+              id="freq-monthly"
+              onclick="setFreq('monthly')"
+            >
+              ♻️ Mensual
+            </button>
+          </div>
+
+          <div class="amounts-label">Selecciona un monto</div>
+
+          <!-- Pills -->
+          <div class="pill-grid">
+            <button class="pill" onclick="selectPill(this, 50)">
+              $50
+              <span class="pill-impact">1 día · 1 animal</span>
+            </button>
+            <button class="pill" onclick="selectPill(this, 100)">
+              $100
+              <span class="pill-impact">2 días · 2 animales</span>
+            </button>
+            <button class="pill active" onclick="selectPill(this, 200)">
+              $200
+              <span class="pill-impact">1 semana · 1 feeder</span>
+            </button>
+            <button class="pill" onclick="selectPill(this, 500)">
+              $500
+              <span class="pill-impact">1 mes · operación</span>
+            </button>
+            <button class="pill" onclick="selectPill(this, 1000)">
+              $1,000
+              <span class="pill-impact">Instala 1 feeder</span>
+            </button>
+            <button class="pill" onclick="selectPill(this, 2500)">
+              $2,500
+              <span class="pill-impact">3 feeders nuevos</span>
+            </button>
+            <button
+              class="pill-otro"
+              id="pill-otro"
+              onclick="toggleOtro(this, 'custom')"
+            >
+              ✏️ Otro monto
+            </button>
+          </div>
+
+          <!-- Otro monto pill -->
+
+          <!-- CTA -->
+          <a
+            href="https://pay.ecosentinel.mx/donar?amt=200"
+            class="btn-donate-main"
+            id="mainDonateBtn"
+            target="_blank"
+          >
+            ♥ Donar
+            <span id="mainDonateAmt">$200</span>
+          </a>
+          <p class="secure-note">
+            🔒 Pago seguro · Recibirás comprobante por correo
+          </p>
+        </div>
+
+        <!-- ── TAB QR ── -->
+        <div class="tab-panel" id="tab-qr">
+          <div class="qr-tab-content">
+            <p>
+              Abre la cámara de tu teléfono y apunta al código. Serás redirigido
+              directamente a la página de pago. También encontrarás este QR
+              pegado en cada dispensador instalado.
+            </p>
+
+            <div class="qr-wrap">
+              <img src="{% static 'images/qrDonate.png' %}" style="width: 200px" />
+            </div>
+
+            <div class="qr-url-pill">🔗 ecosentinel.mx/donar</div>
+            <div class="qr-platform-row">
+              <span class="qr-chip">📱 iOS</span>
+              <span class="qr-chip">🤖 Android</span>
+              <span class="qr-chip">⚡ Instantáneo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TAB ALIMENTO ── -->
+        <div class="tab-panel" id="tab-alimento">
+          <div class="alimento-content">
+            <p>
+              ¿Prefieres donar alimento directamente? Coordina la entrega y lo
+              distribuimos entre los feeders activos. Aceptamos cualquier marca
+              de croquetas secas.
+            </p>
+
+            <div class="alimento-types">
+              <div class="alimento-type active" onclick="selectAlimento(this)">
+                <span class="at-icon">🐕</span>
+                <div class="at-name">Perros</div>
+                <div class="at-sub">Croquetas secas adulto</div>
+              </div>
+              <div class="alimento-type" onclick="selectAlimento(this)">
+                <span class="at-icon">🐈</span>
+                <div class="at-name">Gatos</div>
+                <div class="at-sub">Croquetas secas adulto</div>
+              </div>
+              <div class="alimento-type" onclick="selectAlimento(this)">
+                <span class="at-icon">🐾</span>
+                <div class="at-name">Ambos</div>
+                <div class="at-sub">Lo asignamos donde haga falta</div>
+              </div>
+              <div class="alimento-type" onclick="selectAlimento(this)">
+                <span class="at-icon">📦</span>
+                <div class="at-name">Insumos</div>
+                <div class="at-sub">Baterías, piezas, contenedores</div>
+              </div>
+            </div>
+
+            <button
+              class="btn-alimento"
+              onclick="
+                window.location =
+                  'mailto:donaciones@ecosentinel.mx?subject=Donación de alimento'
+              "
+            >
+              📧 Coordinar entrega
+            </button>
+            <p class="secure-note">
+              También puedes escribirnos directamente por WhatsApp
+            </p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ── TAB ALIMENTO ── -->
-    <div class="tab-panel" id="tab-alimento">
-      <div class="alimento-content">
-        <p>¿Prefieres donar alimento directamente? Coordina la entrega y lo distribuimos entre los feeders activos. Aceptamos cualquier marca de croquetas secas.</p>
+    <!-- IMPACT STRIP -->
+    <div class="impact-strip">
+      <div class="impact-stat reveal">
+        <span class="icon">🐾</span>
+        <div class="num">
+          4,
+          <span>280</span>
+        </div>
+        <div class="desc">animales alimentados este mes</div>
+      </div>
+      <div class="impact-stat reveal" style="transition-delay: 0.07s">
+        <span class="icon">⚖️</span>
+        <div class="num">
+          42
+          <span>kg</span>
+        </div>
+        <div class="desc">de alimento dispensado este mes</div>
+      </div>
+      <div class="impact-stat reveal" style="transition-delay: 0.14s">
+        <span class="icon">📍</span>
+        <div class="num">3</div>
+        <div class="desc">dispensadores activos en operación</div>
+      </div>
+      <div class="impact-stat reveal" style="transition-delay: 0.21s">
+        <span class="icon">📊</span>
+        <div class="num">
+          100
+          <span>%</span>
+        </div>
+        <div class="desc">reporte mensual público y auditable</div>
+      </div>
+    </div>
 
-        <div class="alimento-types">
-          <div class="alimento-type active" onclick="selectAlimento(this)">
-            <span class="at-icon">🐕</span>
-            <div class="at-name">Perros</div>
-            <div class="at-sub">Croquetas secas adulto</div>
+    <!-- FLOW SECTION -->
+    <div class="flow-section">
+      <div class="section-label">Transparencia</div>
+      <h2>
+        ¿A dónde va
+        <br />
+        <em>tu donación?</em>
+      </h2>
+      <p class="flow-sub">
+        Cada peso se distribuye con criterios fijos, revisados trimestralmente y
+        publicados en nuestro repositorio de GitHub.
+      </p>
+
+      <div class="flow-grid">
+        <div class="flow-card reveal">
+          <div class="flow-pct-badge tc">80%</div>
+          <div class="flow-card-text">
+            <h4>Alimento</h4>
+            <p>
+              Compra directa de croquetas de calidad media-alta para perros y
+              gatos. Sin intermediarios.
+            </p>
+            <div class="flow-bar">
+              <div class="flow-bar-fill tc" style="width: 80%"></div>
+            </div>
           </div>
-          <div class="alimento-type" onclick="selectAlimento(this)">
-            <span class="at-icon">🐈</span>
-            <div class="at-name">Gatos</div>
-            <div class="at-sub">Croquetas secas adulto</div>
+        </div>
+        <div class="flow-card reveal" style="transition-delay: 0.08s">
+          <div class="flow-pct-badge sg">15%</div>
+          <div class="flow-card-text">
+            <h4>Mantenimiento</h4>
+            <p>
+              Baterías, limpieza, reparación de sensores y actualizaciones de
+              firmware.
+            </p>
+            <div class="flow-bar">
+              <div class="flow-bar-fill sg" style="width: 15%"></div>
+            </div>
           </div>
-          <div class="alimento-type" onclick="selectAlimento(this)">
-            <span class="at-icon">🐾</span>
-            <div class="at-name">Ambos</div>
-            <div class="at-sub">Lo asignamos donde haga falta</div>
+        </div>
+        <div class="flow-card reveal" style="transition-delay: 0.16s">
+          <div class="flow-pct-badge sk">5%</div>
+          <div class="flow-card-text">
+            <h4>Expansión</h4>
+            <p>
+              Materiales para instalar nuevos feeders en colonias priorizadas
+              por demanda real.
+            </p>
+            <div class="flow-bar">
+              <div class="flow-bar-fill sk" style="width: 5%"></div>
+            </div>
           </div>
-          <div class="alimento-type" onclick="selectAlimento(this)">
-            <span class="at-icon">📦</span>
-            <div class="at-name">Insumos</div>
-            <div class="at-sub">Baterías, piezas, contenedores</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ODS STRIP -->
+    <div class="ods-strip">
+      <div class="ods-label">Objetivos de Desarrollo Sostenible</div>
+      <div class="ods-items">
+        <div class="ods-chip">
+          <span class="num">15</span>
+          Vida de Ecosistemas Terrestres
+        </div>
+        <div class="ods-chip">
+          <span class="num">11</span>
+          Ciudades y Comunidades Sostenibles
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <div class="section-label">Preguntas frecuentes</div>
+      <h2>
+        Todo lo que quieres
+        <br />
+        saber antes de
+        <em>donar</em>
+      </h2>
+      <p class="faq-intro">
+        Si tienes más dudas, escríbenos. Respondemos en menos de 24 h.
+      </p>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Puedo donar de forma recurrente?
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Sí. Al seleccionar "♻️ Mensual" en la página de pago podrás
+              activar una suscripción automática. También puedes configurar una
+              transferencia recurrente y avisarnos por correo para registrarte
+              como donador mensual.
+            </div>
           </div>
         </div>
 
-        <button class="btn-alimento" onclick="window.location='mailto:donaciones@ecosentinel.mx?subject=Donación de alimento'">
-          📧 Coordinar entrega
-        </button>
-        <p class="secure-note">También puedes escribirnos directamente por WhatsApp</p>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Cómo puedo ver en qué se usó mi dinero?
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Publicamos un reporte mensual detallado en GitHub
+              (github.com/ecosentinel/feeder) con cada compra, comprobante y
+              saldo disponible. También lo enviamos por correo a donadores que
+              lo soliciten.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Puedo destinar mi donación a un feeder específico?
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Sí. Contáctanos por correo o WhatsApp indicando la ubicación del
+              dispensador de tu interés. Lo reflejaremos en el reporte mensual.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Aceptan donaciones de alimento o materiales?
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              ¡Por supuesto! Selecciona la pestaña "🥣 Alimento" arriba para
+              coordinar la entrega. Aceptamos croquetas secas, baterías,
+              contenedores herméticos y componentes electrónicos compatibles.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Es seguro hacer el pago en línea?
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Sí. Al dar clic en "Donar" serás redirigido a nuestra pasarela de
+              pago cifrada (HTTPS). Nosotros nunca vemos ni almacenamos los
+              datos de tu tarjeta. Recibirás un comprobante por correo al
+              completar el pago.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-contact-row">
+        <a href="mailto:contacto@ecosentinel.mx" class="faq-contact">
+          ✉️ contacto@ecosentinel.mx
+        </a>
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- IMPACT STRIP -->
-<div class="impact-strip">
-  <div class="impact-stat reveal">
-    <span class="icon">🐾</span>
-    <div class="num">4,<span>280</span></div>
-    <div class="desc">animales alimentados este mes</div>
-  </div>
-  <div class="impact-stat reveal" style="transition-delay:0.07s">
-    <span class="icon">⚖️</span>
-    <div class="num">42<span>kg</span></div>
-    <div class="desc">de alimento dispensado este mes</div>
-  </div>
-  <div class="impact-stat reveal" style="transition-delay:0.14s">
-    <span class="icon">📍</span>
-    <div class="num">3</div>
-    <div class="desc">dispensadores activos en operación</div>
-  </div>
-  <div class="impact-stat reveal" style="transition-delay:0.21s">
-    <span class="icon">📊</span>
-    <div class="num">100<span>%</span></div>
-    <div class="desc">reporte mensual público y auditable</div>
-  </div>
-</div>
-
-<!-- FLOW SECTION -->
-<div class="flow-section">
-  <div class="section-label">Transparencia</div>
-  <h2>¿A dónde va<br><em>tu donación?</em></h2>
-  <p class="flow-sub">Cada peso se distribuye con criterios fijos, revisados trimestralmente y publicados en nuestro repositorio de GitHub.</p>
-
-  <div class="flow-grid">
-    <div class="flow-card reveal">
-      <div class="flow-pct-badge tc">80%</div>
-      <div class="flow-card-text">
-        <h4>Alimento</h4>
-        <p>Compra directa de croquetas de calidad media-alta para perros y gatos. Sin intermediarios.</p>
-        <div class="flow-bar"><div class="flow-bar-fill tc" style="width:80%"></div></div>
+    <!-- FOOTER -->
+    <footer>
+      <a href="/" class="footer-logo">
+        Eco
+        <span>Sentinel</span>
+        Feeder
+      </a>
+      <div class="footer-links">
+        <a href="https://github.com/ecosentinel/feeder" target="_blank">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          GitHub
+        </a>
+        <span class="sep">·</span>
+        <a href="mailto:donaciones@ecosentinel.mx">Contacto</a>
+        <span class="sep">·</span>
+        <span>© 2025 EcoSentinel Feeder</span>
       </div>
-    </div>
-    <div class="flow-card reveal" style="transition-delay:0.08s">
-      <div class="flow-pct-badge sg">15%</div>
-      <div class="flow-card-text">
-        <h4>Mantenimiento</h4>
-        <p>Baterías, limpieza, reparación de sensores y actualizaciones de firmware.</p>
-        <div class="flow-bar"><div class="flow-bar-fill sg" style="width:15%"></div></div>
-      </div>
-    </div>
-    <div class="flow-card reveal" style="transition-delay:0.16s">
-      <div class="flow-pct-badge sk">5%</div>
-      <div class="flow-card-text">
-        <h4>Expansión</h4>
-        <p>Materiales para instalar nuevos feeders en colonias priorizadas por demanda real.</p>
-        <div class="flow-bar"><div class="flow-bar-fill sk" style="width:5%"></div></div>
-      </div>
-    </div>
-  </div>
-</div>
+    </footer>
 
-<!-- ODS STRIP -->
-<div class="ods-strip">
-  <div class="ods-label">Objetivos de Desarrollo Sostenible</div>
-  <div class="ods-items">
-    <div class="ods-chip"><span class="num">15</span> Vida de Ecosistemas Terrestres</div>
-    <div class="ods-chip"><span class="num">11</span> Ciudades y Comunidades Sostenibles</div>
-  </div>
-</div>
+    <script>
+      // ── Scroll reveal (usa .reveal en lugar de .fade-in)
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add("visible"), i * 80);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
 
-<!-- FAQ -->
-<div class="faq-section">
-  <div class="section-label">Preguntas frecuentes</div>
-  <h2>Todo lo que quieres<br>saber antes de <em>donar</em></h2>
-  <p class="faq-intro">Si tienes más dudas, escríbenos. Respondemos en menos de 24 h.</p>
-
-  <div class="faq-list">
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        ¿Puedo donar de forma recurrente?
-        <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="faq-a"><div class="faq-a-inner">Sí. Al seleccionar "♻️ Mensual" en la página de pago podrás activar una suscripción automática. También puedes configurar una transferencia recurrente y avisarnos por correo para registrarte como donador mensual.</div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        ¿Cómo puedo ver en qué se usó mi dinero?
-        <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="faq-a"><div class="faq-a-inner">Publicamos un reporte mensual detallado en GitHub (github.com/ecosentinel/feeder) con cada compra, comprobante y saldo disponible. También lo enviamos por correo a donadores que lo soliciten.</div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        ¿Puedo destinar mi donación a un feeder específico?
-        <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="faq-a"><div class="faq-a-inner">Sí. Contáctanos por correo o WhatsApp indicando la ubicación del dispensador de tu interés. Lo reflejaremos en el reporte mensual.</div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        ¿Aceptan donaciones de alimento o materiales?
-        <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="faq-a"><div class="faq-a-inner">¡Por supuesto! Selecciona la pestaña "🥣 Alimento" arriba para coordinar la entrega. Aceptamos croquetas secas, baterías, contenedores herméticos y componentes electrónicos compatibles.</div></div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        ¿Es seguro hacer el pago en línea?
-        <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="faq-a"><div class="faq-a-inner">Sí. Al dar clic en "Donar" serás redirigido a nuestra pasarela de pago cifrada (HTTPS). Nosotros nunca vemos ni almacenamos los datos de tu tarjeta. Recibirás un comprobante por correo al completar el pago.</div></div>
-    </div>
-
-  </div>
-
-  <div class="faq-contact-row">
-    <a href="mailto:contacto@ecosentinel.mx" class="faq-contact">
-      ✉️ contacto@ecosentinel.mx
-    </a>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <a href="/" class="footer-logo">Eco<span>Sentinel</span> Feeder</a>
-  <div class="footer-links">
-    <a href="https://github.com/ecosentinel/feeder" target="_blank">
-      <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      GitHub
-    </a>
-    <span class="sep">·</span>
-    <a href="mailto:donaciones@ecosentinel.mx">Contacto</a>
-    <span class="sep">·</span>
-    <span>© 2025 EcoSentinel Feeder</span>
-  </div>
-</footer>
-
-<script>
-// ── Scroll reveal (usa .reveal en lugar de .fade-in)
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add("visible"), i * 80);
+      // ── Tabs
+      function switchTab(name, btn) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-panel")
+          .forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-" + name).classList.add("active");
       }
-    });
-  },
-  { threshold: 0.1 }
-);
-document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-// ── Tabs
-function switchTab(name, btn) {
-  document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-  document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("tab-" + name).classList.add("active");
-}
+      // ── Frequency
+      let currentFreq = "once";
+      function setFreq(f) {
+        currentFreq = f;
+        document
+          .getElementById("freq-once")
+          .classList.toggle("active", f === "once");
+        document
+          .getElementById("freq-monthly")
+          .classList.toggle("active", f === "monthly");
 
-// ── Frequency
-let currentFreq = "once";
-function setFreq(f) {
-  currentFreq = f;
-  document.getElementById("freq-once").classList.toggle("active", f === "once");
-  document.getElementById("freq-monthly").classList.toggle("active", f === "monthly");
-  
-  // Si es custom, no mandamos texto extra
-  updateDonateLink(selectedAmount, selectedAmount === "custom" ? "" : "$" + selectedAmount.toLocaleString());
-}
+        // Si es custom, no mandamos texto extra
+        updateDonateLink(
+          selectedAmount,
+          selectedAmount === "custom"
+            ? ""
+            : "$" + selectedAmount.toLocaleString(),
+        );
+      }
 
-// ── Amount
-let selectedAmount = 200;
-let isCustom = false;
+      // ── Amount
+      let selectedAmount = 200;
+      let isCustom = false;
 
-function selectPill(btn, amount) {
-  // Quitamos la clase active de todas las pastillas regulares y de "Otro monto"
-  document.querySelectorAll(".pill").forEach((p) => p.classList.remove("active"));
-  document.getElementById("pill-otro").classList.remove("active");
-  btn.classList.add("active");
+      function selectPill(btn, amount) {
+        // Quitamos la clase active de todas las pastillas regulares y de "Otro monto"
+        document
+          .querySelectorAll(".pill")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("pill-otro").classList.remove("active");
+        btn.classList.add("active");
 
-  isCustom = false;
-  selectedAmount = amount;
+        isCustom = false;
+        selectedAmount = amount;
 
-  updateDonateLink(amount, "$" + amount.toLocaleString());
-}
+        updateDonateLink(amount, "$" + amount.toLocaleString());
+      }
 
-function toggleOtro() {
-  // Quitamos la clase active de las pastillas con monto y se la ponemos a "Otro monto"
-  document.querySelectorAll(".pill").forEach((p) => p.classList.remove("active"));
-  document.getElementById("pill-otro").classList.add("active");
-  
-  isCustom = true;
-  selectedAmount = "custom";
-  
-  updateDonateLink("custom", "");
-}
+      function toggleOtro() {
+        // Quitamos la clase active de las pastillas con monto y se la ponemos a "Otro monto"
+        document
+          .querySelectorAll(".pill")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("pill-otro").classList.add("active");
 
-function updateDonateLink(amount, textToShow) {
-  const links = {
-    custom: "https://buy.stripe.com/test_aFacN54srfj48q896w0Jq00",
-    50:     "https://buy.stripe.com/test_7sYdR9e313Am5dW96w0Jq01",
-    100:    "https://buy.stripe.com/test_4gMeVd2kj2wigWEfuU0Jq02",
-    200:    "https://buy.stripe.com/test_9B6bJ1gb9gn86i00A00Jq03",
-    500:    "https://buy.stripe.com/test_3cI9AT0cb8UG21K5Uk0Jq04",
-  };
+        isCustom = true;
+        selectedAmount = "custom";
 
-  const donateBtn = document.getElementById("mainDonateBtn");
-  if (!donateBtn) return;
+        updateDonateLink("custom", "");
+      }
 
-  donateBtn.href = links[amount] ?? links["custom"];
-  
-  // Si eligen otro monto, el botón queda limpio sin el <span> ni el $
-  if (amount === 'custom') {
-    donateBtn.innerHTML = `♥ Donar`;
-  } else {
-    donateBtn.innerHTML = `♥ Donar <span id="mainDonateAmt">${textToShow}</span>`;
-  }
-}
-// ── Alimento
-function selectAlimento(el) {
-  document.querySelectorAll(".alimento-type").forEach((a) => a.classList.remove("active"));
-  el.classList.add("active");
-}
+      function updateDonateLink(amount, textToShow) {
+        const links = {
+          custom: "https://buy.stripe.com/test_aFacN54srfj48q896w0Jq00",
+          50: "https://buy.stripe.com/test_7sYdR9e313Am5dW96w0Jq01",
+          100: "https://buy.stripe.com/test_4gMeVd2kj2wigWEfuU0Jq02",
+          200: "https://buy.stripe.com/test_9B6bJ1gb9gn86i00A00Jq03",
+          500: "https://buy.stripe.com/test_3cI9AT0cb8UG21K5Uk0Jq04",
+          1000: "https://buy.stripe.com/test_00w28r6Azc6S35ObeE0Jq05",
+          2500: "https://buy.stripe.com/test_6oUeVd3on5Iu7m42I80Jq07",
+        };
 
-// ── FAQ accordion
-function toggleFaq(btn) {
-  const item = btn.closest(".faq-item");
-  const wasOpen = item.classList.contains("open");
-  document.querySelectorAll(".faq-item").forEach((i) => i.classList.remove("open"));
-  if (!wasOpen) item.classList.add("open");
-}
+        const donateBtn = document.getElementById("mainDonateBtn");
+        if (!donateBtn) return;
 
-// ── Init
-updateDonateLink(200, "$200");
-</script>
-</body>
+        donateBtn.href = links[amount] ?? links["custom"];
+
+        // Si eligen otro monto, el botón queda limpio sin el <span> ni el $
+        if (amount === "custom") {
+          donateBtn.innerHTML = `♥ Donar`;
+        } else {
+          donateBtn.innerHTML = `♥ Donar <span id="mainDonateAmt">${textToShow}</span>`;
+        }
+      }
+      // ── Alimento
+      function selectAlimento(el) {
+        document
+          .querySelectorAll(".alimento-type")
+          .forEach((a) => a.classList.remove("active"));
+        el.classList.add("active");
+      }
+
+      // ── FAQ accordion
+      function toggleFaq(btn) {
+        const item = btn.closest(".faq-item");
+        const wasOpen = item.classList.contains("open");
+        document
+          .querySelectorAll(".faq-item")
+          .forEach((i) => i.classList.remove("open"));
+        if (!wasOpen) item.classList.add("open");
+      }
+
+      // ── Init
+      updateDonateLink(200, "$200");
+    </script>
+  </body>
 </html>

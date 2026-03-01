@@ -18,4 +18,6 @@ urlpatterns = [
     path('api/dashboard/',        views.api_dashboard,     name='api_dashboard'),
     path('api/history/',          views.api_history,       name='api_history'),
     path('api/data/delete-all/', views.delete_all_data, name='delete_all_data'),
+
+    path('api/feeder/alert/', views.receive_alert, name='receive_alert'),
 ]

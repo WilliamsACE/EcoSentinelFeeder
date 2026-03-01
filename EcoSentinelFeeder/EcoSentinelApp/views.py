@@ -16,6 +16,8 @@ from django.views.decorators.http import require_POST, require_GET
 
 from .models import Feeder, FeederStatus, DetectionEvent
 
+from collections import deque
+_alertas_pendientes = deque(maxlen=50)
 
 def dashboard(request):
     return render(request, 'dashboard.html')
@@ -89,7 +91,12 @@ def receive_detection(request):
 
 
 def api_dashboard(request):
+
+    alertas = list(_alertas_pendientes)
+    _alertas_pendientes.clear()
+    
     hoy = timezone.now().date()
+
     feeders_data = []
 
     for feeder in Feeder.objects.filter(is_active=True):
@@ -163,13 +170,17 @@ def api_dashboard(request):
     dogs_hoy = DetectionEvent.objects.filter(recorded_at__date=hoy, species='perro').count()
     cats_hoy = DetectionEvent.objects.filter(recorded_at__date=hoy, species='gato').count()
 
+
+
+
     return JsonResponse({
         'feeders': feeders_data,
+        'alerts': alertas,
         'charts': {
             'dispensa': {'labels': horas_labels, 'dogs': dogs_h,  'cats': cats_h},
             'species':  {'dogs': dogs_hoy, 'cats': cats_hoy},
             'trend':    {'labels': labels_7d, 'dogs': dogs_7d, 'cats': cats_7d},
-        }
+        },
     })
 
 
@@ -246,3 +257,30 @@ def delete_all_data(request):
     DetectionEvent.objects.all().delete()
     FeederStatus.objects.all().delete()
     return JsonResponse({'ok': True, 'message': 'Todos los datos eliminados'})
+
+
+@csrf_exempt
+@require_POST
+def receive_alert(request):
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido'}, status=400)
+
+    if data.get('token') != 'YeahPerdonenKamehameha':
+        return JsonResponse({'error': 'No autorizado'}, status=401)
+
+    try:
+        feeder = Feeder.objects.get(feeder_id=data['feeder_id'])
+    except Feeder.DoesNotExist:
+        return JsonResponse({'error': 'Feeder no encontrado'}, status=404)
+
+    _alertas_pendientes.append({
+        'type':        data.get('type', 'warn'),
+        'title':       data.get('title', ''),
+        'description': data.get('description', ''),
+        'time':        data.get('time', ''),
+        'location':    data.get('location', feeder.name),
+    })
+
+    return JsonResponse({'ok': True})
