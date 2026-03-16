@@ -15,7 +15,7 @@ class Feeder(models.Model):
 
 
 class FeederStatus(models.Model):
-    STATUS = [('online','En línea'),('warn','Alerta'),('offline','Sin conexión')]
+    STATUS = [('online', 'En línea'), ('warn', 'Alerta'), ('offline', 'Sin conexión')]
 
     feeder      = models.ForeignKey(Feeder, on_delete=models.CASCADE, related_name='statuses')
     status      = models.CharField(max_length=10, choices=STATUS, default='online')
@@ -26,17 +26,18 @@ class FeederStatus(models.Model):
     recorded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-recorded_at']
+        ordering      = ['-recorded_at']
         get_latest_by = 'recorded_at'
 
 
 class DetectionEvent(models.Model):
-    SPECIES = [('perro','Perro'),('gato','Gato'),('alerta','Alerta')]
+    SPECIES = [('perro', 'Perro'), ('gato', 'Gato'), ('alerta', 'Alerta')]
 
     feeder      = models.ForeignKey(Feeder, on_delete=models.CASCADE, related_name='events')
     species     = models.CharField(max_length=10, choices=SPECIES)
     grams       = models.IntegerField(default=0)
     confidence  = models.IntegerField(default=0)
+    photo       = models.CharField(max_length=500, blank=True, default='')
     recorded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

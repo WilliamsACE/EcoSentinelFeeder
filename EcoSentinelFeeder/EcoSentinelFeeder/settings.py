@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -130,3 +130,9 @@ SESSION_COOKIE_AGE = 28800        # 8 horas en segundos
 SESSION_SAVE_EVERY_REQUEST = True  # reinicia el contador con cada clic
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # persiste aunque cierres el navegador
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')   # carpeta donde se guardan
+MEDIA_URL  = '/media/'                          # URL pública para verlas
+
+# Subir hasta 10 MB por archivo (fotos del ESP32-CAM)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10 MB

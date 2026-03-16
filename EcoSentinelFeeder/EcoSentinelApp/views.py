@@ -1,6 +1,8 @@
 import json
+import os
 from datetime import timedelta
 
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -17,10 +19,12 @@ from django.views.decorators.http import require_POST, require_GET
 from .models import Feeder, FeederStatus, DetectionEvent
 
 from collections import deque
+import stripe
+
+stripe.api_key = 'rk_test_51T3TCFE7kkQzZckXbebvLvpkRHcUItrmxuwq8EqCX1PKmo2vRWKXDUTosN5YkLUrbecYOpmyoln3SeR1xqRR6bWH00yUDbG6Bt'
+
 _alertas_pendientes = deque(maxlen=50)
 
-def dashboard(request):
-    return render(request, 'dashboard.html')
 
 def home(request):
     return render(request, 'home.html')
@@ -31,8 +35,9 @@ def donar(request):
 def login(request):
     return render(request, 'login.html')
 
+def dashboardDocs(request):
+    return render(request, 'dashboardDocs.html')
 
-    
 
 @csrf_exempt
 @require_POST
@@ -68,26 +73,65 @@ def receive_status(request):
 @csrf_exempt
 @require_POST
 def receive_detection(request):
-    try:
-        data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'JSON inválido'}, status=400)
+    """
+    Acepta dos formatos:
+      - multipart/form-data  → cuando viene con foto (simulador / ESP32-CAM)
+      - application/json     → cuando no hay foto (comportamiento original)
+    """
+    content_type = request.content_type or ''
 
-    if data.get('token') != 'YeahPerdonenKamehameha':
+    if 'multipart/form-data' in content_type:
+        # ── Con foto ─────────────────────────────────────────────
+        token      = request.POST.get('token')
+        feeder_id  = request.POST.get('feeder_id')
+        species    = request.POST.get('species', 'alerta')
+        grams      = int(request.POST.get('grams', 0))
+        confidence = int(request.POST.get('confidence', 0))
+        photo      = request.FILES.get('photo')
+    else:
+        # ── Sin foto (JSON) ───────────────────────────────────────
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'JSON inválido'}, status=400)
+        token      = data.get('token')
+        feeder_id  = data.get('feeder_id')
+        species    = data.get('species', 'alerta')
+        grams      = int(data.get('grams', 0))
+        confidence = int(data.get('confidence', 0))
+        photo      = None
+
+    # ── Validaciones ──────────────────────────────────────────────
+    if token != 'YeahPerdonenKamehameha':
         return JsonResponse({'error': 'No autorizado'}, status=401)
 
     try:
-        feeder = Feeder.objects.get(feeder_id=data['feeder_id'])
+        feeder = Feeder.objects.get(feeder_id=feeder_id)
     except Feeder.DoesNotExist:
         return JsonResponse({'error': 'Feeder no encontrado'}, status=404)
 
+    # ── Guardar foto si viene ─────────────────────────────────────
+    photo_url = None
+    if photo:
+        carpeta = os.path.join(settings.MEDIA_ROOT, 'detections', feeder_id)
+        os.makedirs(carpeta, exist_ok=True)
+        nombre  = f"{timezone.now().strftime('%Y%m%d_%H%M%S')}_{photo.name}"
+        ruta    = os.path.join(carpeta, nombre)
+        with open(ruta, 'wb') as f:
+            for chunk in photo.chunks():
+                f.write(chunk)
+        photo_url = f"{settings.MEDIA_URL}detections/{feeder_id}/{nombre}"
+
+    # ── Guardar evento ────────────────────────────────────────────
     DetectionEvent.objects.create(
         feeder=feeder,
-        species=data.get('species', 'alerta'),
-        grams=int(data.get('grams', 0)),
-        confidence=int(data.get('confidence', 0)),
+        species=species,
+        grams=grams,
+        confidence=confidence,
+        photo=photo_url or '',
     )
-    return JsonResponse({'ok': True})
+
+    return JsonResponse({'ok': True, 'photo': photo_url})
 
 
 def api_dashboard(request):
@@ -170,9 +214,6 @@ def api_dashboard(request):
     dogs_hoy = DetectionEvent.objects.filter(recorded_at__date=hoy, species='perro').count()
     cats_hoy = DetectionEvent.objects.filter(recorded_at__date=hoy, species='gato').count()
 
-
-
-
     return JsonResponse({
         'feeders': feeders_data,
         'alerts': alertas,
@@ -188,8 +229,8 @@ def api_history(request):
     limit  = int(request.GET.get('limit', 20))
     events = DetectionEvent.objects.select_related('feeder')[:limit]
 
-    EMOJI = {'perro':'🐕', 'gato':'🐈', 'alerta':'⚠️'}
-    LABEL = {'perro':'Perro', 'gato':'Gato', 'alerta':'Humano'}
+    EMOJI = {'perro': '🐕', 'gato': '🐈', 'alerta': '⚠️'}
+    LABEL = {'perro': 'Perro', 'gato': 'Gato', 'alerta': 'Humano'}
 
     return JsonResponse({'events': [{
         'time':       e.recorded_at.strftime('%H:%M'),
@@ -200,12 +241,12 @@ def api_history(request):
         'emoji':      EMOJI.get(e.species, '❓'),
         'grams':      e.grams,
         'confidence': e.confidence,
+        'photo':      e.photo if e.photo else None,
     } for e in events]})
 
 
-# ── Login ─────────────────────────────────────────────────────────
+# ── Login ──────────────────────────────────────────────────────────
 def login_view(request):
-    # Si ya está autenticado, mandarlo directo al dashboard
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'login.html')
@@ -228,23 +269,22 @@ def login_api(request):
     user = authenticate(request, username=username, password=password)
 
     if user is not None:
-        auth_login(request, user)   # ← auth_login en lugar de login
+        auth_login(request, user)
         return JsonResponse({'ok': True, 'redirect': '../dashboard/'})
     else:
         return JsonResponse({'error': 'Credenciales incorrectas'}, status=401)
 
 
 def logout_view(request):
-    auth_logout(request)            # ← auth_logout en lugar de logout
+    auth_logout(request)
     return redirect('login')
 
 
-# XD ── Protege el dashboard con login_required ───────────────────────
+# ── Vistas protegidas ──────────────────────────────────────────────
 @login_required(login_url='/login/')
 def dashboard(request):
     return render(request, 'dashboard.html')
 
-# Haz lo mismo con las demás páginas que quieras proteger:
 @login_required(login_url='/login/')
 def mapa(request):
     return render(request, 'mapa.html')
@@ -284,3 +324,71 @@ def receive_alert(request):
     })
 
     return JsonResponse({'ok': True})
+
+
+@login_required(login_url='/login/')
+def api_donaciones(request):
+    try:
+        balance = stripe.Balance.retrieve()
+        avail   = balance.available[0] if balance.available else None
+        pending = balance.pending[0]   if balance.pending   else None
+
+        balance_data = {
+            'available': avail.amount   if avail   else 0,
+            'pending':   pending.amount if pending else 0,
+            'currency':  avail.currency if avail   else 'mxn',
+        }
+
+        from datetime import datetime, timedelta
+        hace_30_dias = int((datetime.utcnow() - timedelta(days=30)).timestamp())
+
+        charges_raw = stripe.Charge.list(limit=30)
+        charges_mes = stripe.Charge.list(limit=100, created={'gte': hace_30_dias})
+
+        charges_data = []
+        for c in charges_raw.data:
+            charges_data.append({
+                'id':                  c.id,
+                'created':             c.created,
+                'amount':              c.amount,
+                'currency':            c.currency,
+                'status':              c.status,
+                'description':         c.description or '',
+                'customer_email':      c.billing_details.email if c.billing_details else '',
+                'customer_name':       c.billing_details.name  if c.billing_details else '',
+                'payment_method_type': c.payment_method_details.type if c.payment_method_details else 'card',
+            })
+
+        mes_total = sum(c.amount for c in charges_mes.data if c.status == 'succeeded')
+        mes_count = sum(1        for c in charges_mes.data if c.status == 'succeeded')
+
+        try:
+            customers = stripe.Customer.list(limit=100)
+            donadores = customers.total_count if hasattr(customers, 'total_count') else len(customers.data)
+        except Exception:
+            donadores = 0
+
+        payouts_raw  = stripe.Payout.list(limit=10)
+        payouts_data = []
+        for p in payouts_raw.data:
+            payouts_data.append({
+                'id':                   p.id,
+                'created':              p.created,
+                'arrival_date':         p.arrival_date,
+                'amount':               p.amount,
+                'currency':             p.currency,
+                'status':               p.status,
+                'description':          p.description or '',
+                'statement_descriptor': p.statement_descriptor or '',
+            })
+
+        return JsonResponse({
+            'balance':   balance_data,
+            'mes':       {'total': mes_total, 'count': mes_count},
+            'donadores': donadores,
+            'charges':   charges_data,
+            'payouts':   payouts_data,
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

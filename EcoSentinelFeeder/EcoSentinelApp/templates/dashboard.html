@@ -44,6 +44,250 @@
         --topbar-h: 60px;
       }
 
+      /* ════════════════════════════
+         DARK THEME — Discord style
+      ════════════════════════════ */
+      [data-theme="dark"] {
+        --cream: #1e1f22;
+        --warm-white: #2b2d31;
+        --warm-white2: #232428;
+        --sage: #7984f5;
+        --sage-light: #5865f2;
+        --sage-dark: #8891f7;
+        --terracotta: #a78bfa;
+        --terracotta-light: #c4b5fd;
+        --sky: #60a5fa;
+        --sky-dark: #93c5fd;
+        --charcoal: #dbdee1;
+        --mid: #949ba4;
+        --light-mid: #6d7580;
+        --border: #3b3d44;
+        --border2: #4a4d57;
+
+        --ok: #23a55a;
+        --ok-bg: rgba(35, 165, 90, 0.15);
+        --warn: #f0a132;
+        --warn-bg: rgba(240, 161, 50, 0.15);
+        --danger: #f23f42;
+        --danger-bg: rgba(242, 63, 66, 0.15);
+      }
+
+      /* ════════════════════════════
+         DIM THEME — Discord dark (medium)
+      ════════════════════════════ */
+      [data-theme="dim"] {
+        --cream: #313338;
+        --warm-white: #3b3d44;
+        --warm-white2: #35373e;
+        --sage: #7984f5;
+        --sage-light: #5865f2;
+        --sage-dark: #8891f7;
+        --terracotta: #a78bfa;
+        --terracotta-light: #c4b5fd;
+        --sky: #60a5fa;
+        --sky-dark: #93c5fd;
+        --charcoal: #dbdee1;
+        --mid: #b5bac1;
+        --light-mid: #80848e;
+        --border: #4a4d57;
+        --border2: #5a5d69;
+
+        --ok: #23a55a;
+        --ok-bg: rgba(35, 165, 90, 0.15);
+        --warn: #f0a132;
+        --warn-bg: rgba(240, 161, 50, 0.15);
+        --danger: #f23f42;
+        --danger-bg: rgba(242, 63, 66, 0.15);
+      }
+
+      [data-theme="dim"] .topbar {
+        background: rgba(49, 51, 56, 0.92) !important;
+      }
+      [data-theme="dim"] .map-body {
+        background: #2a2c31;
+      }
+      [data-theme="dim"] .cfg-input {
+        background: var(--warm-white2);
+        color: var(--charcoal);
+        border-color: var(--border2);
+      }
+      [data-theme="dim"] .cfg-input:focus {
+        border-color: var(--sage-dark);
+      }
+      [data-theme="dim"] .skel {
+        background: linear-gradient(
+          90deg,
+          #3b3d44 25%,
+          #46484f 50%,
+          #3b3d44 75%
+        ) !important;
+        background-size: 600px 100% !important;
+      }
+      [data-theme="dim"] #delete-modal > div {
+        background: var(--warm-white) !important;
+      }
+      [data-theme="dim"] #delete-confirm-input {
+        background: var(--cream) !important;
+        color: var(--charcoal) !important;
+        border-color: var(--border2) !important;
+      }
+      [data-theme="dim"] #mobile-banner {
+        background: var(--warm-white) !important;
+      }
+      [data-theme="dim"] ::-webkit-scrollbar-thumb {
+        background: var(--border2);
+      }
+      [data-theme="dim"] .nav-item.active {
+        color: var(--sage-dark);
+        border-left-color: var(--sage-dark);
+        background: rgba(136, 145, 247, 0.1);
+      }
+      [data-theme="dim"] .nav-item:hover {
+        background: rgba(136, 145, 247, 0.06);
+        color: var(--charcoal);
+      }
+
+      body,
+      .sidebar,
+      .main,
+      .topbar,
+      .card,
+      .kpi-card,
+      .feeder-card,
+      .fcard,
+      .notif-slot,
+      .feeder-list-item {
+        transition:
+          background-color 0.3s ease,
+          border-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      /* Dark mode topbar backdrop */
+      [data-theme="dark"] .topbar {
+        background: rgba(30, 31, 34, 0.92) !important;
+      }
+
+      /* Dark mode map container */
+      [data-theme="dark"] .map-body {
+        background: #1a1b1e;
+      }
+      [data-theme="dark"] #feeder-map .leaflet-layer,
+      [data-theme="dark"] #real-map .leaflet-layer,
+      [data-theme="dim"] #feeder-map .leaflet-layer,
+      [data-theme="dim"] #real-map .leaflet-layer {
+        filter: invert(100%) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+      }
+
+      /* Dark mode inputs */
+      [data-theme="dark"] .cfg-input {
+        background: var(--warm-white2);
+        color: var(--charcoal);
+        border-color: var(--border2);
+      }
+      [data-theme="dark"] .cfg-input:focus {
+        border-color: var(--sage-dark);
+      }
+
+      /* Dark mode skeleton */
+      [data-theme="dark"] .skel {
+        background: linear-gradient(
+          90deg,
+          #2e3035 25%,
+          #383a40 50%,
+          #2e3035 75%
+        ) !important;
+        background-size: 600px 100% !important;
+      }
+
+      /* Dark mode delete modal */
+      [data-theme="dark"] #delete-modal > div {
+        background: var(--warm-white) !important;
+      }
+      [data-theme="dark"] #delete-confirm-input {
+        background: var(--cream) !important;
+        color: var(--charcoal) !important;
+        border-color: var(--border2) !important;
+      }
+
+      /* Dark mode mobile banner */
+      [data-theme="dark"] #mobile-banner {
+        background: var(--warm-white) !important;
+      }
+
+      /* Dark mode scrollbar */
+      [data-theme="dark"] ::-webkit-scrollbar-thumb {
+        background: var(--border2);
+      }
+
+      /* Dark mode nav active state uses accent color */
+      [data-theme="dark"] .nav-item.active {
+        color: var(--sage-dark);
+        border-left-color: var(--sage-dark);
+        background: rgba(136, 145, 247, 0.1);
+      }
+      [data-theme="dark"] .nav-item:hover {
+        background: rgba(136, 145, 247, 0.06);
+        color: var(--charcoal);
+      }
+
+      /* Theme toggle switch */
+      .theme-toggle-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .theme-switch {
+        position: relative;
+        width: 46px;
+        height: 26px;
+        flex-shrink: 0;
+      }
+      .theme-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .theme-slider {
+        position: absolute;
+        inset: 0;
+        background: var(--border2);
+        border-radius: 26px;
+        cursor: pointer;
+        transition: background 0.25s;
+      }
+      .theme-slider::before {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        left: 4px;
+        top: 4px;
+        border-radius: 50%;
+        background: var(--cream);
+        transition:
+          transform 0.25s,
+          background 0.25s;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      }
+      .theme-switch input:checked + .theme-slider {
+        background: #5865f2;
+      }
+      .theme-switch input:checked + .theme-slider::before {
+        transform: translateX(20px);
+      }
+      .theme-toggle-label {
+        font-size: 0.85rem;
+        color: var(--charcoal);
+        font-weight: 500;
+        line-height: 1.3;
+      }
+      .theme-toggle-sub {
+        font-size: 0.7rem;
+        color: var(--light-mid);
+        margin-top: 1px;
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -1054,6 +1298,12 @@
         color: var(--terracotta);
         background: rgba(201, 123, 75, 0.06);
       }
+      .hf-short {
+        display: none;
+      }
+      .hf-full {
+        display: inline;
+      }
 
       /* ── SECTION DIVIDER */
       .section-divider {
@@ -1137,24 +1387,931 @@
       }
 
       /* ── CONFIGURACIÓN ── */
-      .cfg-field { display:flex; flex-direction:column; gap:4px; }
-      .cfg-label { font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:var(--light-mid); font-weight:500; }
+      .cfg-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .cfg-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--light-mid);
+        font-weight: 500;
+      }
       .cfg-input {
-        padding:9px 12px; border:1.5px solid var(--border); border-radius:10px;
-        font-family:'DM Sans',sans-serif; font-size:.88rem; color:var(--charcoal);
-        background:var(--cream); outline:none; transition:border-color .2s; width:100%;
+        padding: 9px 12px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        color: var(--charcoal);
+        background: var(--cream);
+        outline: none;
+        transition: border-color 0.2s;
+        width: 100%;
       }
-      .cfg-input:focus { border-color:var(--sage); }
-      .cfg-hint { font-size:.68rem; color:var(--light-mid); }
-      .cfg-static {
-        padding:9px 12px; border:1.5px solid var(--border); border-radius:10px;
-        font-size:.85rem; color:var(--mid); background:var(--warm-white2);
+      .cfg-input:focus {
+        border-color: var(--sage);
       }
-      .tb-btn.primary { background:var(--sage-dark); color:white; border-color:var(--sage-dark); }
-      .tb-btn.primary:hover { background:var(--sage); border-color:var(--sage); }
+      .cfg-hint {
+        font-size: 0.68rem;
+        color: var(--light-mid);
+      }
+      .tb-btn.primary {
+        background: var(--sage-dark);
+        color: white;
+        border-color: var(--sage-dark);
+      }
+      .tb-btn.primary:hover {
+        background: var(--sage);
+        border-color: var(--sage);
+      }
+
+      /* ── FEEDER CARDS (sección Todos los feeders) ── */
+      .fcard {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 14px;
+        transition: box-shadow 0.2s;
+      }
+      .fcard:hover {
+        box-shadow: 0 4px 18px rgba(45, 58, 46, 0.09);
+      }
+      .fcard-preview {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .fcard-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .fcard-dot.online {
+        background: var(--ok);
+        box-shadow: 0 0 0 3px var(--ok-bg);
+      }
+      .fcard-dot.warn {
+        background: var(--warn);
+        box-shadow: 0 0 0 3px var(--warn-bg);
+      }
+      .fcard-dot.offline {
+        background: var(--light-mid);
+      }
+      .fcard-id {
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--light-mid);
+      }
+      .fcard-name {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--charcoal);
+      }
+      .fcard-loc {
+        font-size: 0.72rem;
+        color: var(--mid);
+      }
+      .fcard-pills {
+        display: flex;
+        gap: 8px;
+        margin-left: auto;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .fcard-pill {
+        font-size: 0.7rem;
+        padding: 3px 9px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        color: var(--mid);
+        background: var(--cream);
+        white-space: nowrap;
+      }
+      .fcard-pill.low {
+        border-color: rgba(192, 48, 48, 0.3);
+        color: var(--danger);
+        background: var(--danger-bg);
+      }
+      .fcard-pill.warn {
+        border-color: rgba(184, 106, 26, 0.3);
+        color: var(--warn);
+        background: var(--warn-bg);
+      }
+      .fcard-chevron {
+        font-size: 0.7rem;
+        color: var(--light-mid);
+        margin-left: 8px;
+        transition: transform 0.25s;
+        flex-shrink: 0;
+      }
+      .fcard.expanded .fcard-chevron {
+        transform: rotate(180deg);
+      }
+      .fcard-detail {
+        display: none;
+        border-top: 1px solid var(--border);
+        padding: 20px 24px;
+      }
+      .fcard.expanded .fcard-detail {
+        display: block;
+      }
+      .fcard-gauges {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+      .fcard-stat-row {
+        display: flex;
+        gap: 24px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+      }
+      .fcard-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .fcard-stat .sv {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        color: var(--charcoal);
+        line-height: 1;
+      }
+      .fcard-stat .sl {
+        font-size: 0.67rem;
+        color: var(--light-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      /* ── DONACIONES ── */
+      .pay-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.68rem;
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-weight: 500;
+      }
+      .pay-badge.succeeded {
+        background: var(--ok-bg);
+        color: var(--ok);
+        border: 1px solid rgba(77, 140, 82, 0.2);
+      }
+      .pay-badge.pending {
+        background: var(--warn-bg);
+        color: var(--warn);
+        border: 1px solid rgba(184, 106, 26, 0.2);
+      }
+      .pay-badge.failed {
+        background: var(--danger-bg);
+        color: var(--danger);
+        border: 1px solid rgba(192, 48, 48, 0.2);
+      }
+      .pay-badge.paid {
+        background: var(--ok-bg);
+        color: var(--ok);
+        border: 1px solid rgba(77, 140, 82, 0.2);
+      }
+      .pay-badge.in_transit {
+        background: rgba(90, 155, 192, 0.1);
+        color: var(--sky-dark);
+        border: 1px solid rgba(90, 155, 192, 0.2);
+      }
+      .method-icon {
+        font-size: 0.85rem;
+      }
+
+      /* ── HISTORY ROW DELETE ── */
+      .ht-delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.8rem;
+        opacity: 0;
+        transition:
+          opacity 0.15s,
+          color 0.15s;
+        padding: 2px 4px;
+        border-radius: 5px;
+        color: var(--light-mid);
+        line-height: 1;
+      }
+      .history-table tr:hover .ht-delete-btn {
+        opacity: 1;
+      }
+      .ht-delete-btn:hover {
+        color: var(--danger);
+        background: var(--danger-bg);
+      }
+
+      /* ── HISTORY ROW CLICKABLE ── */
+      .history-table tbody tr:not(.skel-row):not([colspan]) {
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .history-table tbody tr.clickable-row:hover td {
+        background: rgba(122, 158, 126, 0.07);
+      }
+
+      /* ── INLINE EVENT DETAIL (sección Historial) ── */
+      .ev-inline-active td {
+        background: rgba(122, 158, 126, 0.06) !important;
+        border-bottom: none !important;
+      }
+      .ev-inline-row td {
+        padding: 0 !important;
+        border-bottom: none !important;
+      }
+      .ev-inline-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 16px 20px 20px;
+        background: var(--cream);
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition:
+          max-height 0.35s ease,
+          opacity 0.25s ease,
+          padding 0.35s ease;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      .ev-inline-row.ev-inline-open .ev-inline-panel {
+        max-height: 600px;
+        opacity: 1;
+        padding: 16px 20px 20px;
+      }
+      @media (max-width: 700px) {
+        .ev-inline-panel {
+          grid-template-columns: 1fr;
+        }
+      }
+      .ev-inline-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        align-content: start;
+      }
+      .ev-inline-cell {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 13px;
+      }
+      .ev-inline-photo {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #000;
+        align-self: start;
+      }
+      .ev-inline-photo img {
+        width: 100%;
+        max-height: 280px;
+        object-fit: contain;
+        display: block;
+      }
+      .ev-inline-nophoto {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed var(--border2);
+        border-radius: 12px;
+        min-height: 80px;
+        font-size: 0.78rem;
+        color: var(--light-mid);
+        align-self: start;
+      }
+
+      /* ── EVENT DETAIL MODAL ── */
+      #event-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        background: rgba(45, 58, 46, 0.5);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        align-items: center;
+        justify-content: center;
+        animation: fadeInBg 0.2s ease;
+      }
+      #event-modal.open {
+        display: flex;
+      }
+      @keyframes fadeInBg {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .ev-modal-box {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        width: 90%;
+        max-width: 480px;
+        box-shadow: 0 24px 64px rgba(45, 58, 46, 0.25);
+        animation: slideIn 0.25s ease;
+        overflow: hidden;
+      }
+      .ev-modal-header {
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid var(--border);
+        background: var(--warm-white2);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .ev-modal-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        color: var(--charcoal);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ev-modal-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--light-mid);
+        font-size: 1.1rem;
+        line-height: 1;
+        padding: 4px;
+        border-radius: 6px;
+        transition:
+          color 0.15s,
+          background 0.15s;
+      }
+      .ev-modal-close:hover {
+        color: var(--danger);
+        background: var(--danger-bg);
+      }
+      .ev-modal-body {
+        padding: 20px 22px;
+      }
+      .ev-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .ev-info-cell {
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 14px;
+      }
+      .ev-info-label {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--light-mid);
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      .ev-info-value {
+        font-size: 0.9rem;
+        color: var(--charcoal);
+        font-weight: 500;
+      }
+      .ev-photo-zone {
+        border: 2px dashed var(--border2);
+        border-radius: 12px;
+        padding: 22px 16px;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+        position: relative;
+        margin-bottom: 16px;
+        background: var(--cream);
+      }
+      .ev-photo-zone:hover,
+      .ev-photo-zone.drag-over {
+        border-color: var(--sage-dark);
+        background: rgba(122, 158, 126, 0.05);
+      }
+      .ev-photo-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .ev-photo-icon {
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+      }
+      .ev-photo-hint {
+        font-size: 0.75rem;
+        color: var(--mid);
+        line-height: 1.5;
+      }
+      .ev-photo-hint strong {
+        color: var(--sage-dark);
+      }
+      .ev-photo-preview {
+        display: none;
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        background: #000;
+      }
+      .ev-photo-preview img {
+        width: 100%;
+        max-height: 260px;
+        object-fit: contain;
+        display: block;
+        transition: opacity 0.2s;
+      }
+      .ev-modal-box.view-mode .ev-photo-preview img {
+        max-height: 400px;
+      }
+      .ev-modal-box {
+        transition: max-width 0.2s ease;
+      }
+      .ev-photo-remove {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(45, 58, 46, 0.72);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        transition: background 0.15s;
+        backdrop-filter: blur(4px);
+      }
+      .ev-photo-remove:hover {
+        background: var(--danger);
+      }
+      .ev-photo-server-badge {
+        display: none;
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(45, 58, 46, 0.78);
+        color: #d4e8d1;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 20px;
+        letter-spacing: 0.03em;
+        backdrop-filter: blur(4px);
+        pointer-events: none;
+      }
+      .ev-photo-change-btn {
+        display: none;
+        width: 100%;
+        margin-bottom: 16px;
+        background: transparent;
+        border: 1.5px dashed var(--sage);
+        color: var(--sage-dark);
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .ev-photo-change-btn:hover {
+        background: var(--sage-light);
+      }
+      .ev-modal-footer {
+        padding: 14px 22px 18px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        background: var(--warm-white2);
+      }
+      .ev-send-btn {
+        background: var(--sage-dark);
+        color: white;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.84rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.18s;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .ev-send-btn:hover {
+        background: var(--sage);
+      }
+      .ev-send-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .ev-cancel-btn {
+        background: var(--cream);
+        color: var(--mid);
+        border: 1px solid var(--border);
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.84rem;
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .ev-cancel-btn:hover {
+        border-color: var(--border2);
+        color: var(--charcoal);
+      }
+      .ev-send-status {
+        font-size: 0.75rem;
+        color: var(--mid);
+        display: none;
+        align-items: center;
+        gap: 6px;
+        margin-right: auto;
+      }
+      .ev-send-status.visible {
+        display: flex;
+      }
+      .ev-send-status.ok {
+        color: var(--ok);
+      }
+      .ev-send-status.err {
+        color: var(--danger);
+      }
+
+      /* ── HISTORY SEE-ALL FOOTER ── */
+      .history-see-all {
+        padding: 11px 18px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--warm-white2);
+      }
+      .history-see-all-count {
+        font-size: 0.68rem;
+        color: var(--light-mid);
+      }
+      .history-see-all-btn {
+        font-size: 0.7rem;
+        color: var(--terracotta);
+        background: none;
+        border: 1px solid rgba(201, 123, 75, 0.25);
+        border-radius: 7px;
+        padding: 4px 11px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.16s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .history-see-all-btn:hover {
+        background: rgba(201, 123, 75, 0.07);
+        border-color: var(--terracotta);
+      }
+
+      /* ════════════════════════════
+         MOBILE OVERLAY & HAMBURGER
+      ════════════════════════════ */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(45, 58, 46, 0.45);
+        z-index: 199;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+      }
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      .hamburger-btn {
+        display: none;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        width: 36px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        font-size: 1rem;
+        transition: border-color 0.18s;
+      }
+      .hamburger-btn:hover {
+        border-color: var(--sage);
+      }
+
+      /* ════════════════════════════
+         RESPONSIVE — TABLET & MOBILE
+      ════════════════════════════ */
+
+      /* Tablet (≤ 1024px) */
+      @media (max-width: 1024px) {
+        :root {
+          --sidebar-w: 200px;
+        }
+        .kpi-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .map-feeders-row {
+          grid-template-columns: 1fr;
+        }
+        .charts-row {
+          grid-template-columns: 1fr;
+        }
+        .bottom-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Mobile (≤ 768px) */
+      @media (max-width: 768px) {
+        :root {
+          --topbar-h: 54px;
+        }
+
+        /* Sidebar oculta por defecto, slide desde la izquierda */
+        .sidebar {
+          transform: translateX(-100%);
+          transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 1100; /* Leaflet usa 400-1000; esto garantiza estar encima */
+          width: 240px;
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .sidebar-overlay {
+          z-index: 1099;
+        }
+
+        /* Main ocupa todo el ancho */
+        .main {
+          margin-left: 0;
+        }
+
+        /* Topbar compacto */
+        .topbar {
+          padding: 0 16px;
+        }
+        .hamburger-btn {
+          display: flex;
+        }
+        .page-title {
+          font-size: 0.95rem;
+        }
+        .last-sync {
+          display: none;
+        }
+
+        /* Solo mostrar el ícono en los botones del topbar */
+        .btn-label {
+          display: none;
+        }
+        .tb-btn {
+          padding: 7px 10px;
+          font-size: 0.88rem;
+          min-width: 36px;
+        }
+        #refreshBtn {
+          padding: 7px 10px;
+        }
+
+        /* Content */
+        .content {
+          padding: 16px 14px 40px;
+        }
+
+        /* KPIs: 2 columnas */
+        .kpi-row {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+        .kpi-value {
+          font-size: 1.7rem;
+        }
+
+        /* Map + feeders stacked */
+        .map-feeders-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .map-body,
+        #feeder-map {
+          height: 250px !important;
+        }
+
+        /* Charts stacked */
+        .charts-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        /* Bottom stacked */
+        .bottom-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        /* Feeder detail cards */
+        .feeders-grid {
+          margin-left: 0;
+          max-width: 100%;
+        }
+        .gauges-row {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+        .fc-stats-row {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        /* Historial table: scroll horizontal */
+        .history-body {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .history-table {
+          min-width: 500px;
+        }
+
+        /* History filters: íconos solo en móvil */
+        .history-filters {
+          overflow-x: auto;
+          flex-wrap: nowrap;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 4px;
+        }
+        .hf-btn {
+          white-space: nowrap;
+        }
+        .hf-full {
+          display: none;
+        }
+        .hf-short {
+          display: inline;
+        }
+
+        /* Config grids */
+        [style*="grid-template-columns: 1fr 1fr"] {
+          grid-template-columns: 1fr !important;
+        }
+
+        /* Feeder card pills: wrap */
+        .fcard-pills {
+          flex-wrap: wrap;
+          max-width: 130px;
+          gap: 4px;
+        }
+        .fcard-gauges {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Donaciones tables */
+        .don-table-wrap {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Mapa completo */
+        #real-map {
+          height: 380px !important;
+        }
+
+        /* Modal */
+        #delete-modal > div {
+          padding: 24px 20px !important;
+        }
+      }
+
+      @keyframes slideUpBanner {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+      }
+
+      /* Extra small (≤ 420px) */
+      @media (max-width: 420px) {
+        .kpi-row {
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+        }
+        .kpi-value {
+          font-size: 1.5rem;
+        }
+        .kpi-card {
+          padding: 14px 14px;
+        }
+        .topbar-right {
+          gap: 5px;
+        }
+        .fcard-pills {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div
+      class="sidebar-overlay"
+      id="sidebar-overlay"
+      onclick="closeMobileSidebar()"
+    ></div>
+
+    <!-- MOBILE DESKTOP RECOMMENDATION BANNER -->
+    <div
+      id="mobile-banner"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2000;
+        background: var(--warm-white);
+        border: 1px solid var(--border2);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(45, 58, 46, 0.18);
+        padding: 14px 18px 14px 16px;
+        max-width: calc(100vw - 32px);
+        width: 340px;
+        display: none;
+        align-items: flex-start;
+        gap: 12px;
+        animation: slideUpBanner 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      "
+    >
+      <div style="font-size: 1.5rem; flex-shrink: 0; line-height: 1">🖥️</div>
+      <div style="flex: 1; min-width: 0">
+        <div
+          style="
+            font-family: &quot;Playfair Display&quot;, serif;
+            font-size: 0.92rem;
+            color: var(--charcoal);
+            margin-bottom: 3px;
+          "
+        >
+          Mejor experiencia en escritorio
+        </div>
+        <div style="font-size: 0.74rem; color: var(--mid); line-height: 1.55">
+          Para aprovechar todas las funciones del dashboard recomendamos acceder
+          desde una computadora.
+        </div>
+      </div>
+      <button
+        onclick="closeMobileBanner()"
+        style="
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: var(--light-mid);
+          font-size: 1rem;
+          line-height: 1;
+          padding: 2px;
+          flex-shrink: 0;
+          margin-top: -2px;
+          transition: color 0.18s;
+        "
+        title="Cerrar"
+      >
+        ✕
+      </button>
+    </div>
+
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-logo">
@@ -1185,7 +2342,6 @@
           <span class="ni-icon">🗺️</span>
           Mapa
         </a>
-
 
         <div class="sidebar-section-label">Dispositivos</div>
         <a class="nav-item" data-section="feeders">
@@ -1245,6 +2401,14 @@
       <!-- TOPBAR -->
       <div class="topbar">
         <div class="topbar-left">
+          <button
+            class="hamburger-btn"
+            id="hamburger-btn"
+            onclick="toggleMobileSidebar()"
+            aria-label="Menú"
+          >
+            ☰
+          </button>
           <!--
         [🔌 PRODUCCIÓN] El texto de page-title se actualiza automáticamente
         al cambiar de sección via switchSection(). No necesitas tocarlo a mano.
@@ -1262,10 +2426,12 @@
         </div>
         <div class="topbar-right">
           <button class="tb-btn" id="refreshBtn" onclick="refreshData()">
-            🔄 Actualizar
+            🔄
+            <span class="btn-label">Actualizar</span>
           </button>
           <button class="tb-btn danger-btn" onclick="openDeleteModal()">
-            🗑️ Borrar datos
+            🗑️
+            <span class="btn-label">Borrar datos</span>
           </button>
           <div
             class="notif-btn"
@@ -1621,11 +2787,53 @@
             <div class="card">
               <div class="card-header">
                 <div class="card-title">🕘 Historial de eventos</div>
-                <div class="history-filters">
-                  <button class="hf-btn active">Todos</button>
-                  <button class="hf-btn">🐕</button>
-                  <button class="hf-btn">🐈</button>
-                  <button class="hf-btn">⚠️</button>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <div class="history-filters">
+                    <button
+                      class="hf-btn active"
+                      data-filter="todos"
+                      onclick="filterHistory(this, 'history-body')"
+                    >
+                      <span class="hf-full">Todos</span>
+                      <span class="hf-short">Todos</span>
+                    </button>
+                    <button
+                      class="hf-btn"
+                      data-filter="perro"
+                      onclick="filterHistory(this, 'history-body')"
+                    >
+                      <span class="hf-full">🐕 Perro</span>
+                      <span class="hf-short">🐕</span>
+                    </button>
+                    <button
+                      class="hf-btn"
+                      data-filter="gato"
+                      onclick="filterHistory(this, 'history-body')"
+                    >
+                      <span class="hf-full">🐈 Gato</span>
+                      <span class="hf-short">🐈</span>
+                    </button>
+                    <button
+                      class="hf-btn"
+                      data-filter="alerta"
+                      onclick="filterHistory(this, 'history-body')"
+                    >
+                      <span class="hf-full">⚠️ Alerta</span>
+                      <span class="hf-short">⚠️</span>
+                    </button>
+                  </div>
+                  <button
+                    class="hf-btn"
+                    onclick="clearHistory()"
+                    title="Limpiar historial"
+                    style="
+                      border-color: rgba(192, 48, 48, 0.25);
+                      color: var(--danger);
+                    "
+                  >
+                    <span class="hf-full">🗑 Limpiar</span>
+                    <span class="hf-short">🗑</span>
+                  </button>
                 </div>
               </div>
               <div class="history-body">
@@ -1637,11 +2845,12 @@
                       <th>Evento</th>
                       <th>Cantidad</th>
                       <th>Confianza</th>
+                      <th style="width: 32px"></th>
                     </tr>
                   </thead>
                   <tbody id="history-body">
                     <tr class="skel-row">
-                      <td colspan="5">
+                      <td colspan="6">
                         <span
                           class="skel skel-text"
                           style="width: 100%; display: block; height: 0.8rem"
@@ -1649,7 +2858,7 @@
                       </td>
                     </tr>
                     <tr class="skel-row">
-                      <td colspan="5">
+                      <td colspan="6">
                         <span
                           class="skel skel-text"
                           style="width: 90%; display: block; height: 0.8rem"
@@ -1657,7 +2866,7 @@
                       </td>
                     </tr>
                     <tr class="skel-row">
-                      <td colspan="5">
+                      <td colspan="6">
                         <span
                           class="skel skel-text"
                           style="width: 95%; display: block; height: 0.8rem"
@@ -1666,6 +2875,18 @@
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              <div class="history-see-all" id="history-see-all-footer">
+                <span
+                  class="history-see-all-count"
+                  id="history-see-all-count"
+                ></span>
+                <button
+                  class="history-see-all-btn"
+                  onclick="switchSection('historial')"
+                >
+                  Ver todos los eventos →
+                </button>
               </div>
             </div>
           </div>
@@ -1705,12 +2926,16 @@
          SECCIÓN: TODOS LOS FEEDERS
     ══════════════════════════════════════ -->
         <section id="section-feeders" class="page-section">
-          <div class="placeholder-section">
-            <div class="ph-icon">🐾</div>
-            <div class="ph-title">Gestión de feeders</div>
-            <div class="ph-sub">
-              Lista completa de dispositivos, configuración individual y
-              remotos.
+          <div class="section-divider" style="margin-top: 0">
+            <div class="sd-label">Todos los dispositivos</div>
+            <div class="sd-line"></div>
+          </div>
+          <div id="feeders-cards-container">
+            <!-- Generado dinámicamente por renderFeederCards() -->
+            <div
+              style="padding: 20px; color: var(--light-mid); font-size: 0.82rem"
+            >
+              Cargando dispositivos…
             </div>
           </div>
         </section>
@@ -1786,10 +3011,50 @@
                 <div class="card-sub">Del Valle · registros en tiempo real</div>
               </div>
               <div class="history-filters">
-                <button class="hf-btn active">Todos</button>
-                <button class="hf-btn">🐕</button>
-                <button class="hf-btn">🐈</button>
-                <button class="hf-btn">⚠️</button>
+                <button
+                  class="hf-btn active"
+                  data-filter="todos"
+                  onclick="filterHistory(this, 'history-body-extended')"
+                >
+                  <span class="hf-full">Todos</span>
+                  <span class="hf-short">Todos</span>
+                </button>
+                <button
+                  class="hf-btn"
+                  data-filter="perro"
+                  onclick="filterHistory(this, 'history-body-extended')"
+                >
+                  <span class="hf-full">🐕 Perro</span>
+                  <span class="hf-short">🐕</span>
+                </button>
+                <button
+                  class="hf-btn"
+                  data-filter="gato"
+                  onclick="filterHistory(this, 'history-body-extended')"
+                >
+                  <span class="hf-full">🐈 Gato</span>
+                  <span class="hf-short">🐈</span>
+                </button>
+                <button
+                  class="hf-btn"
+                  data-filter="alerta"
+                  onclick="filterHistory(this, 'history-body-extended')"
+                >
+                  <span class="hf-full">⚠️ Alerta</span>
+                  <span class="hf-short">⚠️</span>
+                </button>
+                <button
+                  class="hf-btn"
+                  onclick="clearHistory()"
+                  title="Limpiar historial"
+                  style="
+                    border-color: rgba(192, 48, 48, 0.25);
+                    color: var(--danger);
+                  "
+                >
+                  <span class="hf-full">🗑 Limpiar</span>
+                  <span class="hf-short">🗑</span>
+                </button>
               </div>
             </div>
             <div class="history-body">
@@ -1801,6 +3066,7 @@
                     <th>Evento</th>
                     <th>Cantidad</th>
                     <th>Confianza</th>
+                    <th style="width: 32px"></th>
                   </tr>
                 </thead>
                 <!--
@@ -1809,87 +3075,7 @@
               Si prefieres tablas independientes, da un id distinto y ajusta
               addHistoryEvent() para insertar en ambas.
             -->
-                <tbody id="history-body-extended">
-                  <tr>
-                    <td>14:32</td>
-                    <td>
-                      <div class="ht-feeder">ESF-001</div>
-                      <div style="font-size: 0.68rem; color: var(--light-mid)">
-                        Del Valle
-                      </div>
-                    </td>
-                    <td><span class="ht-species perro">🐕 Perro</span></td>
-                    <td>85 g</td>
-                    <td>
-                      <div class="ht-conf">
-                        <div class="conf-bar">
-                          <div class="conf-fill" style="width: 96%"></div>
-                        </div>
-                        <span>96%</span>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>13:55</td>
-                    <td>
-                      <div class="ht-feeder">ESF-001</div>
-                      <div style="font-size: 0.68rem; color: var(--light-mid)">
-                        Del Valle
-                      </div>
-                    </td>
-                    <td><span class="ht-species alerta">⚠️ Humano</span></td>
-                    <td>—</td>
-                    <td>
-                      <div class="ht-conf">
-                        <div class="conf-bar">
-                          <div
-                            class="conf-fill"
-                            style="width: 99%; background: var(--danger)"
-                          ></div>
-                        </div>
-                        <span>99%</span>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>13:29</td>
-                    <td>
-                      <div class="ht-feeder">ESF-001</div>
-                      <div style="font-size: 0.68rem; color: var(--light-mid)">
-                        Del Valle
-                      </div>
-                    </td>
-                    <td><span class="ht-species gato">🐈 Gato</span></td>
-                    <td>60 g</td>
-                    <td>
-                      <div class="ht-conf">
-                        <div class="conf-bar">
-                          <div class="conf-fill" style="width: 93%"></div>
-                        </div>
-                        <span>93%</span>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>12:48</td>
-                    <td>
-                      <div class="ht-feeder">ESF-001</div>
-                      <div style="font-size: 0.68rem; color: var(--light-mid)">
-                        Del Valle
-                      </div>
-                    </td>
-                    <td><span class="ht-species perro">🐕 Perro</span></td>
-                    <td>85 g</td>
-                    <td>
-                      <div class="ht-conf">
-                        <div class="conf-bar">
-                          <div class="conf-fill" style="width: 97%"></div>
-                        </div>
-                        <span>97%</span>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody id="history-body-extended"></tbody>
               </table>
             </div>
           </div>
@@ -1899,12 +3085,138 @@
          SECCIÓN: DONACIONES
     ══════════════════════════════════════ -->
         <section id="section-donaciones" class="page-section">
-          <div class="placeholder-section">
-            <div class="ph-icon">💚</div>
-            <div class="ph-title">Donaciones</div>
-            <div class="ph-sub">
-              Integra aquí tu módulo de donaciones, reportes de patrocinadores y
-              métricas de impacto.
+          <div class="section-divider" style="margin-top: 0">
+            <div class="sd-label">Donaciones · Stripe</div>
+            <div class="sd-line"></div>
+          </div>
+
+          <!-- KPIs de donaciones -->
+          <div class="kpi-row" style="margin-bottom: 18px">
+            <div class="kpi-card sg">
+              <div class="kpi-label">💚 Balance disponible</div>
+              <div class="kpi-value sg" id="don-balance">—</div>
+              <div class="kpi-change" id="don-balance-sub">
+                <span class="skel skel-text" style="width: 80px"></span>
+              </div>
+            </div>
+            <div class="kpi-card tc">
+              <div class="kpi-label">📥 Donaciones este mes</div>
+              <div class="kpi-value tc" id="don-mes">—</div>
+              <div class="kpi-change" id="don-mes-sub">
+                <span class="skel skel-text" style="width: 80px"></span>
+              </div>
+            </div>
+            <div class="kpi-card sk">
+              <div class="kpi-label">👥 Donadores totales</div>
+              <div class="kpi-value sk" id="don-donadores">—</div>
+              <div class="kpi-change" id="don-donadores-sub">
+                <span class="skel skel-text" style="width: 80px"></span>
+              </div>
+            </div>
+            <div class="kpi-card dn">
+              <div class="kpi-label">🔄 Pendiente de pago</div>
+              <div class="kpi-value dn" id="don-pendiente">—</div>
+              <div class="kpi-change" id="don-pendiente-sub">
+                <span class="skel skel-text" style="width: 80px"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Últimas donaciones -->
+          <div class="card" style="margin-bottom: 18px">
+            <div class="card-header">
+              <div>
+                <div class="card-title">💳 Últimas donaciones</div>
+                <div class="card-sub" id="don-charges-sub">
+                  Cargando desde Stripe…
+                </div>
+              </div>
+              <button class="tb-btn" onclick="syncDonaciones()">
+                🔄 Actualizar
+              </button>
+            </div>
+            <div class="history-body">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Donador</th>
+                    <th>Monto</th>
+                    <th>Método</th>
+                    <th>Estado</th>
+                    <th>Descripción</th>
+                  </tr>
+                </thead>
+                <tbody id="don-charges-body">
+                  <tr class="skel-row">
+                    <td colspan="6">
+                      <span
+                        class="skel skel-text"
+                        style="width: 100%; display: block; height: 0.8rem"
+                      ></span>
+                    </td>
+                  </tr>
+                  <tr class="skel-row">
+                    <td colspan="6">
+                      <span
+                        class="skel skel-text"
+                        style="width: 90%; display: block; height: 0.8rem"
+                      ></span>
+                    </td>
+                  </tr>
+                  <tr class="skel-row">
+                    <td colspan="6">
+                      <span
+                        class="skel skel-text"
+                        style="width: 95%; display: block; height: 0.8rem"
+                      ></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Payouts -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  🏦 Transferencias a cuenta bancaria
+                </div>
+                <div class="card-sub">Payouts de Stripe hacia tu banco</div>
+              </div>
+            </div>
+            <div class="history-body">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Fecha estimada</th>
+                    <th>Descripción</th>
+                  </tr>
+                </thead>
+                <tbody id="don-payouts-body">
+                  <tr class="skel-row">
+                    <td colspan="5">
+                      <span
+                        class="skel skel-text"
+                        style="width: 100%; display: block; height: 0.8rem"
+                      ></span>
+                    </td>
+                  </tr>
+                  <tr class="skel-row">
+                    <td colspan="5">
+                      <span
+                        class="skel skel-text"
+                        style="width: 85%; display: block; height: 0.8rem"
+                      ></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -1913,117 +3225,239 @@
          SECCIÓN: CONFIGURACIÓN
     ══════════════════════════════════════ -->
         <section id="section-configuracion" class="page-section">
-          <div class="section-divider" style="margin-top:0">
+          <div class="section-divider" style="margin-top: 0">
             <div class="sd-label">Configuración del sistema</div>
             <div class="sd-line"></div>
           </div>
 
-          <!-- UMBRALES DE ALERTA -->
-          <div class="card" style="margin-bottom:18px">
+          <!-- TEMA OSCURO -->
+          <div class="card" style="margin-bottom: 18px">
             <div class="card-header">
               <div>
-                <div class="card-title">⚠️ Umbrales de alerta</div>
-                <div class="card-sub">El feeder generará una alerta cuando baje de estos valores</div>
+                <div class="card-title">🎨 Apariencia</div>
+                <div class="card-sub">
+                  Personaliza el aspecto visual del dashboard
+                </div>
               </div>
-              <button class="tb-btn primary" onclick="guardarUmbrales()" id="btn-guardar-umbrales">Guardar cambios</button>
             </div>
-            <div style="padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
-              <div class="cfg-field">
-                <label class="cfg-label">🔋 Batería mínima (%)</label>
-                <input class="cfg-input" type="number" id="cfg-bat" min="5" max="50" value="15">
-                <div class="cfg-hint">Por debajo de este % se marca como alerta</div>
+            <div
+              style="
+                padding: 20px 24px;
+                display: flex;
+                align-items: center;
+                gap: 24px;
+                flex-wrap: wrap;
+              "
+            >
+              <div class="theme-toggle-wrap">
+                <label class="theme-switch" title="Cambiar tema">
+                  <input
+                    type="checkbox"
+                    id="dark-mode-toggle"
+                    onchange="toggleDarkMode(this.checked)"
+                  />
+                  <span class="theme-slider"></span>
+                </label>
+                <div>
+                  <div class="theme-toggle-label" id="theme-label">
+                    Tema claro
+                  </div>
+                  <div class="theme-toggle-sub">
+                    Haz clic para activar el modo oscuro
+                  </div>
+                </div>
               </div>
-              <div class="cfg-field">
-                <label class="cfg-label">💧 Agua mínima (%)</label>
-                <input class="cfg-input" type="number" id="cfg-water" min="5" max="50" value="15">
-                <div class="cfg-hint">Por debajo de este % se genera notificación</div>
-              </div>
-              <div class="cfg-field">
-                <label class="cfg-label">🐕 Comida perros mínima (%)</label>
-                <input class="cfg-input" type="number" id="cfg-dog" min="5" max="50" value="10">
-                <div class="cfg-hint">Umbral para disparo de alerta de comida</div>
-              </div>
-              <div class="cfg-field">
-                <label class="cfg-label">🐈 Comida gatos mínima (%)</label>
-                <input class="cfg-input" type="number" id="cfg-cat" min="5" max="50" value="10">
-                <div class="cfg-hint">Umbral para disparo de alerta de comida</div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                <button
+                  class="tb-btn"
+                  onclick="setTheme('light')"
+                  id="btn-theme-light"
+                  style="gap: 6px; font-size: 0.78rem"
+                >
+                  ☀️ Claro
+                </button>
+                <button
+                  class="tb-btn"
+                  onclick="setTheme('dim')"
+                  id="btn-theme-dim"
+                  style="gap: 6px; font-size: 0.78rem"
+                >
+                  🌆 Dim
+                </button>
+                <button
+                  class="tb-btn"
+                  onclick="setTheme('dark')"
+                  id="btn-theme-dark"
+                  style="gap: 6px; font-size: 0.78rem"
+                >
+                  🌙 Oscuro
+                </button>
+                <button
+                  class="tb-btn"
+                  onclick="setTheme('auto')"
+                  id="btn-theme-auto"
+                  style="gap: 6px; font-size: 0.78rem"
+                >
+                  🖥️ Sistema
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- INTERVALOS DE SYNC -->
-          <div class="card" style="margin-bottom:18px">
+          <div class="card" style="margin-bottom: 18px">
+            <div class="card-header">
+              <div>
+                <div class="card-title">⚠️ Umbrales de alerta</div>
+                <div class="card-sub">
+                  El feeder genera alerta cuando baja de estos valores
+                </div>
+              </div>
+              <button
+                class="tb-btn primary"
+                onclick="guardarUmbrales()"
+                id="btn-guardar-umbrales"
+              >
+                Guardar cambios
+              </button>
+            </div>
+            <div
+              style="
+                padding: 20px 24px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+              "
+            >
+              <div class="cfg-field">
+                <label class="cfg-label">🔋 Batería mínima (%)</label>
+                <input
+                  class="cfg-input"
+                  type="number"
+                  id="cfg-bat"
+                  min="5"
+                  max="50"
+                  value="15"
+                />
+                <div class="cfg-hint">
+                  Por debajo de este % se marca como alerta
+                </div>
+              </div>
+              <div class="cfg-field">
+                <label class="cfg-label">💧 Agua mínima (%)</label>
+                <input
+                  class="cfg-input"
+                  type="number"
+                  id="cfg-water"
+                  min="5"
+                  max="50"
+                  value="15"
+                />
+                <div class="cfg-hint">
+                  Por debajo de este % se genera notificación
+                </div>
+              </div>
+              <div class="cfg-field">
+                <label class="cfg-label">🐕 Comida perros mínima (%)</label>
+                <input
+                  class="cfg-input"
+                  type="number"
+                  id="cfg-dog"
+                  min="5"
+                  max="50"
+                  value="10"
+                />
+                <div class="cfg-hint">Umbral para disparo de alerta</div>
+              </div>
+              <div class="cfg-field">
+                <label class="cfg-label">🐈 Comida gatos mínima (%)</label>
+                <input
+                  class="cfg-input"
+                  type="number"
+                  id="cfg-cat"
+                  min="5"
+                  max="50"
+                  value="10"
+                />
+                <div class="cfg-hint">Umbral para disparo de alerta</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 18px">
             <div class="card-header">
               <div>
                 <div class="card-title">🔄 Intervalos de sincronización</div>
-                <div class="card-sub">Frecuencia con la que el dashboard pide datos al servidor</div>
+                <div class="card-sub">
+                  Frecuencia con la que el dashboard pide datos al servidor
+                </div>
               </div>
-              <button class="tb-btn primary" onclick="guardarIntervalos()" id="btn-guardar-intervalos">Aplicar</button>
+              <button
+                class="tb-btn primary"
+                onclick="guardarIntervalos()"
+                id="btn-guardar-intervalos"
+              >
+                Aplicar
+              </button>
             </div>
-            <div style="padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div
+              style="
+                padding: 20px 24px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+              "
+            >
               <div class="cfg-field">
                 <label class="cfg-label">📡 Sync de estado (segundos)</label>
-                <input class="cfg-input" type="number" id="cfg-sync-dashboard" min="10" max="300" value="30">
+                <input
+                  class="cfg-input"
+                  type="number"
+                  id="cfg-sync-dashboard"
+                  min="10"
+                  max="300"
+                  value="30"
+                />
                 <div class="cfg-hint">Actualiza KPIs, gauges y mapa</div>
               </div>
               <div class="cfg-field">
                 <label class="cfg-label">🕘 Sync de historial (segundos)</label>
-                <input class="cfg-input" type="number" id="cfg-sync-history" min="5" max="120" value="15">
+                <input
+                  class="cfg-input"
+                  type="number"
+                  id="cfg-sync-history"
+                  min="5"
+                  max="120"
+                  value="15"
+                />
                 <div class="cfg-hint">Actualiza la tabla de detecciones</div>
               </div>
             </div>
           </div>
 
-          <!-- INFO DEL FEEDER -->
-          <div class="card" style="margin-bottom:18px">
-            <div class="card-header">
-              <div>
-                <div class="card-title">🐾 Información del feeder</div>
-                <div class="card-sub">Datos del dispositivo ESF-001 registrado en el sistema</div>
-              </div>
-            </div>
-            <div style="padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:20px" id="cfg-feeder-info">
-              <div class="cfg-field">
-                <label class="cfg-label">ID del feeder</label>
-                <div class="cfg-static" id="cfg-feeder-id">—</div>
-              </div>
-              <div class="cfg-field">
-                <label class="cfg-label">Nombre</label>
-                <div class="cfg-static" id="cfg-feeder-name">—</div>
-              </div>
-              <div class="cfg-field">
-                <label class="cfg-label">Ubicación</label>
-                <div class="cfg-static" id="cfg-feeder-location">—</div>
-              </div>
-              <div class="cfg-field">
-                <label class="cfg-label">Estado actual</label>
-                <div class="cfg-static" id="cfg-feeder-status">—</div>
-              </div>
-              <div class="cfg-field">
-                <label class="cfg-label">Última sincronización</label>
-                <div class="cfg-static" id="cfg-feeder-lastsync">—</div>
-              </div>
-              <div class="cfg-field">
-                <label class="cfg-label">Precisión IA</label>
-                <div class="cfg-static" id="cfg-feeder-ai">—</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SESIÓN -->
           <div class="card">
             <div class="card-header">
-              <div>
-                <div class="card-title">👤 Sesión</div>
-                <div class="card-sub">Gestión de acceso al panel</div>
-              </div>
+              <div class="card-title">👤 Sesión</div>
             </div>
-            <div style="padding:20px 24px;display:flex;gap:12px;align-items:center">
-              <a href="/logout/" class="tb-btn danger-btn" style="text-decoration:none">🚪 Cerrar sesión</a>
-              <span style="font-size:.78rem;color:var(--light-mid)">Te redirigirá a la pantalla de login</span>
+            <div
+              style="
+                padding: 20px 24px;
+                display: flex;
+                gap: 12px;
+                align-items: center;
+              "
+            >
+              <a
+                href="/logout/"
+                class="tb-btn danger-btn"
+                style="text-decoration: none"
+              >
+                🚪 Cerrar sesión
+              </a>
+              <span style="font-size: 0.78rem; color: var(--light-mid)">
+                Te redirigirá a la pantalla de login
+              </span>
             </div>
           </div>
-
         </section>
       </div>
       <!-- /content -->
@@ -2087,7 +3521,81 @@
       })();
 
       // ═══════════════════════════════════════════════
-      //  NAVEGACIÓN POR SECCIONES
+      //  TEMA OSCURO
+      // ═══════════════════════════════════════════════
+      (function initTheme() {
+        const saved = localStorage.getItem("eco-theme") || "auto";
+        applyTheme(saved, false);
+      })();
+
+      function applyTheme(mode, save) {
+        const html = document.documentElement;
+        const toggle = document.getElementById("dark-mode-toggle");
+        const label = document.getElementById("theme-label");
+        const wrap = toggle && toggle.closest(".theme-toggle-wrap");
+        const sub = wrap && wrap.querySelector(".theme-toggle-sub");
+
+        let isDark = false;
+        if (mode === "dark" || mode === "dim") isDark = true;
+        else if (mode === "auto")
+          isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        const resolvedMode =
+          mode === "auto" ? (isDark ? "dark" : "light") : mode;
+
+        html.setAttribute("data-theme", resolvedMode);
+
+        if (toggle) toggle.checked = isDark;
+
+        const labels = {
+          light: "Tema claro",
+          dim: "Dim",
+          dark: "Tema oscuro",
+          auto: "Sistema",
+        };
+        const subs = {
+          light: "Haz clic para activar el modo oscuro",
+          dim: "Tono medio — menos intenso que el oscuro",
+          dark: "Haz clic para volver al modo claro",
+          auto: "Sigue la preferencia de tu sistema operativo",
+        };
+        if (label) label.textContent = labels[mode] || mode;
+        if (sub) sub.textContent = subs[mode] || "";
+
+        // Highlight active button
+        ["light", "dim", "dark", "auto"].forEach((t) => {
+          const btn = document.getElementById("btn-theme-" + t);
+          if (!btn) return;
+          const active = t === mode;
+          btn.style.borderColor = active ? "var(--sage-dark)" : "";
+          btn.style.color = active ? "var(--sage-dark)" : "";
+          btn.style.background = active ? "rgba(136,145,247,0.1)" : "";
+        });
+
+        if (save !== false) localStorage.setItem("eco-theme", mode);
+
+        // Update map tiles only if maps have been initialized (guard against TDZ)
+        try {
+          updateMapTiles();
+        } catch (e) {}
+      }
+
+      function setTheme(mode) {
+        applyTheme(mode, true);
+      }
+
+      function toggleDarkMode(checked) {
+        applyTheme(checked ? "dark" : "light", true);
+      }
+
+      // Listen for system theme change when in "auto" mode
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", () => {
+          if ((localStorage.getItem("eco-theme") || "auto") === "auto")
+            applyTheme("auto", false);
+        });
+
       // ═══════════════════════════════════════════════
       const SECTION_TITLES = {
         resumen: "Resumen general",
@@ -2101,26 +3609,35 @@
       };
 
       function switchSection(id) {
-        document
-          .querySelectorAll(".page-section")
-          .forEach((s) => s.classList.remove("active"));
+        document.querySelectorAll(".page-section").forEach((s) => {
+          s.classList.remove("active");
+          s.style.display = "none";
+        });
         document
           .querySelectorAll(".nav-item")
           .forEach((n) => n.classList.remove("active"));
-        document.getElementById("section-" + id)?.classList.add("active");
-        document
-          .querySelector(`.nav-item[data-section="${id}"]`)
-          ?.classList.add("active");
-        document.getElementById("page-title").textContent =
-          SECTION_TITLES[id] || id;
+        const target = document.getElementById("section-" + id);
+        if (target) {
+          target.classList.add("active");
+          target.style.display = "block";
+        }
+        const nav = document.querySelector(`.nav-item[data-section="${id}"]`);
+        if (nav) nav.classList.add("active");
+        const titleEl = document.getElementById("page-title");
+        if (titleEl) titleEl.textContent = SECTION_TITLES[id] || id;
         window.scrollTo({ top: 0, behavior: "smooth" });
         if (id === "mapa") setTimeout(initMapFull, 60);
+        if (id === "donaciones") syncDonaciones();
       }
-      document
-        .querySelectorAll(".nav-item[data-section]")
-        .forEach((el) =>
-          el.addEventListener("click", () => switchSection(el.dataset.section)),
-        );
+      document.querySelectorAll(".nav-item[data-section]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          switchSection(el.dataset.section);
+        });
+      });
+      document.querySelectorAll(".page-section").forEach((s) => {
+        s.style.display = s.classList.contains("active") ? "block" : "none";
+      });
 
       // ═══════════════════════════════════════════════
       //  NOTIFICACIONES
@@ -2259,8 +3776,8 @@
       <div class="fli-location">📍 ${f.name} · ${f.lastSync}</div>
       <div class="mini-gauges">
         <div><div class="mg-label">🔋 Bat.</div><div class="mg-bar"><div class="mg-fill ${gc(f.battery)}" style="width:${f.battery}%"></div></div><div class="mg-val">${f.battery}%</div></div>
-        <div><div class="mg-label">🐕</div><div class="mg-bar"><div class="mg-fill ${gc(f.foodDog)}" style="width:${f.foodDog}%"></div></div><div class="mg-val">${f.foodDog}%</div></div>
-        <div><div class="mg-label">🐈</div><div class="mg-bar"><div class="mg-fill ${gc(f.foodCat)}" style="width:${f.foodCat}%"></div></div><div class="mg-val">${f.foodCat}%</div></div>
+        <div><div class="mg-label" style="font-size:.6rem;letter-spacing:0">🦴 Dog Food</div><div class="mg-bar"><div class="mg-fill ${gc(f.foodDog)}" style="width:${f.foodDog}%"></div></div><div class="mg-val">${f.foodDog}%</div></div>
+        <div><div class="mg-label" style="font-size:.6rem;letter-spacing:0">🐟 Cat Food</div><div class="mg-bar"><div class="mg-fill ${gc(f.foodCat)}" style="width:${f.foodCat}%"></div></div><div class="mg-val">${f.foodCat}%</div></div>
         <div><div class="mg-label">💧</div><div class="mg-bar"><div class="mg-fill sky" style="width:${f.water}%"></div></div><div class="mg-val">${f.water}%</div></div>
       </div>
     </div>`,
@@ -2307,10 +3824,10 @@
           <div class="gauge-item"><div class="gauge-label">Batería</div>
             <div class="gauge-ring-wrap"><svg viewBox="0 0 64 64"><circle class="gauge-track" cx="32" cy="32" r="26"/><circle class="gauge-fill" cx="32" cy="32" r="26" stroke="${sBat}" stroke-dasharray="163.4" stroke-dashoffset="${pct(f.battery)}"/></svg>
             <div class="gauge-text" style="color:${f.battery < 20 ? "var(--danger)" : "inherit"}">${f.battery}%</div></div></div>
-          <div class="gauge-item"><div class="gauge-label">🐕 Comida</div>
+          <div class="gauge-item"><div class="gauge-label">Dog food</div>
             <div class="gauge-ring-wrap"><svg viewBox="0 0 64 64"><circle class="gauge-track" cx="32" cy="32" r="26"/><circle class="gauge-fill" cx="32" cy="32" r="26" stroke="${sDog}" stroke-dasharray="163.4" stroke-dashoffset="${pct(f.foodDog)}"/></svg>
             <div class="gauge-text" style="color:${f.foodDog < 20 ? "var(--danger)" : "inherit"}">${f.foodDog}%</div></div></div>
-          <div class="gauge-item"><div class="gauge-label">🐈 Comida</div>
+          <div class="gauge-item"><div class="gauge-label">Cat food</div>
             <div class="gauge-ring-wrap"><svg viewBox="0 0 64 64"><circle class="gauge-track" cx="32" cy="32" r="26"/><circle class="gauge-fill" cx="32" cy="32" r="26" stroke="${sCat}" stroke-dasharray="163.4" stroke-dashoffset="${pct(f.foodCat)}"/></svg>
             <div class="gauge-text" style="color:${f.foodCat < 20 ? "var(--danger)" : "inherit"}">${f.foodCat}%</div></div></div>
           <div class="gauge-item"><div class="gauge-label">💧 Agua</div>
@@ -2330,26 +3847,196 @@
         // Actualizar pins del mapa
         _refreshMapPins(feeders);
         _lastFeeders = feeders;
-        poblarInfoFeeder(feeders);
+        renderFeederCards(feeders);
       }
 
+      // Constante: máximo de filas visibles en el panel de resumen
+      const HISTORY_PREVIEW_MAX = 5;
+
       function addHistoryEvent(ev) {
-        const row = `
+        const rowInner = `
     <td>${ev.time}</td>
     <td><div class="ht-feeder">${ev.feederId}</div><div style="font-size:.68rem;color:var(--light-mid)">${ev.feederName}</div></td>
     <td><span class="ht-species ${ev.species}">${ev.emoji} ${ev.label}</span></td>
     <td>${ev.grams > 0 ? ev.grams + " g" : "—"}</td>
-    <td><div class="ht-conf"><div class="conf-bar"><div class="conf-fill" style="width:${ev.confidence}%${ev.species === "alerta" ? ";background:var(--danger)" : ""}"></div></div><span>${ev.confidence}%</span></div></td>`;
+    <td><div class="ht-conf"><div class="conf-bar"><div class="conf-fill" style="width:${ev.confidence}%${ev.species === "alerta" ? ";background:var(--danger)" : ""}"></div></div><span>${ev.confidence}%</span></div></td>
+    <td style="text-align:right">
+      <button class="ht-delete-btn" title="Eliminar evento" onclick="event.stopPropagation();deleteHistoryRow(this)">🗑</button>
+    </td>`;
+
         ["history-body", "history-body-extended"].forEach((id) => {
           const tbody = document.getElementById(id);
           if (!tbody) return;
-          // Quitar skeletons si existen
           tbody.querySelectorAll(".skel-row").forEach((r) => r.remove());
           const tr = document.createElement("tr");
+          tr.className = "clickable-row";
           tr.style.animation = "slideIn .35s ease";
-          tr.innerHTML = row;
+          tr.dataset.ev = JSON.stringify(ev);
+          tr.title = "Ver detalle del evento";
+          tr.addEventListener("click", function (e) {
+            if (e.target.closest(".ht-delete-btn")) return;
+            const evData = JSON.parse(this.dataset.ev);
+            const isExtended =
+              this.closest("tbody")?.id === "history-body-extended";
+            if (isExtended) {
+              // Historial completo → expandir inline, no modal
+              toggleInlineEventDetail(this, evData);
+            } else {
+              // Panel de resumen → navegar a resumen y abrir modal
+              const activeSection = document.querySelector(
+                ".page-section.active",
+              );
+              if (activeSection && activeSection.id !== "section-resumen") {
+                switchSection("resumen");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setTimeout(() => openEventModal(evData), 250);
+              } else {
+                openEventModal(evData);
+              }
+            }
+          });
+          tr.innerHTML = rowInner;
           tbody.insertBefore(tr, tbody.firstChild);
-          while (tbody.children.length > 20) tbody.removeChild(tbody.lastChild);
+          // Resumen: máximo HISTORY_PREVIEW_MAX filas
+          // Historial extendido: máximo 20
+          const max = id === "history-body" ? HISTORY_PREVIEW_MAX : 20;
+          while (tbody.children.length > max)
+            tbody.removeChild(tbody.lastChild);
+        });
+        _updateHistoryCounter();
+      }
+
+      function deleteHistoryRow(btn) {
+        const tr = btn.closest("tr");
+        if (!tr) return;
+
+        // ── Guardar fingerprint en localStorage para que no vuelva en el sync ──
+        try {
+          const ev = tr.dataset.ev ? JSON.parse(tr.dataset.ev) : null;
+          if (ev) {
+            const fp = `${ev.time}|${ev.feederId}|${ev.species}`;
+            const saved = JSON.parse(
+              localStorage.getItem("history_hidden_fps") || "[]",
+            );
+            if (!saved.includes(fp)) {
+              saved.push(fp);
+              localStorage.setItem("history_hidden_fps", JSON.stringify(saved));
+            }
+          }
+        } catch (e) {}
+
+        // Obtener posición para sincronizar ambas tablas
+        const tbody = tr.closest("tbody");
+        const idx = Array.from(tbody.children).indexOf(tr);
+
+        // Cerrar detalle inline si estaba abierto
+        const next = tr.nextElementSibling;
+        if (next && next.classList.contains("ev-inline-row")) next.remove();
+
+        // Animación de salida
+        tr.style.transition = "opacity 0.22s, transform 0.22s";
+        tr.style.opacity = "0";
+        tr.style.transform = "translateX(12px)";
+        setTimeout(() => {
+          tr.remove();
+          // Eliminar la misma fila en la otra tabla
+          const otherId =
+            tbody.id === "history-body"
+              ? "history-body-extended"
+              : "history-body";
+          const otherTbody = document.getElementById(otherId);
+          if (otherTbody && otherTbody.children[idx]) {
+            otherTbody.children[idx].remove();
+          }
+          _updateHistoryCounter();
+          _checkHistoryEmpty();
+        }, 220);
+      }
+
+      function clearHistory() {
+        // Leer los fingerprints de todos los eventos actualmente visibles
+        // y acumularlos con los que ya estaban guardados
+        const existing = [];
+        try {
+          const saved = JSON.parse(
+            localStorage.getItem("history_hidden_fps") || "[]",
+          );
+          existing.push(...saved);
+        } catch (e) {}
+
+        // Cada fila tiene: hora (td[0]), feeder (td[1] .ht-feeder), especie (td[2] .ht-species)
+        const tbody = document.getElementById("history-body-extended");
+        if (tbody) {
+          Array.from(tbody.querySelectorAll("tr")).forEach((tr) => {
+            const tds = tr.querySelectorAll("td");
+            if (tds.length < 3) return;
+            const time = tds[0].textContent.trim();
+            const feeder =
+              tr.querySelector(".ht-feeder")?.textContent.trim() || "";
+            const species =
+              tr
+                .querySelector(".ht-species")
+                ?.className.replace("ht-species", "")
+                .trim() || "";
+            const fp = `${time}|${feeder}|${species}`;
+            if (fp !== "||" && !existing.includes(fp)) existing.push(fp);
+          });
+        }
+        try {
+          localStorage.setItem("history_hidden_fps", JSON.stringify(existing));
+        } catch (e) {}
+
+        // Limpiar el DOM
+        ["history-body", "history-body-extended"].forEach((id) => {
+          const tb = document.getElementById(id);
+          if (!tb) return;
+          tb.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
+        });
+        _updateHistoryCounter();
+      }
+
+      function _updateHistoryCounter() {
+        const tbody = document.getElementById("history-body");
+        const extTbody = document.getElementById("history-body-extended");
+        if (!tbody) return;
+        // Contar filas reales (sin el mensaje vacío)
+        const visibleRows = Array.from(tbody.children).filter(
+          (tr) =>
+            !tr.querySelector("td[colspan]") &&
+            !tr.classList.contains("skel-row"),
+        ).length;
+        const totalRows = extTbody
+          ? Array.from(extTbody.children).filter(
+              (tr) =>
+                !tr.querySelector("td[colspan]") &&
+                !tr.classList.contains("skel-row"),
+            ).length
+          : visibleRows;
+
+        const countEl = document.getElementById("history-see-all-count");
+        if (countEl) {
+          if (totalRows === 0) {
+            countEl.textContent = "";
+          } else if (totalRows > HISTORY_PREVIEW_MAX) {
+            countEl.textContent = `Mostrando ${visibleRows} de ${totalRows} eventos`;
+          } else {
+            countEl.textContent = `${totalRows} evento${totalRows !== 1 ? "s" : ""}`;
+          }
+        }
+      }
+
+      function _checkHistoryEmpty() {
+        ["history-body", "history-body-extended"].forEach((id) => {
+          const tbody = document.getElementById(id);
+          if (!tbody) return;
+          const hasRealRows = Array.from(tbody.children).some(
+            (tr) =>
+              !tr.querySelector("td[colspan]") &&
+              !tr.classList.contains("skel-row"),
+          );
+          if (!hasRealRows) {
+            tbody.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
+          }
         });
       }
 
@@ -2418,16 +4105,26 @@
             data.charts.trend,
           );
 
-          // Generar alertas automáticas si algún feeder está en warn
+          // Alertas del ESP32 vía /api/feeder/alert/
+          if (data.alerts && data.alerts.length > 0) {
+            data.alerts.forEach((a) => {
+              const ya = notifStore.find((n) => n.title === a.title);
+              if (!ya) addNotification(a);
+            });
+          }
+          // Alertas automáticas por status warn
           data.feeders.forEach((f) => {
             if (f.status === "warn" && f.alertMessage) {
               const ya = notifStore.find((n) => n.title.includes(f.id));
               if (!ya)
                 addNotification({
                   type: "warn",
-                  title: `${f.id} — ${f.alertMessage}`,
-                  description: `Niveles bajos detectados. Batería: ${f.battery}% · Comida 🐕: ${f.foodDog}% · Comida 🐈: ${f.foodCat}%`,
-                  time: "Ahora",
+                  title: `${f.id} — Niveles bajos`,
+                  description: `Batería: ${f.battery}% · Dog food: ${f.foodDog}% · Cat food: ${f.foodCat}%`,
+                  time: new Date().toLocaleTimeString("es-MX", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }),
                   location: f.name,
                 });
             }
@@ -2453,21 +4150,40 @@
           if (!res.ok) throw new Error("HTTP " + res.status);
           const data = await res.json();
 
+          // ── Filtro de limpieza ──────────────────────────────────────────
+          // Si el usuario limpió el historial, guardamos en localStorage
+          // los "fingerprints" (hora+feeder) de cada evento visible.
+          // Al recargar, se saltan esos eventos específicos.
+          let hiddenFingerprints = [];
+          try {
+            hiddenFingerprints = JSON.parse(
+              localStorage.getItem("history_hidden_fps") || "[]",
+            );
+          } catch (e) {}
+
+          const _fp = (ev) => `${ev.time}|${ev.feederId}|${ev.species}`;
+          const eventos = hiddenFingerprints.length
+            ? data.events.filter((ev) => !hiddenFingerprints.includes(_fp(ev)))
+            : data.events;
+          // ──────────────────────────────────────────────────────────────
+
           // Limpiar tablas (skeletons y filas viejas)
           ["history-body", "history-body-extended"].forEach((id) => {
             const tb = document.getElementById(id);
             if (tb) tb.innerHTML = "";
           });
 
-          if (data.events.length === 0) {
+          if (eventos.length === 0) {
             ["history-body", "history-body-extended"].forEach((id) => {
               const tb = document.getElementById(id);
               if (tb)
-                tb.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados aún.</td></tr>`;
+                tb.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
             });
+            _updateHistoryCounter();
             return;
           }
-          data.events.forEach(addHistoryEvent);
+          eventos.forEach(addHistoryEvent);
+          _updateHistoryCounter();
         } catch (err) {
           console.error("[syncHistory]", err);
         }
@@ -2489,7 +4205,9 @@
       let _mapSmall = null,
         _mapFull = null,
         _mapMarkers = [],
-        _lastFeeders = [];
+        _lastFeeders = [],
+        _tileSmall = null,
+        _tileFull = null;
       const _SC = { online: "#4d8c52", warn: "#c97b4b", offline: "#8a9f8b" };
       const _SL = {
         online: "● En línea",
@@ -2513,8 +4231,8 @@
     <div style="font-size:.97rem;font-weight:500;color:#2d3a2e;margin:3px 0 10px">${f.name}</div>
     <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.75rem;color:#5a6b5b">
       <span>🔋 Batería</span> <b style="color:${f.battery < 20 ? "#c03030" : "#2d3a2e"}">${f.battery}%</b>
-      <span>🐕 Comida</span>  <b style="color:${f.foodDog < 20 ? "#c03030" : "#2d3a2e"}">${f.foodDog}%</b>
-      <span>🐈 Comida</span>  <b style="color:${f.foodCat < 20 ? "#c03030" : "#2d3a2e"}">${f.foodCat}%</b>
+      <span>Dog food</span>  <b style="color:${f.foodDog < 20 ? "#c03030" : "#2d3a2e"}">${f.foodDog}%</b>
+      <span>Cat food</span>  <b style="color:${f.foodCat < 20 ? "#c03030" : "#2d3a2e"}">${f.foodCat}%</b>
       <span>💧 Agua</span>    <b>${f.water}%</b>
     </div>
     <div style="margin-top:9px;padding-top:8px;border-top:1px solid #e2d9cc;font-size:.68rem;color:${c};font-weight:500">
@@ -2536,18 +4254,46 @@
       }
 
       // Mapa pequeño del resumen — se inicia al cargar la página
+
+      function _tileUrl(dark, labels) {
+        // In dark mode we use light tiles + CSS invert filter for better quality
+        const style = labels ? "light_all" : "light_nolabels";
+        return `https://{s}.basemaps.cartocdn.com/${style}/{z}/{x}/{y}{r}.png`;
+      }
+
+      function updateMapTiles() {
+        const theme = document.documentElement.getAttribute("data-theme");
+        const isDark = theme === "dark" || theme === "dim";
+        if (_mapSmall && _tileSmall) {
+          _mapSmall.removeLayer(_tileSmall);
+          _tileSmall = L.tileLayer(_tileUrl(isDark, true), {
+            attribution: "© CartoDB",
+            maxZoom: 19,
+          }).addTo(_mapSmall);
+        }
+        if (_mapFull && _tileFull) {
+          _mapFull.removeLayer(_tileFull);
+          _tileFull = L.tileLayer(_tileUrl(isDark, false), {
+            attribution: "© CartoDB",
+            maxZoom: 19,
+          }).addTo(_mapFull);
+        }
+      }
+
       function initMapSmall() {
         if (_mapSmall) return;
+        const isDark =
+          document.documentElement.getAttribute("data-theme") === "dark";
         _mapSmall = L.map("feeder-map", {
           center: [25.6728356714816, -100.25332267854714],
           zoom: 15,
           zoomControl: true,
           scrollWheelZoom: false,
         });
-        L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-          { attribution: "© CartoDB", maxZoom: 19 },
-        ).addTo(_mapSmall);
+        _tileSmall = L.tileLayer(_tileUrl(isDark, true), {
+          attribution: "© CartoDB",
+          maxZoom: 19,
+        }).addTo(_mapSmall);
       }
 
       // Mapa completo de la sección Mapa — lazy init
@@ -2556,15 +4302,17 @@
           _mapFull.invalidateSize();
           return;
         }
+        const isDark =
+          document.documentElement.getAttribute("data-theme") === "dark";
         _mapFull = L.map("real-map", {
           center: [25.6728356714816, -100.25332267854714],
           zoom: 13,
           zoomControl: true,
         });
-        L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
-          { attribution: "© CartoDB", maxZoom: 19 },
-        ).addTo(_mapFull);
+        _tileFull = L.tileLayer(_tileUrl(isDark, false), {
+          attribution: "© CartoDB",
+          maxZoom: 19,
+        }).addTo(_mapFull);
         if (_lastFeeders.length) _addPins(_mapFull, _lastFeeders);
       }
 
@@ -2746,8 +4494,37 @@
       });
 
       // Filtros de historial
+      function filterHistory(btn, tbodyId) {
+        // Marcar botón activo dentro del mismo grupo
+        btn
+          .closest(".history-filters, .card-header")
+          .querySelectorAll(".hf-btn[data-filter]")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const filter = btn.dataset.filter;
+        const tbody = document.getElementById(tbodyId);
+        if (!tbody) return;
+
+        tbody.querySelectorAll("tr").forEach((row) => {
+          if (filter === "todos") {
+            row.style.display = "";
+          } else {
+            const sp = row.querySelector(".ht-species");
+            if (!sp) {
+              row.style.display = "";
+              return;
+            }
+            row.style.display = sp.classList.contains(filter) ? "" : "none";
+          }
+        });
+      }
+
+      // Mantener active en botones sin data-filter (7D/30D/90D)
       document
-        .querySelectorAll(".history-filters .hf-btn, .card-header .hf-btn")
+        .querySelectorAll(
+          ".history-filters .hf-btn:not([data-filter]), .card-header .hf-btn:not([data-filter])",
+        )
         .forEach((btn) =>
           btn.addEventListener("click", () => {
             btn
@@ -2773,19 +4550,88 @@
         .forEach((el) => observer.observe(el));
 
       // ═══════════════════════════════════════════════
+      //  MOBILE SIDEBAR
+      // ═══════════════════════════════════════════════
+      function toggleMobileSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
+        document.body.style.overflow = sidebar.classList.contains("open")
+          ? "hidden"
+          : "";
+      }
+
+      function closeMobileSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      // Cierra el sidebar móvil al navegar a una sección
+      (function () {
+        const origSwitch = switchSection;
+        window.switchSection = function (id) {
+          origSwitch(id);
+          closeMobileSidebar();
+        };
+      })();
+
+      // ═══════════════════════════════════════════════
+      //  MOBILE DESKTOP RECOMMENDATION BANNER
+      // ═══════════════════════════════════════════════
+      function closeMobileBanner() {
+        const banner = document.getElementById("mobile-banner");
+        if (!banner) return;
+        banner.style.animation = "none";
+        banner.style.opacity = "0";
+        banner.style.transform = "translateX(-50%) translateY(20px)";
+        banner.style.transition = "opacity 0.25s ease, transform 0.25s ease";
+        setTimeout(() => (banner.style.display = "none"), 260);
+        try {
+          sessionStorage.setItem("mobile_banner_dismissed", "1");
+        } catch (e) {}
+      }
+
+      (function showMobileBannerIfNeeded() {
+        const isMobile =
+          window.innerWidth <= 768 ||
+          /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+        if (!isMobile) return;
+        let dismissed = false;
+        try {
+          dismissed = sessionStorage.getItem("mobile_banner_dismissed") === "1";
+        } catch (e) {}
+        if (dismissed) return;
+        const banner = document.getElementById("mobile-banner");
+        if (!banner) return;
+        setTimeout(() => {
+          banner.style.display = "flex";
+        }, 800);
+      })();
+
+      // ═══════════════════════════════════════════════
       //  ARRANQUE
       // ═══════════════════════════════════════════════
+
+      // Declaraciones elevadas para evitar TDZ
+      let _syncDashInterval, _syncHistInterval;
+      let _currentEventData = null;
+      let _selectedPhotoFile = null;
+
       initMapSmall(); // mapa del resumen
       renderNotifications(); // paneles de alertas vacíos
-      cargarSettings();
       syncDashboard(); // carga inicial de feeders + gráficas
       syncHistory(); // carga inicial del historial
 
       // Polling: datos cada 30s, historial cada 15s
-      const _sd0 = parseInt(localStorage.getItem('cfg_sync_d') || '30');
-      const _sh0 = parseInt(localStorage.getItem('cfg_sync_h') || '15');
+      cargarSettings();
+      const _sd0 = parseInt(localStorage.getItem("cfg_sync_d") || "30");
+      const _sh0 = parseInt(localStorage.getItem("cfg_sync_h") || "15");
       _syncDashInterval = setInterval(syncDashboard, _sd0 * 1000);
-      _syncHistInterval = setInterval(syncHistory,   _sh0 * 1000);
+      _syncHistInterval = setInterval(syncHistory, _sh0 * 1000);
 
       // ═══════════════════════════════════════════════
       //  MODAL — BORRAR TODOS LOS DATOS
@@ -2842,7 +4688,7 @@
           ["history-body", "history-body-extended"].forEach((id) => {
             const tb = document.getElementById(id);
             if (tb)
-              tb.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
+              tb.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
           });
           notifStore.length = 0;
           renderNotifications();
@@ -2881,63 +4727,763 @@
       }
 
       // ════════════════════════════════════════
-      //  CONFIGURACIÓN
+      //  CONFIGURACIÓN (localStorage)
       // ════════════════════════════════════════
-      let _syncDashInterval, _syncHistInterval;
 
       function cargarSettings() {
-        const fields = {
-          'cfg-bat':              localStorage.getItem('cfg_bat')    || '15',
-          'cfg-water':            localStorage.getItem('cfg_water')  || '15',
-          'cfg-dog':              localStorage.getItem('cfg_dog')    || '10',
-          'cfg-cat':              localStorage.getItem('cfg_cat')    || '10',
-          'cfg-sync-dashboard':   localStorage.getItem('cfg_sync_d') || '30',
-          'cfg-sync-history':     localStorage.getItem('cfg_sync_h') || '15',
+        const map = {
+          "cfg-bat": localStorage.getItem("cfg_bat") || "15",
+          "cfg-water": localStorage.getItem("cfg_water") || "15",
+          "cfg-dog": localStorage.getItem("cfg_dog") || "10",
+          "cfg-cat": localStorage.getItem("cfg_cat") || "10",
+          "cfg-sync-dashboard": localStorage.getItem("cfg_sync_d") || "30",
+          "cfg-sync-history": localStorage.getItem("cfg_sync_h") || "15",
         };
-        Object.entries(fields).forEach(([id, val]) => {
+        Object.entries(map).forEach(([id, v]) => {
           const el = document.getElementById(id);
-          if (el) el.value = val;
+          if (el) el.value = v;
         });
       }
 
       function guardarUmbrales() {
-        localStorage.setItem('cfg_bat',   document.getElementById('cfg-bat').value);
-        localStorage.setItem('cfg_water', document.getElementById('cfg-water').value);
-        localStorage.setItem('cfg_dog',   document.getElementById('cfg-dog').value);
-        localStorage.setItem('cfg_cat',   document.getElementById('cfg-cat').value);
-        const btn = document.getElementById('btn-guardar-umbrales');
-        btn.textContent = '✓ Guardado'; btn.style.background = 'var(--ok)';
-        setTimeout(() => { btn.textContent = 'Guardar cambios'; btn.style.background = ''; }, 2000);
+        localStorage.setItem(
+          "cfg_bat",
+          document.getElementById("cfg-bat").value,
+        );
+        localStorage.setItem(
+          "cfg_water",
+          document.getElementById("cfg-water").value,
+        );
+        localStorage.setItem(
+          "cfg_dog",
+          document.getElementById("cfg-dog").value,
+        );
+        localStorage.setItem(
+          "cfg_cat",
+          document.getElementById("cfg-cat").value,
+        );
+        const btn = document.getElementById("btn-guardar-umbrales");
+        btn.textContent = "✓ Guardado";
+        btn.style.background = "var(--ok)";
+        setTimeout(() => {
+          btn.textContent = "Guardar cambios";
+          btn.style.background = "";
+        }, 2000);
       }
 
       function guardarIntervalos() {
-        const sd = parseInt(document.getElementById('cfg-sync-dashboard').value) || 30;
-        const sh = parseInt(document.getElementById('cfg-sync-history').value)   || 15;
-        localStorage.setItem('cfg_sync_d', sd);
-        localStorage.setItem('cfg_sync_h', sh);
+        const sd =
+          parseInt(document.getElementById("cfg-sync-dashboard").value) || 30;
+        const sh =
+          parseInt(document.getElementById("cfg-sync-history").value) || 15;
+        localStorage.setItem("cfg_sync_d", sd);
+        localStorage.setItem("cfg_sync_h", sh);
         clearInterval(_syncDashInterval);
         clearInterval(_syncHistInterval);
         _syncDashInterval = setInterval(syncDashboard, sd * 1000);
-        _syncHistInterval = setInterval(syncHistory,   sh * 1000);
-        const btn = document.getElementById('btn-guardar-intervalos');
-        btn.textContent = '✓ Aplicado'; btn.style.background = 'var(--ok)';
-        setTimeout(() => { btn.textContent = 'Aplicar'; btn.style.background = ''; }, 2000);
+        _syncHistInterval = setInterval(syncHistory, sh * 1000);
+        const btn = document.getElementById("btn-guardar-intervalos");
+        btn.textContent = "✓ Aplicado";
+        btn.style.background = "var(--ok)";
+        setTimeout(() => {
+          btn.textContent = "Aplicar";
+          btn.style.background = "";
+        }, 2000);
       }
 
-      function poblarInfoFeeder(feeders) {
-        if (!feeders || !feeders.length) return;
-        const f = feeders[0];
-        const SL = { online:'🟢 En línea', warn:'🟡 Alerta', offline:'🔴 Sin conexión' };
-        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-        set('cfg-feeder-id',       f.id);
-        set('cfg-feeder-name',     f.name);
-        set('cfg-feeder-location', f.location);
-        set('cfg-feeder-status',   SL[f.status] || f.status);
-        set('cfg-feeder-lastsync', f.lastSync);
-        set('cfg-feeder-ai',       (f.aiAccuracy || '—') + (f.aiAccuracy ? '%' : ''));
+      // ════════════════════════════════════════
+      //  SECCIÓN TODOS LOS FEEDERS — cards expandibles
+      // ════════════════════════════════════════
+      function renderFeederCards(feeders) {
+        const container = document.getElementById("feeders-cards-container");
+        if (!container) return;
+
+        const pct = (v) => Math.round(163.4 * (1 - v / 100));
+        const gc = (v) => (v < 20 ? "low" : v < 40 ? "warn" : "");
+        const pillColor = (v) => (v < 20 ? "low" : v < 40 ? "warn" : "");
+        const SL = {
+          online: "● En línea",
+          warn: "⚠ Alerta",
+          offline: "✕ Sin conexión",
+        };
+        const SC = {
+          online: "var(--ok)",
+          warn: "var(--warn)",
+          offline: "var(--light-mid)",
+        };
+
+        container.innerHTML = feeders
+          .map((f, idx) => {
+            // Pills de estado rápido
+            const pills = [
+              { label: `🔋 ${f.battery}%`, cls: pillColor(f.battery) },
+              { label: `🐕 ${f.foodDog}%`, cls: pillColor(f.foodDog) },
+              { label: `🐈 ${f.foodCat}%`, cls: pillColor(f.foodCat) },
+              { label: `💧 ${f.water}%`, cls: pillColor(f.water) },
+            ]
+              .map((p) => `<span class="fcard-pill ${p.cls}">${p.label}</span>`)
+              .join("");
+
+            // Gauges SVG para el detalle expandido
+            const gauges = [
+              {
+                label: "Batería",
+                val: f.battery,
+                color:
+                  f.battery < 20
+                    ? "#c03030"
+                    : f.battery < 40
+                      ? "#c97b4b"
+                      : "#4d7a52",
+              },
+              {
+                label: "🐕 Comida",
+                val: f.foodDog,
+                color: f.foodDog < 20 ? "#c03030" : "#c97b4b",
+              },
+              {
+                label: "🐈 Comida",
+                val: f.foodCat,
+                color: f.foodCat < 20 ? "#c03030" : "#5a9bc0",
+              },
+              { label: "💧 Agua", val: f.water, color: "#a8c8e8" },
+            ]
+              .map(
+                (g) => `
+            <div style="text-align:center">
+              <div style="font-size:.65rem;color:var(--light-mid);margin-bottom:6px">${g.label}</div>
+              <div class="gauge-ring-wrap" style="margin:auto">
+                <svg viewBox="0 0 64 64">
+                  <circle class="gauge-track" cx="32" cy="32" r="26"/>
+                  <circle class="gauge-fill" cx="32" cy="32" r="26" stroke="${g.color}" stroke-dasharray="163.4" stroke-dashoffset="${pct(g.val)}"/>
+                </svg>
+                <div class="gauge-text" style="color:${g.val < 20 ? "var(--danger)" : "inherit"}">${g.val}%</div>
+              </div>
+            </div>`,
+              )
+              .join("");
+
+            return `
+          <div class="fcard" id="fcard-${f.id}">
+            <div class="fcard-preview" onclick="toggleFcard('${f.id}')">
+              <div class="fcard-dot ${f.status}"></div>
+              <div style="min-width:0">
+                <div class="fcard-id">${f.id}</div>
+                <div class="fcard-name">${f.name}</div>
+                <div class="fcard-loc">📍 ${f.location} · ${f.lastSync}</div>
+              </div>
+              <div class="fcard-pills">${pills}</div>
+              <div class="fcard-chevron">▼</div>
+            </div>
+            <div class="fcard-detail">
+              <div class="fcard-gauges">${gauges}</div>
+              <div class="fcard-stat-row">
+                <div class="fcard-stat"><span class="sv">${f.dogsToday ?? "—"}</span><span class="sl">Perros hoy</span></div>
+                <div class="fcard-stat"><span class="sv">${f.catsToday ?? "—"}</span><span class="sl">Gatos hoy</span></div>
+                <div class="fcard-stat"><span class="sv">${(f.dogsToday ?? 0) + (f.catsToday ?? 0)}</span><span class="sl">Total hoy</span></div>
+                <div class="fcard-stat"><span class="sv">${f.aiAccuracy ?? "—"}${f.aiAccuracy ? "%" : ""}</span><span class="sl">Precisión IA</span></div>
+                <div class="fcard-stat" style="margin-left:auto">
+                  <span class="status-badge ${f.status}" style="font-size:.75rem">${SL[f.status] || f.status}</span>
+                </div>
+              </div>
+            </div>
+          </div>`;
+          })
+          .join("");
       }
 
+      function toggleFcard(id) {
+        const card = document.getElementById("fcard-" + id);
+        if (card) card.classList.toggle("expanded");
+      }
+
+      // ═══════════════════════════════════════════════
+      //  DETALLE INLINE (sección Historial)
+      // ═══════════════════════════════════════════════
+
+      function toggleInlineEventDetail(tr, ev) {
+        // Si ya hay un detalle abierto para esta misma fila → cerrarlo
+        const existing = tr.nextElementSibling;
+        if (existing && existing.classList.contains("ev-inline-row")) {
+          existing.classList.remove("ev-inline-open");
+          tr.classList.remove("ev-inline-active");
+          setTimeout(() => existing.remove(), 300);
+          return;
+        }
+
+        // Cerrar cualquier otro detalle abierto en esta tabla
+        const tbody = tr.closest("tbody");
+        tbody.querySelectorAll(".ev-inline-row").forEach((r) => {
+          r.classList.remove("ev-inline-open");
+          setTimeout(() => r.remove(), 300);
+        });
+        tbody
+          .querySelectorAll(".ev-inline-active")
+          .forEach((r) => r.classList.remove("ev-inline-active"));
+
+        tr.classList.add("ev-inline-active");
+
+        // Barra de confianza coloreada
+        const confColor =
+          ev.species === "alerta"
+            ? "var(--danger)"
+            : (ev.confidence || 0) >= 80
+              ? "var(--sage-dark)"
+              : "var(--warn)";
+
+        // Construir contenido
+        const photoHtml = ev.photo
+          ? `<div class="ev-inline-photo">
+               <img src="${ev.photo}" alt="Foto del evento">
+               <span class="ev-photo-server-badge" style="display:inline-flex;position:absolute;bottom:10px;left:10px">📷 Foto del feeder</span>
+             </div>`
+          : `<div class="ev-inline-nophoto">Sin foto adjunta</div>`;
+
+        const detailRow = document.createElement("tr");
+        detailRow.className = "ev-inline-row";
+        detailRow.innerHTML = `
+          <td colspan="6" style="padding:0;border-bottom:2px solid var(--border)">
+            <div class="ev-inline-panel">
+              <div class="ev-inline-grid">
+                <div class="ev-inline-cell"><div class="ev-info-label">🕐 Hora</div><div class="ev-info-value">${ev.time || "—"}</div></div>
+                <div class="ev-inline-cell"><div class="ev-info-label">📡 Feeder</div><div class="ev-info-value">${(ev.feederId || "—") + (ev.feederName ? " · " + ev.feederName : "")}</div></div>
+                <div class="ev-inline-cell"><div class="ev-info-label">🐾 Especie</div><div class="ev-info-value">${(ev.emoji || "") + " " + (ev.label || "—")}</div></div>
+                <div class="ev-inline-cell"><div class="ev-info-label">⚖️ Cantidad</div><div class="ev-info-value">${ev.grams > 0 ? ev.grams + " g" : "—"}</div></div>
+                <div class="ev-inline-cell" style="grid-column:1/-1">
+                  <div class="ev-info-label">🎯 Confianza IA</div>
+                  <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+                    <div style="flex:1;height:6px;background:var(--border);border-radius:4px;overflow:hidden">
+                      <div style="height:100%;border-radius:4px;background:${confColor};width:${ev.confidence || 0}%;transition:width .5s ease"></div>
+                    </div>
+                    <span style="font-size:.88rem;font-weight:500;color:var(--charcoal);min-width:36px">${ev.confidence || 0}%</span>
+                  </div>
+                </div>
+              </div>
+              ${photoHtml}
+            </div>
+          </td>`;
+
+        tr.after(detailRow);
+
+        // Scroll suave para que el detalle sea visible
+        requestAnimationFrame(() => {
+          detailRow.classList.add("ev-inline-open");
+          setTimeout(() => {
+            detailRow.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }, 80);
+        });
+      }
+
+      // ═══════════════════════════════════════════════
+      //  MODAL DETALLE DE EVENTO + FOTO
+      // ═══════════════════════════════════════════════
+
+      function openEventModal(ev) {
+        _currentEventData = ev;
+        _selectedPhotoFile = null;
+
+        const isViewMode = !!ev.photo;
+
+        document.getElementById("ev-modal-emoji").textContent =
+          ev.emoji || "🐾";
+        document.getElementById("ev-modal-title-text").textContent =
+          (ev.label || "Evento") + " · " + (ev.feederId || "");
+        document.getElementById("ev-info-time").textContent = ev.time || "—";
+        document.getElementById("ev-info-feeder").textContent =
+          (ev.feederId || "—") + (ev.feederName ? " · " + ev.feederName : "");
+        document.getElementById("ev-info-species").textContent =
+          (ev.emoji || "") + " " + (ev.label || "—");
+        document.getElementById("ev-info-grams").textContent =
+          ev.grams > 0 ? ev.grams + " g" : "—";
+        document.getElementById("ev-info-confidence").textContent =
+          (ev.confidence || 0) + "%";
+        document.getElementById("ev-conf-bar").style.width =
+          (ev.confidence || 0) + "%";
+        document.getElementById("ev-conf-bar").style.background =
+          ev.species === "alerta"
+            ? "var(--danger)"
+            : (ev.confidence || 0) >= 80
+              ? "var(--sage-dark)"
+              : "var(--warn)";
+
+        _resetPhotoArea();
+        if (isViewMode) {
+          document.getElementById("ev-photo-img").src = ev.photo;
+          document.getElementById("ev-photo-preview").style.display = "block";
+          document.getElementById("ev-photo-zone").style.display = "none";
+          document.getElementById("ev-photo-server-badge").style.display =
+            "inline-flex";
+          document.getElementById("ev-photo-remove-btn").style.display = "none";
+          document.getElementById("ev-photo-change-btn").style.display = "none";
+        }
+
+        const sendBtn = document.getElementById("ev-send-btn");
+        const status = document.getElementById("ev-send-status");
+        if (sendBtn) {
+          sendBtn.style.display = isViewMode ? "none" : "flex";
+          sendBtn.disabled = false;
+          sendBtn.innerHTML =
+            '<span id="ev-send-btn-icon">📤</span> Enviar evento';
+        }
+        if (status) {
+          status.textContent = "";
+          status.className = "ev-send-status";
+        }
+
+        const modalBox = document.querySelector(".ev-modal-box");
+        if (modalBox) {
+          modalBox.style.maxWidth = isViewMode ? "600px" : "480px";
+          modalBox.classList.toggle("view-mode", isViewMode);
+        }
+
+        document.getElementById("event-modal").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeEventModal() {
+        document.getElementById("event-modal").classList.remove("open");
+        document.body.style.overflow = "";
+        _currentEventData = null;
+        _selectedPhotoFile = null;
+        const modalBox = document.querySelector(".ev-modal-box");
+        if (modalBox) {
+          modalBox.style.maxWidth = "480px";
+          modalBox.classList.remove("view-mode");
+        }
+        const sendBtn = document.getElementById("ev-send-btn");
+        if (sendBtn) sendBtn.style.display = "flex";
+      }
+
+      function handleEventModalBackdrop(e) {
+        if (e.target === document.getElementById("event-modal"))
+          closeEventModal();
+      }
+
+      function _resetPhotoArea() {
+        document.getElementById("ev-photo-preview").style.display = "none";
+        document.getElementById("ev-photo-zone").style.display = "block";
+        document.getElementById("ev-photo-input").value = "";
+        document.getElementById("ev-photo-img").src = "";
+        document.getElementById("ev-photo-server-badge").style.display = "none";
+        document.getElementById("ev-photo-remove-btn").style.display =
+          "inline-block";
+        document.getElementById("ev-photo-change-btn").style.display = "none";
+        _selectedPhotoFile = null;
+      }
+
+      // Muestra la zona de subida cuando el usuario quiere cambiar la foto del servidor
+      function showPhotoUploadZone() {
+        document.getElementById("ev-photo-change-btn").style.display = "none";
+        document.getElementById("ev-photo-zone").style.display = "block";
+        // Mantiene la foto del servidor visible como preview hasta que elija otra
+        document.getElementById("ev-photo-server-badge").style.display = "none";
+        document.getElementById("ev-photo-remove-btn").style.display =
+          "inline-block";
+      }
+
+      function handlePhotoSelect(e) {
+        const file = e.target.files[0];
+        if (file) _setPhotoFile(file);
+      }
+
+      function handlePhotoDragOver(e) {
+        e.preventDefault();
+        document.getElementById("ev-photo-zone").classList.add("drag-over");
+      }
+      function handlePhotoDragLeave(e) {
+        document.getElementById("ev-photo-zone").classList.remove("drag-over");
+      }
+      function handlePhotoDrop(e) {
+        e.preventDefault();
+        document.getElementById("ev-photo-zone").classList.remove("drag-over");
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) _setPhotoFile(file);
+      }
+
+      function _setPhotoFile(file) {
+        if (file.size > 8 * 1024 * 1024) {
+          alert("La imagen excede el límite de 8 MB.");
+          return;
+        }
+        _selectedPhotoFile = file;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          document.getElementById("ev-photo-img").src = ev.target.result;
+          document.getElementById("ev-photo-preview").style.display = "block";
+          document.getElementById("ev-photo-zone").style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function removeEventPhoto() {
+        _resetPhotoArea();
+      }
+
+      async function submitEventWithPhoto() {
+        if (!_currentEventData) return;
+
+        const btn = document.getElementById("ev-send-btn");
+        const status = document.getElementById("ev-send-status");
+
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Enviando…";
+        status.textContent = "";
+        status.className = "ev-send-status";
+
+        try {
+          const formData = new FormData();
+          // Append all event fields
+          Object.entries(_currentEventData).forEach(([k, v]) => {
+            formData.append(k, v ?? "");
+          });
+          // Append photo if selected
+          if (_selectedPhotoFile) {
+            formData.append(
+              "photo",
+              _selectedPhotoFile,
+              _selectedPhotoFile.name,
+            );
+          }
+
+          const res = await fetch("/api/event/submit/", {
+            method: "POST",
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
+            body: formData,
+          });
+
+          if (!res.ok) throw new Error("HTTP " + res.status);
+
+          btn.innerHTML = "✅ Enviado";
+          status.textContent = _selectedPhotoFile
+            ? "Evento y foto enviados correctamente"
+            : "Evento enviado correctamente";
+          status.className = "ev-send-status visible ok";
+
+          setTimeout(() => closeEventModal(), 1800);
+        } catch (err) {
+          btn.disabled = false;
+          btn.innerHTML = "<span>📤</span> Reintentar";
+          status.textContent = "Error al enviar: " + err.message;
+          status.className = "ev-send-status visible err";
+        }
+      }
+
+      function getCookie(name) {
+        const v = document.cookie.match(
+          "(^|;)\\s*" + name + "\\s*=\\s*([^;]+)",
+        );
+        return v ? v.pop() : "";
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeEventModal();
+      });
+
+      // ════════════════════════════════════════
+      //  DONACIONES — Stripe via Django
+      // ════════════════════════════════════════
+      async function syncDonaciones() {
+        // Skeletons mientras carga
+        ["don-balance", "don-mes", "don-donadores", "don-pendiente"].forEach(
+          (id) => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = '<span class="skel skel-kpi"></span>';
+          },
+        );
+
+        try {
+          const res = await fetch("/api/donaciones/", {
+            headers: { Accept: "application/json" },
+            signal: AbortSignal.timeout(12000),
+          });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const d = await res.json();
+
+          // ── KPIs ──────────────────────────────────────
+          const fmt = (amt, cur) => {
+            const sym =
+              { mxn: "$", usd: "$", eur: "€" }[cur?.toLowerCase()] || "$";
+            return (
+              sym +
+              (amt / 100).toLocaleString("es-MX", { minimumFractionDigits: 2 })
+            );
+          };
+
+          document.getElementById("don-balance").textContent = fmt(
+            d.balance.available,
+            d.balance.currency,
+          );
+          document.getElementById("don-balance-sub").textContent =
+            "Balance disponible";
+          document.getElementById("don-mes").textContent = fmt(
+            d.mes.total,
+            d.balance.currency,
+          );
+          document.getElementById("don-mes-sub").textContent =
+            d.mes.count + " donación" + (d.mes.count !== 1 ? "es" : "");
+          document.getElementById("don-donadores").textContent = d.donadores;
+          document.getElementById("don-donadores-sub").textContent =
+            "clientes únicos";
+          document.getElementById("don-pendiente").textContent = fmt(
+            d.balance.pending,
+            d.balance.currency,
+          );
+          document.getElementById("don-pendiente-sub").textContent =
+            "en tránsito a tu cuenta";
+
+          // ── Tabla charges ──────────────────────────────
+          const subEl = document.getElementById("don-charges-sub");
+          if (subEl)
+            subEl.textContent =
+              "Últimos " + d.charges.length + " pagos · Stripe";
+
+          const STATUS_LABEL = {
+            succeeded: "✅ Pagado",
+            pending: "⏳ Pendiente",
+            failed: "❌ Fallido",
+          };
+          const METHOD_ICON = {
+            card: "💳",
+            bank_transfer: "🏦",
+            oxxo: "🏪",
+            link: "🔗",
+            cash: "💵",
+          };
+
+          const chargesBody = document.getElementById("don-charges-body");
+          if (chargesBody) {
+            if (d.charges.length === 0) {
+              chargesBody.innerHTML =
+                '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin donaciones registradas aún.</td></tr>';
+            } else {
+              chargesBody.innerHTML = d.charges
+                .map((c) => {
+                  const fecha = new Date(c.created * 1000).toLocaleDateString(
+                    "es-MX",
+                    { day: "2-digit", month: "short", year: "numeric" },
+                  );
+                  const hora = new Date(c.created * 1000).toLocaleTimeString(
+                    "es-MX",
+                    { hour: "2-digit", minute: "2-digit" },
+                  );
+                  const metodo = METHOD_ICON[c.payment_method_type] || "💳";
+                  return `<tr>
+                  <td><span style="font-size:.85rem">${fecha}</span><br><span style="font-size:.68rem;color:var(--light-mid)">${hora}</span></td>
+                  <td><span style="font-size:.82rem;color:var(--charcoal)">${c.customer_name || c.customer_email || "Anónimo"}</span>${c.customer_email && c.customer_name ? '<br><span style="font-size:.68rem;color:var(--light-mid)">' + c.customer_email + "</span>" : ""}</td>
+                  <td><strong style="color:var(--sage-dark)">${fmt(c.amount, c.currency)}</strong></td>
+                  <td><span class="method-icon">${metodo}</span> <span style="font-size:.75rem;color:var(--mid);text-transform:capitalize">${c.payment_method_type || "—"}</span></td>
+                  <td><span class="pay-badge ${c.status}">${STATUS_LABEL[c.status] || c.status}</span></td>
+                  <td style="font-size:.75rem;color:var(--mid)">${c.description || "—"}</td>
+                </tr>`;
+                })
+                .join("");
+            }
+          }
+
+          // ── Tabla payouts ──────────────────────────────
+          const PAYOUT_STATUS = {
+            paid: "✅ Depositado",
+            pending: "⏳ Pendiente",
+            in_transit: "🚀 En tránsito",
+            failed: "❌ Fallido",
+            canceled: "🚫 Cancelado",
+          };
+          const payoutsBody = document.getElementById("don-payouts-body");
+          if (payoutsBody) {
+            if (d.payouts.length === 0) {
+              payoutsBody.innerHTML =
+                '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin transferencias aún.</td></tr>';
+            } else {
+              payoutsBody.innerHTML = d.payouts
+                .map((p) => {
+                  const fecha = new Date(p.created * 1000).toLocaleDateString(
+                    "es-MX",
+                    { day: "2-digit", month: "short", year: "numeric" },
+                  );
+                  const fechaArr = p.arrival_date
+                    ? new Date(p.arrival_date * 1000).toLocaleDateString(
+                        "es-MX",
+                        { day: "2-digit", month: "short" },
+                      )
+                    : "—";
+                  return `<tr>
+                  <td>${fecha}</td>
+                  <td><strong style="color:var(--sage-dark)">${fmt(p.amount, p.currency)}</strong></td>
+                  <td><span class="pay-badge ${p.status}">${PAYOUT_STATUS[p.status] || p.status}</span></td>
+                  <td style="font-size:.82rem;color:var(--mid)">${fechaArr}</td>
+                  <td style="font-size:.75rem;color:var(--mid)">${p.description || p.statement_descriptor || "—"}</td>
+                </tr>`;
+                })
+                .join("");
+            }
+          }
+        } catch (err) {
+          ["don-balance", "don-mes", "don-donadores", "don-pendiente"].forEach(
+            (id) => {
+              const el = document.getElementById(id);
+              if (el) el.textContent = "—";
+            },
+          );
+          const cb = document.getElementById("don-charges-body");
+          if (cb)
+            cb.innerHTML =
+              '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--danger);font-size:.78rem">⚠️ Error al cargar datos de Stripe — ' +
+              err.message +
+              "</td></tr>";
+          console.error("[syncDonaciones]", err);
+        }
+      }
     </script>
+
+    <!-- MODAL DETALLE DE EVENTO + FOTO -->
+    <div
+      id="event-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ev-modal-title-text"
+      onclick="handleEventModalBackdrop(event)"
+    >
+      <div class="ev-modal-box">
+        <div class="ev-modal-header">
+          <div class="ev-modal-title">
+            <span id="ev-modal-emoji">🐾</span>
+            <span id="ev-modal-title-text">Detalle del evento</span>
+          </div>
+          <button
+            class="ev-modal-close"
+            onclick="closeEventModal()"
+            title="Cerrar"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="ev-modal-body">
+          <!-- Info grid -->
+          <div class="ev-info-grid">
+            <div class="ev-info-cell">
+              <div class="ev-info-label">🕐 Hora</div>
+              <div class="ev-info-value" id="ev-info-time">—</div>
+            </div>
+            <div class="ev-info-cell">
+              <div class="ev-info-label">📡 Feeder</div>
+              <div class="ev-info-value" id="ev-info-feeder">—</div>
+            </div>
+            <div class="ev-info-cell">
+              <div class="ev-info-label">🐾 Especie</div>
+              <div class="ev-info-value" id="ev-info-species">—</div>
+            </div>
+            <div class="ev-info-cell">
+              <div class="ev-info-label">⚖️ Cantidad</div>
+              <div class="ev-info-value" id="ev-info-grams">—</div>
+            </div>
+            <div class="ev-info-cell" style="grid-column: 1 / -1">
+              <div class="ev-info-label">🎯 Confianza IA</div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                  margin-top: 4px;
+                "
+              >
+                <div
+                  style="
+                    flex: 1;
+                    height: 6px;
+                    background: var(--border);
+                    border-radius: 4px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    id="ev-conf-bar"
+                    style="
+                      height: 100%;
+                      border-radius: 4px;
+                      background: var(--sage-dark);
+                      width: 0%;
+                      transition: width 0.4s ease;
+                    "
+                  ></div>
+                </div>
+                <span
+                  id="ev-info-confidence"
+                  style="
+                    font-size: 0.88rem;
+                    font-weight: 500;
+                    color: var(--charcoal);
+                    min-width: 36px;
+                  "
+                >
+                  —
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Foto preview (visible solo cuando hay imagen) -->
+          <div class="ev-photo-preview" id="ev-photo-preview">
+            <img id="ev-photo-img" src="" alt="Foto del evento" />
+            <button
+              class="ev-photo-remove"
+              id="ev-photo-remove-btn"
+              onclick="removeEventPhoto()"
+            >
+              ✕ Quitar
+            </button>
+            <span class="ev-photo-server-badge" id="ev-photo-server-badge">
+              📷 Foto del feeder
+            </span>
+          </div>
+
+          <!-- Botón para cambiar foto del servidor -->
+          <button
+            class="ev-photo-change-btn"
+            id="ev-photo-change-btn"
+            onclick="showPhotoUploadZone()"
+          >
+            🔄 Cambiar foto
+          </button>
+
+          <!-- Zona de carga de foto -->
+          <div
+            class="ev-photo-zone"
+            id="ev-photo-zone"
+            ondragover="handlePhotoDragOver(event)"
+            ondragleave="handlePhotoDragLeave(event)"
+            ondrop="handlePhotoDrop(event)"
+          >
+            <input
+              type="file"
+              id="ev-photo-input"
+              accept="image/*"
+              onchange="handlePhotoSelect(event)"
+            />
+            <div class="ev-photo-icon">📷</div>
+            <div class="ev-photo-hint">
+              <strong>Arrastra una foto aquí</strong>
+              o haz clic para seleccionar
+              <br />
+              JPG, PNG, WEBP · máx. 8 MB
+            </div>
+          </div>
+        </div>
+        <div class="ev-modal-footer">
+          <span class="ev-send-status" id="ev-send-status"></span>
+          <button class="ev-cancel-btn" onclick="closeEventModal()">
+            Cancelar
+          </button>
+          <button
+            class="ev-send-btn"
+            id="ev-send-btn"
+            onclick="submitEventWithPhoto()"
+          >
+            <span id="ev-send-btn-icon">📤</span>
+            Enviar evento
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- MODAL BORRAR DATOS -->
     <div
