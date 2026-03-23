@@ -9,11 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="shortcut icon"
-      href="{% static 'images/EcoSentinelIcon.ico' %}"
-    />
-    <link rel="shortcut icon" href="static/EcoSentinelIcon.ico" />
+    <link rel="shortcut icon" href="{% static 'images/EcoSentinelIcon.ico' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
     <style>
       :root {
@@ -32,16 +30,8 @@
         --border: #e2d9cc;
       }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         background: var(--cream);
         color: var(--charcoal);
@@ -50,20 +40,19 @@
         overflow-x: hidden;
       }
 
-      /* NAV */
+      /* ── NAV ── */
       nav {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
+        top: 0; left: 0; right: 0;
+        z-index: 200;
         padding: 20px 60px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: rgba(253, 248, 240, 0.88);
+        background: rgba(253, 248, 240, 0.92);
         backdrop-filter: blur(14px);
         border-bottom: 1px solid var(--border);
+        transition: padding 0.3s;
       }
 
       .logo {
@@ -71,12 +60,11 @@
         font-size: 1.25rem;
         color: var(--sage-dark);
         letter-spacing: 0.02em;
+        text-decoration: none;
+        z-index: 201;
+        position: relative;
       }
-
-      .logo span {
-        color: var(--terracotta);
-        font-style: italic;
-      }
+      .logo span { color: var(--terracotta); font-style: italic; }
 
       nav ul {
         list-style: none;
@@ -94,23 +82,10 @@
         text-transform: uppercase;
         transition: color 0.25s;
       }
+      nav a:hover { color: var(--sage-dark); }
 
-      nav a:hover {
-        color: var(--sage-dark);
-      }
-
-      .nav-github {
-        display: flex !important;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .nav-github svg {
-        width: 15px;
-        height: 15px;
-        fill: currentColor;
-        vertical-align: middle;
-      }
+      .nav-github { display: flex !important; align-items: center; gap: 6px; }
+      .nav-github svg { width: 15px; height: 15px; fill: currentColor; vertical-align: middle; }
 
       .nav-donate {
         background: var(--terracotta);
@@ -119,61 +94,140 @@
         border-radius: 100px;
         font-weight: 500 !important;
         transition: background 0.25s !important;
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        line-height: 1;
       }
+      .nav-donate:hover { background: var(--charcoal) !important; color: white !important; }
 
-      .nav-donate:hover {
-        background: var(--charcoal) !important;
-        color: white !important;
+      /* ── HAMBURGER ── */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 40px;
+        height: 40px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 8px;
+        z-index: 201;
+        position: relative;
+        transition: background 0.2s;
       }
+      .hamburger:hover { background: rgba(77,122,82,0.08); }
+      .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--charcoal);
+        border-radius: 2px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform-origin: center;
+      }
+      .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+      .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-      /* HERO */
+      /* ── MOBILE MENU OVERLAY ── */
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 199;
+        background: rgba(253, 248, 240, 0.97);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 100px 32px 40px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+      .mobile-menu.open {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .mobile-menu a {
+        font-size: 1.4rem;
+        font-weight: 400;
+        font-family: "Playfair Display", serif;
+        color: var(--charcoal);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        padding: 14px 24px;
+        width: 100%;
+        text-align: center;
+        border-radius: 12px;
+        transition: background 0.2s, color 0.2s;
+        text-transform: none;
+      }
+      .mobile-menu a:hover { background: rgba(77,122,82,0.08); color: var(--sage-dark); }
+      .mobile-menu .m-donate {
+        background: var(--terracotta);
+        color: white;
+        font-size: 1.1rem;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 500;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        line-height: 1.2;
+      }
+      .mobile-menu .m-donate:hover { background: var(--charcoal); color: white; }
+      .mobile-menu .m-donate svg { width: 16px; height: 16px; fill: white; flex-shrink: 0; }
+      .mobile-menu .m-github {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-family: "DM Sans", sans-serif;
+        color: var(--mid);
+        border: 1px solid var(--border);
+        margin-top: 4px;
+      }
+      .mobile-menu .m-github svg { width: 16px; height: 16px; fill: currentColor; }
+      .mobile-menu-divider { width: 40px; height: 1px; background: var(--border); margin: 8px 0; }
+
+      /* ── HERO ── */
       .hero {
-        min-height: 100vh;
+        min-height: 94vh;
         display: grid;
         grid-template-columns: 1fr 1fr;
         align-items: center;
-        padding: 120px 60px 80px;
+        padding: 110px 60px 66px;
         gap: 60px;
         position: relative;
         overflow: hidden;
       }
-
       .hero::before {
         content: "";
         position: absolute;
-        top: -200px;
-        right: -200px;
-        width: 700px;
-        height: 700px;
+        top: -200px; right: -200px;
+        width: 700px; height: 700px;
         border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(168, 197, 172, 0.25) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(168, 197, 172, 0.25) 0%, transparent 70%);
         pointer-events: none;
       }
-
       .hero::after {
         content: "";
         position: absolute;
-        bottom: -150px;
-        left: -100px;
-        width: 500px;
-        height: 500px;
+        bottom: -150px; left: -100px;
+        width: 500px; height: 500px;
         border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(201, 123, 75, 0.12) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(201, 123, 75, 0.12) 0%, transparent 70%);
         pointer-events: none;
       }
-
-      .hero-text {
-        z-index: 1;
-      }
-
+      .hero-text { z-index: 1; }
       .hero-badge {
         display: inline-flex;
         align-items: center;
@@ -187,101 +241,69 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
         font-weight: 500;
-        margin-bottom: 32px;
+        margin-bottom: 28px;
         animation: fadeUp 0.8s ease both;
       }
-
       .hero-badge .bdot {
-        width: 7px;
-        height: 7px;
+        width: 7px; height: 7px;
         border-radius: 50%;
         background: var(--sage);
         animation: pulse 2s ease infinite;
       }
-
       @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-
-        50% {
-          opacity: 0.5;
-          transform: scale(0.8);
-        }
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.8); }
       }
-
       h1 {
         font-family: "Playfair Display", serif;
-        font-size: clamp(3rem, 5vw, 4.8rem);
+        font-size: clamp(2.4rem, 4.4vw, 4.2rem);
         line-height: 1.08;
         font-weight: 700;
         color: var(--charcoal);
-        margin-bottom: 28px;
+        margin-bottom: 22px;
         animation: fadeUp 0.8s 0.1s ease both;
       }
-
-      h1 em {
-        font-style: italic;
-        color: var(--sage-dark);
-      }
-
+      h1 em { font-style: italic; color: var(--sage-dark); }
       .hero-desc {
-        font-size: 1.05rem;
+        font-size: 0.97rem;
         line-height: 1.75;
         color: var(--mid);
-        max-width: 480px;
-        margin-bottom: 44px;
+        max-width: 460px;
+        margin-bottom: 36px;
         animation: fadeUp 0.8s 0.2s ease both;
       }
-
       .hero-ctas {
         display: flex;
-        gap: 16px;
+        gap: 14px;
         flex-wrap: wrap;
         animation: fadeUp 0.8s 0.3s ease both;
       }
-
       .btn-primary {
         background: var(--sage-dark);
         color: white;
-        padding: 14px 32px;
+        padding: 13px 28px;
         border-radius: 8px;
         text-decoration: none;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         font-weight: 500;
-        transition:
-          background 0.25s,
-          transform 0.2s;
+        transition: background 0.25s, transform 0.2s;
         letter-spacing: 0.02em;
+        text-align: center;
       }
-
-      .btn-primary:hover {
-        background: var(--charcoal);
-        transform: translateY(-2px);
-      }
-
+      .btn-primary:hover { background: var(--charcoal); transform: translateY(-2px); animation: none; }
       .btn-secondary {
         background: transparent;
         color: var(--sage-dark);
-        padding: 14px 32px;
+        padding: 13px 28px;
         border-radius: 8px;
         text-decoration: none;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         font-weight: 500;
         border: 1.5px solid var(--sage-light);
-        transition:
-          border-color 0.25s,
-          transform 0.2s;
+        transition: border-color 0.25s, transform 0.2s;
+        text-align: center;
       }
-
-      .btn-secondary:hover {
-        border-color: var(--sage-dark);
-        transform: translateY(-2px);
-      }
-
-      /* HERO VISUAL */
+      .btn-secondary:hover { border-color: var(--sage-dark); transform: translateY(-2px); }
       .hero-visual {
         z-index: 1;
         animation: fadeUp 0.8s 0.2s ease both;
@@ -289,71 +311,21 @@
         justify-content: center;
         align-items: center;
       }
-
       .device-card {
         width: 100%;
-        height: 600px;
-        background-image: url(static/mepmhisnofondo.png);
+        height: 528px;
+        background-image: url("{% static 'images/mepmhisnofondo.png' %}");
         background-position: center;
-        background-size: 550px;
+        background-size: 80%;
         background-repeat: no-repeat;
       }
 
-      .stats-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-top: 8px;
-      }
-
-      .stat-box {
-        background: var(--cream);
-        border-radius: 14px;
-        padding: 14px 16px;
-        border: 1px solid var(--border);
-      }
-
-      .stat-box .val {
-        font-family: "Playfair Display", serif;
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: var(--sage-dark);
-        line-height: 1;
-      }
-
-      .stat-box .label {
-        font-size: 0.72rem;
-        color: var(--light-mid);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-top: 4px;
-      }
-
-      .live-badge {
-        position: absolute;
-        top: 24px;
-        right: 24px;
-        background: #e8f5e9;
-        color: #388e3c;
-        font-size: 0.72rem;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 100px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .live-badge::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #388e3c;
-        animation: pulse 1.5s ease infinite;
-      }
-
-      /* ODS STRIP */
+      /* ── ODS STRIP ── */
+      /* ── ODS STRIP ── */
+      /* ── ODS STRIP ── */
+      /* ── ODS STRIP ── */
+      /* ── ODS STRIP ── */
+      /* ── ODS STRIP ── */
       .ods-strip {
         background: var(--charcoal);
         color: white;
@@ -362,8 +334,8 @@
         align-items: center;
         gap: 40px;
         overflow: hidden;
+        flex-wrap: wrap;
       }
-
       .ods-label {
         font-size: 0.72rem;
         text-transform: uppercase;
@@ -372,24 +344,17 @@
         white-space: nowrap;
         font-weight: 500;
       }
-
-      .ods-items {
-        display: flex;
-        gap: 24px;
-        flex-wrap: wrap;
-      }
-
+      .ods-items { display: flex; gap: 16px; flex-wrap: wrap; }
       .ods-chip {
         display: flex;
         align-items: center;
         gap: 10px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
         padding: 8px 18px;
         border-radius: 100px;
         font-size: 0.82rem;
       }
-
       .ods-chip .num {
         font-family: "Playfair Display", serif;
         font-size: 1.1rem;
@@ -397,11 +362,18 @@
         color: var(--terracotta-light);
       }
 
-      /* SECTIONS */
-      section {
-        padding: 100px 60px;
+      /* ── SECTION DIVIDERS ── */
+      .section-divider {
+        width: 100%;
+        height: 1px;
+        border: none;
+        background: linear-gradient(to right, transparent, var(--border) 15%, var(--sage-light) 50%, var(--border) 85%, transparent);
+        margin: 0;
+        opacity: 0.6;
       }
 
+      /* ── SECTIONS ── */
+      section { padding: 100px 60px; }
       .section-label {
         font-size: 0.75rem;
         text-transform: uppercase;
@@ -410,15 +382,13 @@
         font-weight: 500;
         margin-bottom: 16px;
       }
-
       h2 {
         font-family: "Playfair Display", serif;
-        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-size: clamp(1.8rem, 3.5vw, 3rem);
         line-height: 1.15;
         color: var(--charcoal);
         margin-bottom: 20px;
       }
-
       .section-sub {
         font-size: 1rem;
         color: var(--mid);
@@ -427,14 +397,13 @@
         margin-bottom: 64px;
       }
 
-      /* STEPS */
+      /* ── STEPS ── */
       .steps {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 24px;
         counter-reset: step;
       }
-
       .step {
         background: var(--warm-white);
         border: 1px solid var(--border);
@@ -442,32 +411,22 @@
         padding: 36px 28px;
         position: relative;
         overflow: hidden;
-        transition:
-          transform 0.25s,
-          box-shadow 0.25s;
+        transition: transform 0.25s, box-shadow 0.25s;
       }
-
-      .step:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 50px rgba(45, 58, 46, 0.1);
-      }
-
+      .step:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(45,58,46,0.1); }
       .step::before {
         counter-increment: step;
         content: counter(step, decimal-leading-zero);
         font-family: "Playfair Display", serif;
         font-size: 5rem;
         font-weight: 700;
-        color: rgba(122, 158, 126, 0.2);
+        color: rgba(122,158,126,0.2);
         position: absolute;
-        top: -10px;
-        right: 16px;
+        top: -10px; right: 16px;
         line-height: 1;
       }
-
       .step-icon {
-        width: 52px;
-        height: 52px;
+        width: 52px; height: 52px;
         border-radius: 14px;
         background: linear-gradient(135deg, var(--sage-light), var(--sage));
         display: flex;
@@ -475,40 +434,26 @@
         justify-content: center;
         font-size: 1.4rem;
         margin-bottom: 20px;
-        box-shadow: 0 4px 14px rgba(122, 158, 126, 0.3);
+        box-shadow: 0 4px 14px rgba(122,158,126,0.3);
       }
+      .step h4 { font-family: "Playfair Display", serif; font-size: 1.1rem; margin-bottom: 10px; color: var(--charcoal); }
+      .step p { font-size: 0.875rem; color: var(--mid); line-height: 1.65; }
 
-      .step h4 {
-        font-family: "Playfair Display", serif;
-        font-size: 1.1rem;
-        margin-bottom: 10px;
-        color: var(--charcoal);
-      }
+      /* Accordion wrappers — neutrales en desktop */
+      .step-accordion-header { display: block; padding: 0; cursor: default; pointer-events: none; }
+      .step-chevron { display: none; }
+      .step-num { display: none; }
+      .step-accordion-body { display: block; overflow: visible; max-height: none; padding: 0; }
 
-      .step p {
-        font-size: 0.875rem;
-        color: var(--mid);
-        line-height: 1.65;
-      }
-
-      /* FEATURES */
-      #features {
-        background: var(--warm-white);
-      }
-
+      /* ── FEATURES ── */
+      #features { background: var(--warm-white); }
       .features-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 40px;
         align-items: center;
       }
-
-      .features-list {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-
+      .features-list { display: flex; flex-direction: column; gap: 20px; }
       .feature-item {
         display: flex;
         gap: 18px;
@@ -519,136 +464,57 @@
         transition: all 0.25s;
         cursor: default;
       }
-
-      .feature-item:hover {
-        background: var(--cream);
-        border-color: var(--border);
-      }
-
+      .feature-item:hover { background: var(--cream); border-color: var(--border); }
       .feat-icon {
-        width: 44px;
-        height: 44px;
+        width: 44px; height: 44px;
         flex-shrink: 0;
         border-radius: 12px;
-        background: rgba(122, 158, 126, 0.15);
+        background: rgba(122,158,126,0.15);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.3rem;
       }
+      .feat-text h4 { font-family: "Playfair Display", serif; font-size: 1rem; margin-bottom: 6px; color: var(--charcoal); }
+      .feat-text p { font-size: 0.85rem; color: var(--mid); line-height: 1.6; }
 
-      .feat-text h4 {
-        font-family: "Playfair Display", serif;
-        font-size: 1rem;
-        margin-bottom: 6px;
-        color: var(--charcoal);
-      }
-
-      .feat-text p {
-        font-size: 0.85rem;
-        color: var(--mid);
-        line-height: 1.6;
-      }
-
-      /* PLATFORM PREVIEW */
+      /* Platform preview */
       .platform-preview {
         background: var(--charcoal);
         border-radius: 24px;
         padding: 32px;
         color: white;
-        box-shadow: 0 32px 80px rgba(45, 58, 46, 0.25);
+        box-shadow: 0 32px 80px rgba(45,58,46,0.25);
         position: relative;
         overflow: hidden;
       }
-
       .platform-preview::before {
         content: "";
         position: absolute;
-        top: -80px;
-        right: -80px;
-        width: 300px;
-        height: 300px;
+        top: -80px; right: -80px;
+        width: 300px; height: 300px;
         border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(122, 158, 126, 0.2) 0%,
-          transparent 70%
-        );
+        background: radial-gradient(circle, rgba(122,158,126,0.2) 0%, transparent 70%);
       }
-
-      .platform-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 28px;
-      }
-
-      .window-dots {
-        display: flex;
-        gap: 6px;
-      }
-
-      .wdot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-      }
-
-      .wdot.red {
-        background: #ff5f57;
-      }
-
-      .wdot.yellow {
-        background: #ffbd2e;
-      }
-
-      .wdot.green {
-        background: #28c840;
-      }
-
-      .platform-title {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.4);
-        margin-left: 8px;
-      }
-
-      .metric-cards {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 20px;
-      }
-
+      .platform-header { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; }
+      .window-dots { display: flex; gap: 6px; }
+      .wdot { width: 10px; height: 10px; border-radius: 50%; }
+      .wdot.red { background: #ff5f57; }
+      .wdot.yellow { background: #ffbd2e; }
+      .wdot.green { background: #28c840; }
+      .platform-title { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-left: 8px; }
+      .metric-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
       .metric-card {
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.1);
         border-radius: 12px;
         padding: 14px;
       }
-
-      .metric-card .m-label {
-        font-size: 0.68rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: rgba(255, 255, 255, 0.45);
-        margin-bottom: 6px;
-      }
-
-      .metric-card .m-val {
-        font-family: "Playfair Display", serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: white;
-      }
-
-      .metric-card .m-change {
-        font-size: 0.72rem;
-        color: #7ecf82;
-        margin-top: 2px;
-      }
-
+      .metric-card .m-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
+      .metric-card .m-val { font-family: "Playfair Display", serif; font-size: 1.5rem; font-weight: 700; color: white; }
+      .metric-card .m-change { font-size: 0.72rem; color: #7ecf82; margin-top: 2px; }
       .chart-area {
-        background: rgba(255, 255, 255, 0.04);
+        background: rgba(255,255,255,0.04);
         border-radius: 12px;
         padding: 16px;
         margin-bottom: 16px;
@@ -658,232 +524,147 @@
         gap: 6px;
         overflow: hidden;
       }
-
-      .bar {
-        flex: 1;
-        border-radius: 4px 4px 0 0;
-        opacity: 0.85;
-        animation: growBar 1s ease both;
-      }
-
-      .bar.dog {
-        background: var(--terracotta-light);
-      }
-
-      .bar.cat {
-        background: var(--sky);
-      }
-
+      .bar { flex: 1; border-radius: 4px 4px 0 0; opacity: 0.85; animation: growBar 1s ease both; }
+      .bar.dog { background: var(--terracotta-light); }
+      .bar.cat { background: var(--sky); }
       @keyframes growBar {
-        from {
-          transform: scaleY(0);
-          transform-origin: bottom;
-        }
-
-        to {
-          transform: scaleY(1);
-        }
+        from { transform: scaleY(0); transform-origin: bottom; }
+        to { transform: scaleY(1); }
       }
-
       .event-row {
         display: flex;
         align-items: center;
         gap: 12px;
         padding: 10px 12px;
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255,255,255,0.05);
         border-radius: 10px;
         margin-bottom: 8px;
         font-size: 0.78rem;
+        flex-wrap: wrap;
       }
+      .event-tag { padding: 3px 10px; border-radius: 100px; font-size: 0.68rem; font-weight: 500; }
+      .event-tag.perro { background: rgba(232,169,122,0.25); color: var(--terracotta-light); }
+      .event-tag.gato { background: rgba(168,200,232,0.25); color: var(--sky); }
+      .event-tag.alerta { background: rgba(255,100,100,0.25); color: #ff8a80; }
+      .event-time { color: rgba(255,255,255,0.35); margin-left: auto; }
 
-      .event-tag {
-        padding: 3px 10px;
-        border-radius: 100px;
-        font-size: 0.68rem;
-        font-weight: 500;
-      }
-
-      .event-tag.perro {
-        background: rgba(232, 169, 122, 0.25);
-        color: var(--terracotta-light);
-      }
-
-      .event-tag.gato {
-        background: rgba(168, 200, 232, 0.25);
-        color: var(--sky);
-      }
-
-      .event-tag.alerta {
-        background: rgba(255, 100, 100, 0.25);
-        color: #ff8a80;
-      }
-
-      .event-time {
-        color: rgba(255, 255, 255, 0.35);
-        margin-left: auto;
-      }
-
-      /* IMPACT */
+      /* ── IMPACT ── */
       #impact {
-        background: linear-gradient(
-          160deg,
-          var(--sage-dark) 0%,
-          var(--charcoal) 100%
-        );
-        color: white;
+        background: var(--charcoal);
+        padding: 32px 60px !important;
+        border-top: 1px solid rgba(255,255,255,0.07);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
       }
-
-      #impact .section-label {
-        color: var(--sage-light);
+      .impact-strip {
+        display: flex;
+        align-items: center;
       }
-
-      #impact h2 {
-        color: white;
+      .impact-stat {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 28px;
+        border-right: 1px solid rgba(255,255,255,0.1);
       }
-
-      #impact .section-sub {
-        color: rgba(255, 255, 255, 0.65);
-      }
-
-      .impact-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 24px;
-      }
-
-      .impact-card {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 20px;
-        padding: 36px 28px;
-        text-align: center;
-        transition:
-          background 0.25s,
-          transform 0.25s;
-      }
-
-      .impact-card:hover {
-        background: rgba(255, 255, 255, 0.13);
-        transform: translateY(-4px);
-      }
-
-      .impact-card .ic-emoji {
-        font-size: 2.5rem;
-        margin-bottom: 16px;
-        display: block;
-      }
-
-      .impact-card h4 {
+      .impact-stat:first-child { padding-left: 0; }
+      .impact-stat:last-child { border-right: none; }
+      .impact-stat-emoji { font-size: 1.4rem; flex-shrink: 0; }
+      .impact-stat-val {
         font-family: "Playfair Display", serif;
-        font-size: 1.15rem;
-        margin-bottom: 10px;
+        font-size: 1.35rem;
+        font-weight: 700;
         color: white;
+        line-height: 1;
+      }
+      .impact-stat-label {
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.42);
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
       }
 
-      .impact-card p {
-        font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.65;
-      }
-
-      /* ===================== DONACIÓN ===================== */
+      /* ── DONACIÓN ── */
       #donacion {
         background: var(--warm-white);
         padding: 100px 60px;
         position: relative;
         overflow: hidden;
       }
-
       #donacion::before {
         content: "";
         position: absolute;
-        top: -180px;
-        right: -180px;
-        width: 600px;
-        height: 600px;
+        top: -180px; right: -180px;
+        width: 600px; height: 600px;
         border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(201, 123, 75, 0.08) 0%,
-          transparent 65%
-        );
+        background: radial-gradient(circle, rgba(201,123,75,0.08) 0%, transparent 65%);
         pointer-events: none;
       }
-
       #donacion::after {
         content: "";
         position: absolute;
-        bottom: -120px;
-        left: -80px;
-        width: 400px;
-        height: 400px;
+        bottom: -120px; left: -80px;
+        width: 400px; height: 400px;
         border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(122, 158, 126, 0.1) 0%,
-          transparent 65%
-        );
+        background: radial-gradient(circle, rgba(122,158,126,0.1) 0%, transparent 65%);
         pointer-events: none;
       }
-
-      /* Banner emocional — sin botón redundante */
       .donate-banner {
         background: linear-gradient(135deg, var(--terracotta) 0%, #a0522d 100%);
-        border-radius: 24px;
-        padding: 48px 52px;
+        border-radius: 16px;
+        padding: 28px 36px;
         color: white;
-        margin-bottom: 60px;
+        margin-bottom: 40px;
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        flex-wrap: wrap;
       }
-
-      .donate-banner::before {
-        content: "🐾";
-        position: absolute;
-        right: 60px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 10rem;
-        opacity: 0.07;
-        pointer-events: none;
-      }
-
-      .donate-banner h3 {
-        font-family: "Playfair Display", serif;
-        font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-        line-height: 1.25;
-        font-weight: 700;
-        margin-bottom: 12px;
-        max-width: 600px;
-      }
-
-      .donate-banner h3 em {
-        font-style: italic;
-        font-weight: 400;
-        opacity: 0.9;
-      }
-
-      .donate-banner p {
-        font-size: 0.97rem;
-        opacity: 0.82;
-        line-height: 1.7;
-        max-width: 520px;
-      }
-
-      .donate-banner-badge {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+      .donate-banner::before { display: none; }
+      .donate-banner-btn {
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.35);
+        color: white;
+        padding: 10px 22px;
         border-radius: 100px;
-        padding: 6px 16px;
-        font-size: 0.72rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-decoration: none;
+        font-family: "DM Sans", sans-serif;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: background 0.2s, transform 0.2s;
+      }
+      .donate-banner-btn:hover {
+        background: rgba(255,255,255,0.28);
+        transform: translateY(-1px);
+      }
+      .donate-banner h3 {
+        font-family: "DM Sans", sans-serif;
+        font-size: 1.05rem;
+        line-height: 1.4;
+        font-weight: 500;
+        margin-bottom: 4px;
+        max-width: 500px;
+      }
+      .donate-banner h3 em { font-style: italic; font-weight: 400; opacity: 0.9; }
+      .donate-banner p { font-size: 0.82rem; opacity: 0.75; line-height: 1.5; max-width: 480px; margin: 0; }
+      .donate-banner-badge {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 100px;
+        padding: 4px 14px;
+        font-size: 0.68rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         font-weight: 500;
         display: inline-block;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        white-space: nowrap;
       }
-
-      /* Montos */
       .donate-amounts-label {
         font-size: 0.75rem;
         text-transform: uppercase;
@@ -892,38 +673,24 @@
         font-weight: 500;
         margin-bottom: 20px;
       }
-
       .donate-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 32px;
         position: relative;
       }
-
       .donate-web h3 {
-        font-family: "Playfair Display", serif;
-        font-size: 1.5rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 500;
         color: var(--charcoal);
         margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 10px;
       }
-
-      .donate-web > p {
-        font-size: 0.9rem;
-        color: var(--mid);
-        line-height: 1.7;
-        margin-bottom: 28px;
-      }
-
-      .amount-pills {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
-      }
-
+      .donate-web > p { font-size: 0.9rem; color: var(--mid); line-height: 1.7; margin-bottom: 28px; }
+      .amount-pills { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
       .amount-pill {
         background: var(--cream);
         border: 1.5px solid var(--border);
@@ -937,16 +704,13 @@
         font-family: "DM Sans", sans-serif;
         position: relative;
       }
-
-      .amount-pill:hover,
-      .amount-pill.active {
+      .amount-pill:hover, .amount-pill.active {
         background: var(--terracotta);
         border-color: var(--terracotta);
         color: white;
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(201, 123, 75, 0.3);
+        box-shadow: 0 6px 18px rgba(201,123,75,0.3);
       }
-
       .amount-pill .impact-tip {
         display: none;
         position: absolute;
@@ -962,30 +726,19 @@
         pointer-events: none;
         z-index: 10;
       }
-
       .amount-pill .impact-tip::after {
         content: "";
         position: absolute;
-        top: 100%;
-        left: 50%;
+        top: 100%; left: 50%;
         transform: translateX(-50%);
         border: 5px solid transparent;
         border-top-color: var(--charcoal);
       }
-
-      .amount-pill:hover .impact-tip {
-        display: block;
-      }
-
-      .custom-amount {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        margin-bottom: 28px;
-      }
-
+      .amount-pill:hover .impact-tip { display: block; }
+      .custom-amount { display: flex; gap: 10px; align-items: center; margin-bottom: 28px; flex-wrap: wrap; }
       .custom-amount-input {
         flex: 1;
+        min-width: 120px;
         background: var(--cream);
         border: 1.5px solid var(--border);
         border-radius: 10px;
@@ -996,15 +749,8 @@
         outline: none;
         transition: border-color 0.2s;
       }
-
-      .custom-amount-input:focus {
-        border-color: var(--terracotta);
-      }
-
-      .custom-amount-input::placeholder {
-        color: var(--light-mid);
-      }
-
+      .custom-amount-input:focus { border-color: var(--terracotta); }
+      .custom-amount-input::placeholder { color: var(--light-mid); }
       .btn-donate-web {
         background: var(--terracotta);
         color: white;
@@ -1016,30 +762,173 @@
         border: none;
         cursor: pointer;
         font-family: "DM Sans", sans-serif;
-        transition:
-          background 0.25s,
-          transform 0.2s;
+        transition: background 0.25s, transform 0.2s;
         letter-spacing: 0.02em;
         display: flex;
         align-items: center;
         gap: 6px;
+        white-space: nowrap;
       }
+      .btn-donate-web:hover { background: var(--charcoal); transform: translateY(-2px); }
+      .donate-note { font-size: 0.78rem; color: var(--light-mid); display: flex; align-items: center; gap: 6px; margin-top: 4px; }
 
-      .btn-donate-web:hover {
-        background: var(--charcoal);
-        transform: translateY(-2px);
-      }
-
-      .donate-note {
-        font-size: 0.78rem;
-        color: var(--light-mid);
+      /* ── DONATE FOOTER BANNER ── */
+      .donate-footer-banner {
+        margin-top: 40px;
         display: flex;
         align-items: center;
-        gap: 6px;
-        margin-top: 4px;
+        justify-content: space-between;
+        gap: 24px;
+        background: rgba(201, 123, 75, 0.08);
+        border: 1px solid rgba(201, 123, 75, 0.2);
+        border-radius: 14px;
+        padding: 20px 28px;
+        flex-wrap: wrap;
+      }
+      .donate-footer-banner-text { flex: 1; min-width: 200px; }
+      .donate-footer-title {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.92rem;
+        font-weight: 400;
+        color: var(--charcoal);
+        line-height: 1.5;
+        margin-bottom: 4px;
+      }
+      .donate-footer-title em {
+        font-style: italic;
+        color: var(--terracotta);
+        font-weight: 400;
+      }
+      .donate-footer-sub {
+        font-size: 0.78rem;
+        color: var(--light-mid);
+        line-height: 1.55;
+        margin: 0;
+      }
+      .donate-footer-btn {
+        background: transparent;
+        border: 1px solid rgba(201, 123, 75, 0.35);
+        color: var(--terracotta);
+        padding: 9px 20px;
+        border-radius: 100px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        text-decoration: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: background 0.2s, border-color 0.2s, color 0.2s;
+      }
+      .donate-footer-btn:hover {
+        background: var(--terracotta);
+        border-color: var(--terracotta);
+        color: white;
       }
 
-      /* Divider vertical */
+      .link-short { display: none; }
+      .link-full  { display: inline; }
+
+      /* Bank card */
+      .bank-card {
+        background: linear-gradient(135deg, var(--charcoal) 0%, #3d5240 100%);
+        border-radius: 16px;
+        padding: 22px 24px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 8px;
+        box-shadow: 0 6px 24px rgba(45,58,46,0.2);
+        max-width: 340px;
+      }
+      .bank-card::before {
+        content: "";
+        position: absolute;
+        top: -40px; right: -40px;
+        width: 130px; height: 130px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.04);
+      }
+      .bank-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .bank-chip {
+        width: 28px; height: 20px;
+        background: linear-gradient(135deg, #e8a97a, #c97b4b);
+        border-radius: 4px;
+      }
+      .bank-name {
+        font-size: 0.67rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+        font-weight: 400;
+      }
+      .bank-number {
+        font-family: "DM Sans", sans-serif;
+        font-size: 1.05rem;
+        font-weight: 400;
+        letter-spacing: 0.18em;
+        color: white;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+      }
+      .bank-holder {
+        font-size: 0.72rem;
+        color: rgba(255,255,255,0.4);
+        letter-spacing: 0.05em;
+        margin-bottom: 18px;
+        position: relative;
+        z-index: 1;
+      }
+      .bank-copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.14);
+        color: rgba(255,255,255,0.75);
+        padding: 7px 16px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        position: relative;
+        z-index: 1;
+      }
+      .bank-copy-btn svg { width: 12px; height: 12px; }
+      .bank-copy-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+      .bank-copy-btn.copied { background: rgba(77,140,82,0.35); border-color: rgba(77,140,82,0.4); color: #7ecf82; }
+
+      /* PayPal button */
+      .paypal-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #003087;
+        color: white;
+        padding: 15px 28px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        transition: background 0.25s, transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 16px rgba(0,48,135,0.25);
+        margin-bottom: 4px;
+        letter-spacing: 0.01em;
+      }
+      .paypal-btn:hover {
+        background: #002060;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,48,135,0.3);
+      }
+
       .donate-divider {
         display: flex;
         flex-direction: column;
@@ -1047,20 +936,14 @@
         justify-content: center;
         gap: 12px;
         position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
+        left: 50%; top: 0; bottom: 0;
         transform: translateX(-50%);
       }
-
-      .donate-divider::before,
-      .donate-divider::after {
-        content: "";
-        flex: 1;
+      .donate-divider::before, .donate-divider::after {
+        content: ""; flex: 1;
         width: 1px;
         background: var(--border);
       }
-
       .donate-divider span {
         font-size: 0.72rem;
         text-transform: uppercase;
@@ -1072,67 +955,42 @@
         border-radius: 100px;
         white-space: nowrap;
       }
-
-      /* Columna derecha: QR */
-      .donate-qr {
-        padding-left: 32px;
-      }
-
+      .donate-qr { padding-left: 32px; }
       .donate-qr h3 {
-        font-family: "Playfair Display", serif;
-        font-size: 1.5rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 500;
         color: var(--charcoal);
         margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 10px;
       }
-
-      .donate-qr > p {
-        font-size: 0.9rem;
-        color: var(--mid);
-        line-height: 1.7;
-        margin-bottom: 28px;
-      }
-
+      .donate-qr > p { font-size: 0.9rem; color: var(--mid); line-height: 1.7; margin-bottom: 28px; }
       .qr-card {
         background: var(--cream);
         border: 1px solid var(--border);
         border-radius: 20px;
         padding: 28px;
         text-align: center;
-        position: relative;
       }
-
       .qr-svg-wrap {
-        width: 250px;
-        height: 250px;
+        width: 200px; height: 200px;
         margin: 0 auto 16px;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(45, 58, 46, 0.1);
+        box-shadow: 0 4px 20px rgba(45,58,46,0.1);
         background: white;
         display: flex;
         align-items: center;
         justify-content: center;
       }
-
-      .qr-svg-wrap svg {
-        width: 100%;
-        height: 100%;
-      }
-
-      .qr-label {
-        font-size: 0.82rem;
-        color: var(--mid);
-        margin-bottom: 16px;
-        line-height: 1.5;
-      }
-
+      .qr-svg-wrap img { width: 100%; height: 100%; object-fit: contain; }
+      .qr-label { font-size: 0.82rem; color: var(--mid); margin-bottom: 16px; line-height: 1.5; }
       .qr-url {
         font-size: 0.78rem;
         color: var(--sage-dark);
-        background: rgba(77, 122, 82, 0.08);
+        background: rgba(77,122,82,0.08);
         border: 1px solid var(--sage-light);
         border-radius: 8px;
         padding: 8px 14px;
@@ -1142,14 +1000,7 @@
         margin-bottom: 16px;
         word-break: break-all;
       }
-
-      .qr-badge-row {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
+      .qr-badge-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
       .qr-badge {
         background: var(--warm-white);
         border: 1px solid var(--border);
@@ -1161,10 +1012,9 @@
         align-items: center;
         gap: 5px;
       }
-
       .device-hint {
         margin-top: 20px;
-        background: rgba(77, 122, 82, 0.08);
+        background: rgba(77,122,82,0.08);
         border: 1px solid var(--sage-light);
         border-radius: 14px;
         padding: 16px 20px;
@@ -1172,28 +1022,9 @@
         gap: 14px;
         align-items: flex-start;
       }
-
-      .device-hint-icon {
-        font-size: 1.5rem;
-        flex-shrink: 0;
-        margin-top: 2px;
-      }
-
-      .device-hint-text strong {
-        display: block;
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--charcoal);
-        margin-bottom: 3px;
-      }
-
-      .device-hint-text span {
-        font-size: 0.8rem;
-        color: var(--mid);
-        line-height: 1.55;
-      }
-
-      /* Transparency row */
+      .device-hint-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+      .device-hint-text strong { display: block; font-size: 0.85rem; font-weight: 500; color: var(--charcoal); margin-bottom: 3px; }
+      .device-hint-text span { font-size: 0.8rem; color: var(--mid); line-height: 1.55; }
       .transparency-row {
         margin-top: 56px;
         padding: 32px 36px;
@@ -1201,296 +1032,18 @@
         border-radius: 20px;
         border: 1px solid var(--border);
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 24px;
         position: relative;
         z-index: 1;
       }
+      .transparency-item { text-align: center; }
+      .transparency-item .ti-icon { font-size: 1.6rem; margin-bottom: 8px; }
+      .transparency-item strong { display: block; font-family: "Playfair Display", serif; font-size: 1rem; color: var(--charcoal); margin-bottom: 4px; }
+      .transparency-item span { font-size: 0.8rem; color: var(--mid); line-height: 1.55; }
 
-      .transparency-item {
-        text-align: center;
-      }
-
-      .transparency-item .ti-icon {
-        font-size: 1.6rem;
-        margin-bottom: 8px;
-      }
-
-      .transparency-item strong {
-        display: block;
-        font-family: "Playfair Display", serif;
-        font-size: 1rem;
-        color: var(--charcoal);
-        margin-bottom: 4px;
-      }
-
-      .transparency-item span {
-        font-size: 0.8rem;
-        color: var(--mid);
-        line-height: 1.55;
-      }
-
-      /* ABOUT / INSTAGRAM — variante invertida: fotos izq, texto oscuro der */
-      .about-section {
-        background: var(--charcoal);
-        position: relative;
-        overflow: hidden;
-        padding: 0 !important;
-      }
-
-      /* Layout: fotos izquierda + texto derecha */
-      .about-inner {
-        display: grid;
-        grid-template-columns: 1.15fr 1fr;
-        min-height: 680px;
-        max-width: none;
-        margin: 0;
-        align-items: stretch;
-      }
-
-      /* Columna izquierda — grid editorial con alturas fijas */
-      .about-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 320px 360px;
-        gap: 3px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      /* Todos los items con tamaño controlado por el grid */
-      .ag-item {
-        position: relative;
-        overflow: hidden;
-        background: var(--charcoal);
-        min-height: 0;
-        min-width: 0;
-      }
-
-      .ag-item.tall {
-        grid-row: 1 / 3;
-      }
-
-      .ag-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.55s ease;
-      }
-
-      .ag-item:hover img {
-        transform: scale(1.03);
-      }
-
-      /* Overlay sutil en hover */
-      .ag-item::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(45, 58, 46, 0.2);
-        opacity: 0;
-        transition: opacity 0.3s;
-        z-index: 1;
-      }
-      .ag-item:hover::after {
-        opacity: 1;
-      }
-
-      /* Badge IG flotante */
-      .ag-ig-badge {
-        position: absolute;
-        bottom: 14px;
-        left: 14px;
-        z-index: 2;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 10px;
-        padding: 9px 13px;
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        text-decoration: none;
-        transition: background 0.2s;
-      }
-      .ag-ig-badge:hover {
-        background: rgba(0, 0, 0, 0.8);
-      }
-      .ag-ig-badge svg {
-        width: 16px;
-        height: 16px;
-        fill: white;
-        flex-shrink: 0;
-      }
-      .ag-ig-badge-text {
-        display: flex;
-        flex-direction: column;
-        gap: 1px;
-      }
-      .ag-ig-badge-handle {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: white;
-        white-space: nowrap;
-      }
-      .ag-ig-badge-label {
-        font-size: 0.6rem;
-        color: rgba(255, 255, 255, 0.5);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-      }
-
-      /* Tag de categoría */
-      .ag-tag {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 2;
-        background: rgba(0, 0, 0, 0.45);
-        backdrop-filter: blur(6px);
-        border-radius: 6px;
-        padding: 4px 9px;
-        font-size: 0.62rem;
-        color: rgba(255, 255, 255, 0.88);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-weight: 500;
-      }
-
-      /* Columna derecha — panel oscuro con texto */
-      .about-left {
-        padding: 72px 60px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 26px;
-        background: var(--charcoal);
-        position: relative;
-        z-index: 1;
-      }
-
-      /* Línea decorativa izquierda */
-      .about-left::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 60px;
-        bottom: 60px;
-        width: 1px;
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          rgba(255, 255, 255, 0.12) 30%,
-          rgba(255, 255, 255, 0.12) 70%,
-          transparent
-        );
-      }
-
-      .about-left .section-label {
-        color: var(--terracotta-light);
-      }
-
-      .about-left h2 {
-        color: white;
-        margin-bottom: 0;
-      }
-
-      .about-left h2 em {
-        color: var(--sage-light);
-      }
-
-      .about-left p {
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.52);
-        line-height: 1.85;
-        max-width: 400px;
-        margin: 0;
-      }
-
-      /* IG pill — versión clara sobre fondo oscuro */
-      .ig-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 100px;
-        padding: 9px 20px 9px 10px;
-        width: fit-content;
-        text-decoration: none;
-        transition:
-          background 0.2s,
-          border-color 0.2s,
-          transform 0.2s;
-      }
-      .ig-pill:hover {
-        background: rgba(255, 255, 255, 0.12);
-        border-color: rgba(255, 255, 255, 0.26);
-        transform: translateY(-1px);
-      }
-
-      .ig-pill-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-      }
-      .ig-pill-icon svg {
-        width: 15px;
-        height: 15px;
-        fill: white;
-      }
-
-      .ig-pill-text {
-        display: flex;
-        flex-direction: column;
-        gap: 1px;
-      }
-      .ig-pill-handle {
-        font-size: 0.83rem;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.88);
-      }
-      .ig-pill-sub {
-        font-size: 0.67rem;
-        color: rgba(255, 255, 255, 0.38);
-        text-transform: uppercase;
-        letter-spacing: 0.09em;
-      }
-
-      /* Separador decorativo */
-      .about-divider {
-        width: 40px;
-        height: 2px;
-        background: linear-gradient(to right, var(--sage), transparent);
-        border-radius: 2px;
-      }
-
-      @media (max-width: 975px) {
-        .about-inner {
-          grid-template-columns: 1fr;
-          min-height: auto;
-        }
-        .about-grid {
-          min-height: 420px;
-        }
-        .ag-item.tall {
-          grid-row: auto;
-        }
-        .about-left {
-          padding: 56px 28px;
-        }
-        .about-left::before {
-          display: none;
-        }
-      }
-
-      /* CTA */
+      /* ── ABOUT ── */
+      /* ── CTA ── */
       .cta-section {
         text-align: center;
         padding: 100px 60px;
@@ -1498,366 +1051,864 @@
         position: relative;
         overflow: hidden;
       }
-
       .cta-section::before {
         content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-          ellipse at 50% 100%,
-          rgba(168, 197, 172, 0.2) 0%,
-          transparent 60%
-        );
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 50% 100%, rgba(168,197,172,0.2) 0%, transparent 60%);
       }
-
-      .cta-section h2 {
-        position: relative;
-        margin: 0 auto 20px;
-        max-width: 600px;
+      .cta-section h2 { position: relative; margin: 0 auto 20px; max-width: 600px; }
+      .cta-section p { position: relative; font-size: 1rem; color: var(--mid); max-width: 480px; margin: 0 auto 40px; line-height: 1.75; }
+      .cta-section .hero-ctas { justify-content: center; position: relative; }
+      .cta-section .btn-secondary {
+        color: var(--sage-dark);
+        border-color: var(--sage-light);
+        border-width: 1.5px;
       }
+      .cta-section .btn-secondary:hover { border-color: var(--sage-dark); color: var(--sage-dark); background: rgba(122,158,126,0.07); }
 
-      .cta-section p {
-        position: relative;
-        font-size: 1rem;
-        color: var(--mid);
-        max-width: 480px;
-        margin: 0 auto 40px;
-        line-height: 1.75;
-      }
-
-      .cta-section .hero-ctas {
-        justify-content: center;
-        position: relative;
-      }
-
-      /* ===================== FOOTER ===================== */
+      /* ── FOOTER ── */
       footer {
         background: var(--charcoal);
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255,255,255,0.5);
         padding: 60px 60px 32px;
         font-size: 0.82rem;
       }
-
       .footer-grid {
         display: grid;
         grid-template-columns: 1.5fr 1fr 1fr 1fr;
         gap: 48px;
         margin-bottom: 48px;
         padding-bottom: 40px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
       }
-
       .footer-brand-logo {
         font-family: "Playfair Display", serif;
         font-size: 1.15rem;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(255,255,255,0.85);
         letter-spacing: 0.02em;
         display: block;
         margin-bottom: 12px;
         text-decoration: none;
       }
-
-      .footer-brand-logo span {
-        color: var(--terracotta-light);
-        font-style: italic;
-      }
-
-      .footer-brand p {
-        font-size: 0.82rem;
-        color: rgba(255, 255, 255, 0.4);
-        line-height: 1.75;
-        margin-bottom: 22px;
-      }
-
-      .footer-social {
-        display: flex;
-        gap: 8px;
-      }
-
+      .footer-brand-logo span { color: var(--terracotta-light); font-style: italic; }
+      .footer-brand p { font-size: 0.82rem; color: rgba(255,255,255,0.4); line-height: 1.75; margin-bottom: 22px; }
+      .footer-social { display: flex; gap: 8px; }
       .social-btn {
-        width: 36px;
-        height: 36px;
+        width: 36px; height: 36px;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex; align-items: center; justify-content: center;
         font-size: 1rem;
         text-decoration: none;
-        color: rgba(255, 255, 255, 0.55);
-        transition:
-          background 0.2s,
-          border-color 0.2s,
-          transform 0.2s,
-          color 0.2s;
+        color: rgba(255,255,255,0.55);
+        transition: background 0.2s, border-color 0.2s, transform 0.2s, color 0.2s;
       }
-
-      .social-btn:hover {
-        background: rgba(255, 255, 255, 0.14);
-        border-color: rgba(255, 255, 255, 0.22);
-        transform: translateY(-2px);
-        color: white;
-      }
-
-      .social-btn svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-      }
-
-      .footer-col h5 {
-        font-size: 0.68rem;
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-        color: rgba(255, 255, 255, 0.28);
-        font-weight: 500;
-        margin-bottom: 18px;
-      }
-
-      .footer-col ul {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 11px;
-      }
-
-      .footer-col ul li a {
-        color: rgba(255, 255, 255, 0.5);
-        text-decoration: none;
-        font-size: 0.83rem;
-        transition: color 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        line-height: 1.4;
-      }
-
-      .footer-col ul li a:hover {
-        color: rgba(255, 255, 255, 0.9);
-      }
-
-      .footer-col ul li a .fi {
-        opacity: 0.65;
-        font-size: 0.85rem;
-      }
-
+      .social-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.22); transform: translateY(-2px); color: white; }
+      .social-btn svg { width: 16px; height: 16px; fill: currentColor; }
+      .footer-col h5 { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.28); font-weight: 500; margin-bottom: 18px; }
+      .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+      .footer-col ul li a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; display: flex; align-items: center; gap: 8px; line-height: 1.4; }
+      .footer-col ul li a:hover { color: rgba(255,255,255,0.9); }
+      .footer-col ul li a .fi { opacity: 0.65; font-size: 0.85rem; }
       .footer-bottom {
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
         gap: 12px;
-        color: rgba(255, 255, 255, 0.3);
+        color: rgba(255,255,255,0.3);
         font-size: 0.78rem;
       }
+      .footer-bottom-logo { font-family: "Playfair Display", serif; color: rgba(255,255,255,0.5); font-size: 1rem; }
+      .footer-bottom-logo span { color: var(--terracotta-light); font-style: italic; }
+      .footer-bottom-links { display: flex; gap: 16px; align-items: center; }
+      .footer-bottom-links a { color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+      .footer-bottom-links a:hover { color: rgba(255,255,255,0.7); }
+      .footer-bottom-links .sep { opacity: 0.2; }
 
-      .footer-bottom-logo {
-        font-family: "Playfair Display", serif;
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 1rem;
+      /* ── PROGRESS BAR ── */
+      .progress-block {
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px 32px;
+        margin-bottom: 48px;
+        position: relative;
+        z-index: 1;
       }
-
-      .footer-bottom-logo span {
-        color: var(--terracotta-light);
-        font-style: italic;
-      }
-
-      .footer-bottom-links {
+      .progress-top {
         display: flex;
-        gap: 16px;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .progress-left {}
+      .progress-goal-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--light-mid);
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      .progress-amounts {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+      }
+      .progress-raised {
+        font-family: "Playfair Display", serif;
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: var(--terracotta);
+        line-height: 1;
+      }
+      .progress-separator {
+        font-size: 1rem;
+        color: var(--light-mid);
+      }
+      .progress-goal-amount {
+        font-size: 1rem;
+        color: var(--mid);
+        font-weight: 400;
+      }
+      .progress-pct {
+        font-size: 0.8rem;
+        color: var(--light-mid);
+        margin-top: 3px;
+      }
+      /* rotating text box */
+      .progress-msg-box {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 18px;
+        height: 44px;
+        min-width: 220px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
         align-items: center;
       }
+      .progress-msg {
+        font-size: 0.85rem;
+        color: var(--mid);
+        line-height: 1.3;
+        position: absolute;
+        width: calc(100% - 36px);
+        animation: none;
+      }
+      .progress-msg.slide-out {
+        animation: msgOut 0.35s ease forwards;
+      }
+      .progress-msg.slide-in {
+        animation: msgIn 0.35s ease forwards;
+      }
+      @keyframes msgOut {
+        from { opacity: 1; transform: translateY(0); }
+        to   { opacity: 0; transform: translateY(-16px); }
+      }
+      @keyframes msgIn {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      /* track */
+      .progress-track {
+        background: var(--border);
+        border-radius: 100px;
+        height: 10px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 100px;
+        background: linear-gradient(90deg, var(--terracotta), var(--terracotta-light));
+        transition: width 1.2s cubic-bezier(.4,0,.2,1);
+        width: 0%;
+      }
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--light-mid);
+      }
+      .progress-meta strong { color: var(--mid); }
 
-      .footer-bottom-links a {
-        color: rgba(255, 255, 255, 0.3);
-        text-decoration: none;
-        transition: color 0.2s;
+      /* ── MAP SECTION ── */
+      #feeders {
+        background: var(--warm-white);
+        padding: 100px 60px;
+      }
+      .map-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 32px;
+        align-items: start;
+      }
+      .map-container {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 32px rgba(45,58,46,0.08);
+        height: 420px;
+        position: relative;
+        isolation: isolate;
+      }
+      #feeder-map {
+        width: 100%;
+        height: 420px;
+        border-radius: 20px;
+      }
+      /* ESF popup — igual al dashboard */
+      .esf-popup .leaflet-popup-content-wrapper {
+        border-radius: 14px;
+        border: 1px solid #e2d9cc;
+        box-shadow: 0 8px 28px rgba(45,58,46,.13);
+        padding: 0;
+        font-family: 'DM Sans', sans-serif;
+      }
+      .esf-popup .leaflet-popup-content { margin: 14px 16px; }
+      .esf-popup .leaflet-popup-tip-container { display: none; }
+      .esf-popup .leaflet-popup-close-button { color: #8a9f8b !important; top: 8px !important; right: 10px !important; }
+      /* Sidebar */
+      .map-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .map-sidebar-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        color: var(--charcoal);
+        margin-bottom: 4px;
+      }
+      .feeder-card {
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 18px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .feeder-card:hover, .feeder-card.active {
+        border-color: var(--sage-light);
+        background: white;
+        box-shadow: 0 4px 16px rgba(77,122,82,0.1);
+        transform: translateX(3px);
+      }
+      .feeder-card-dot {
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .feeder-card-dot.on   { background: #4d8c52; box-shadow: 0 0 0 3px rgba(77,140,82,0.18); }
+      .feeder-card-dot.warn-dot { background: #c97b4b; box-shadow: 0 0 0 3px rgba(201,123,75,0.18); }
+      .feeder-card-dot.off  { background: var(--terracotta-light); }
+      .feeder-card-info {}
+      .feeder-card-name {
+        font-size: 0.87rem;
+        font-weight: 500;
+        color: var(--charcoal);
+        margin-bottom: 2px;
+      }
+      .feeder-card-sub {
+        font-size: 0.73rem;
+        color: var(--light-mid);
+      }
+      .feeder-card-stat {
+        margin-left: auto;
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .feeder-card-stat .val {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--sage-dark);
+        line-height: 1;
+      }
+      .feeder-card-stat .unit {
+        font-size: 0.65rem;
+        color: var(--light-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .map-cta-note {
+        font-size: 0.78rem;
+        color: var(--light-mid);
+        text-align: center;
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+      @media (max-width: 960px) {
+        #feeders { padding: 60px 24px; }
+        .map-layout { grid-template-columns: 1fr; }
+        .map-container { height: 320px; }
+        #feeder-map { height: 320px; }
+        .map-sidebar { flex-direction: row; flex-wrap: wrap; }
+        .feeder-card { flex: 1; min-width: 140px; }
+        .feeder-card:hover, .feeder-card.active { transform: translateY(-2px); }
+      }
+      @media (max-width: 480px) {
+        #feeders { padding: 44px 16px; }
+        .map-container { height: 260px; }
+        #feeder-map { height: 260px; }
+        .map-sidebar { flex-direction: column; }
+      }
+      /* ── MOCKUP DUO ── */
+      .mockup-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mockup-duo {
+        position: relative;
+        width: 100%;
+        max-width: 640px;
+        height: 570px;
+        overflow: visible;
+        background: none;
+      }
+      .mockup-duo::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 55%;
+        transform: translate(-50%, -50%);
+        width: 85%;
+        height: 85%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(200,200,200,0.3) 0%, transparent 68%);
+        filter: blur(50px);
+        pointer-events: none;
+        z-index: 0;
+      }
+      .mockup-laptop {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 520px;
+        height: auto;
+        filter: drop-shadow(0 24px 40px rgba(45,58,46,0.16));
+        transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
+        z-index: 1;
+      }
+      .mockup-phone {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        width: 130px;
+        height: auto;
+        filter: drop-shadow(0 20px 36px rgba(45,58,46,0.18));
+        transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
+        z-index: 2;
+      }
+      .mockup-laptop:hover { transform: translateY(-7px); }
+      .mockup-phone:hover  { transform: translateY(-7px); }
+
+      /* Mobile combined mockup — hidden on desktop */
+      .mockup-duo-mobile {
+        display: none;
+        width: 100%;
+        height: 340px;
+        background-image: url("{% static 'images/duomockup.png' %}");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 140%;
+        margin: 0 auto;
       }
 
-      .footer-bottom-links a:hover {
-        color: rgba(255, 255, 255, 0.7);
+      @media (max-width: 1205px) {
+        .mockup-laptop { width: 420px; }
+        .mockup-phone  { width: 105px; }
+        .mockup-duo    { height: 380px; }
+      }
+      @media (max-width: 1024px) {
+        .mockup-laptop { width: 340px; }
+        .mockup-phone  { width: 85px; }
+        .mockup-duo    { height: 310px; }
+      }
+      @media (max-width: 768px) {
+        .mockup-duo { display: none; }
+        .mockup-duo-mobile { display: block; height: 380px; background-size: 95%; }
+      }
+      @media (max-width: 640px) {
+        .mockup-duo-mobile { height: 320px; background-size: 95%; }
+      }
+      @media (max-width: 480px) {
+        .mockup-duo-mobile { height: 280px; background-size: 120%; }
       }
 
-      .footer-bottom-links .sep {
-        opacity: 0.2;
-      }
-
-      /* ANIMATIONS */
       @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(28px);
-        }
-
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(28px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
-      .fade-in {
-        opacity: 0;
-        transform: translateY(30px);
-        transition:
-          opacity 0.7s ease,
-          transform 0.7s ease;
+      /* ── ANIMACIONES EXTRA ── */
+
+      /* Orbs flotantes del hero */
+      @keyframes floatA {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33%  { transform: translate(30px, -40px) scale(1.05); }
+        66%  { transform: translate(-20px, 20px) scale(0.97); }
+      }
+      @keyframes floatB {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        40%  { transform: translate(-35px, 25px) scale(1.04); }
+        70%  { transform: translate(20px, -15px) scale(0.98); }
+      }
+      .hero::before { animation: floatA 12s ease-in-out infinite; transform: translate(var(--px, 0px), var(--py, 0px)); }
+      .hero::after  { animation: floatB 15s ease-in-out infinite; transform: translate(calc(var(--px, 0px) * -0.6), calc(var(--py, 0px) * -0.6)); }
+
+      /* Shimmer en btn-primary */
+      @keyframes shimmer {
+        0%   { background-position: -200% center; }
+        100% { background-position: 200% center; }
+      }
+      .btn-primary {
+        background-size: 200% auto;
+        background-image: linear-gradient(120deg, var(--sage-dark) 0%, var(--sage-dark) 40%, #6aad70 50%, var(--sage-dark) 60%, var(--sage-dark) 100%);
+        animation: shimmer 4s linear infinite;
+      }
+      .btn-primary:hover { animation: none; background: var(--charcoal); }
+
+      /* Counter up en stats de impact */
+      .impact-stat-val { transition: color 0.3s; }
+
+      /* Stagger delays para cards de steps */
+      .steps .step:nth-child(1) { transition-delay: 0s; }
+      .steps .step:nth-child(2) { transition-delay: 0.08s; }
+      .steps .step:nth-child(3) { transition-delay: 0.16s; }
+      .steps .step:nth-child(4) { transition-delay: 0.24s; }
+      .steps .step:nth-child(5) { transition-delay: 0.32s; }
+
+      /* Stagger para impact stats */
+      .impact-stat:nth-child(1) { transition-delay: 0s; }
+      .impact-stat:nth-child(2) { transition-delay: 0.1s; }
+      .impact-stat:nth-child(3) { transition-delay: 0.2s; }
+      .impact-stat:nth-child(4) { transition-delay: 0.3s; }
+
+      /* Stagger para feature items */
+      .features-list .feature-item:nth-child(1) { transition-delay: 0s; }
+      .features-list .feature-item:nth-child(2) { transition-delay: 0.1s; }
+      .features-list .feature-item:nth-child(3) { transition-delay: 0.2s; }
+      .features-list .feature-item:nth-child(4) { transition-delay: 0.3s; }
+
+      /* Nav progress bar al hacer scroll */
+      .nav-progress {
+        position: fixed;
+        top: 0; left: 0;
+        height: 2px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--sage), var(--terracotta));
+        z-index: 300;
+        transition: width 0.1s linear;
       }
 
-      .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
+      /* Glow sutil en los feeder-card al hacer hover */
+      .feeder-card { transition: background 0.2s, box-shadow 0.2s, transform 0.2s; }
+      .feeder-card:hover { transform: translateX(4px); box-shadow: -3px 0 0 var(--sage); }
+
+      /* Typed cursor en el badge del hero */
+      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+      .hero-badge .bdot { animation: pulse 2s ease infinite; }
+      .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+      .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+      /* ── TILT CARDS ── */
+      .step, .impact-card, .feature-item {
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+      .step { transition: transform 0.05s linear, box-shadow 0.05s linear; }
+
+      /* ── SCRAMBLE CURSOR ── */
+      .scramble { display: inline; }
+
+      /* ── SECTION CLIP REVEAL ── */
+      .clip-reveal {
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path 0.9s cubic-bezier(0.77,0,0.18,1);
+      }
+      .clip-reveal.visible { clip-path: inset(0 0% 0 0); }
+
+      /* ── LIVE BADGE ── */
+      @keyframes livePulse {
+        0%,100% { box-shadow: 0 0 0 0 rgba(122,158,126,0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(122,158,126,0); }
+      }
+      .hero-badge { animation: livePulse 2.5s ease infinite; }
+
+      /* ── IMPACT COUNTER GLOW ── */
+      @keyframes numGlow {
+        0%,100% { text-shadow: none; }
+        50% { text-shadow: 0 0 20px rgba(122,158,126,0.6); }
+      }
+      .impact-stat-val.counting { animation: numGlow 0.4s ease; }
+
+      /* ════════════════════════════════════════
+         RESPONSIVE — TABLET  ≤ 1024px
+      ════════════════════════════════════════ */
+      @media (max-width: 1024px) {
+        .hero { padding: 90px 24px 32px; }
+        .hero-bento { grid-template-columns: 1fr 1fr; }
+        .bcard-headline { grid-column: 1 / 3; grid-row: 1; min-height: auto; }
+        .bcard-device { grid-column: 1; grid-row: 2; }
+        .bcard-status { grid-column: 2; grid-row: 2; }
+        .bcard-donate { grid-column: 1 / 3; grid-row: 3; flex-direction: row; align-items: center; }
+        .device-card { height: auto; min-height: 300px; }
+        section { padding: 80px 40px; }
+        #donacion { padding: 80px 40px; }
+        footer { padding: 50px 40px 28px; }
+        .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+        .footer-brand { grid-column: 1 / -1; }
       }
 
-      /* RESPONSIVE */
-      @media (max-width: 975px) {
-        nav {
-          padding: 18px 28px;
-        }
+      /* ════════════════════════════════════════
+         RESPONSIVE — NAV TIGHT  ≤ 1200px
+      ════════════════════════════════════════ */
+      @media (max-width: 1200px) {
+        nav { padding: 18px 32px; }
+        nav ul { gap: 20px; }
+        nav a { font-size: 0.78rem; }
+        .nav-donate { padding: 7px 14px; }
+      }
 
-        nav ul {
-          display: none;
-        }
+      /* ════════════════════════════════════════
+         RESPONSIVE — NAV + DONATE BREAK  ≤ 960px
+      ════════════════════════════════════════ */
+      @media (max-width: 960px) {
+        nav { padding: 16px 24px; }
+        nav ul { display: none; }
+        .hamburger { display: flex; }
 
-        .hero {
-          grid-template-columns: 1fr;
-          padding: 100px 28px 60px;
-        }
-
-        section {
-          padding: 70px 28px;
-        }
-
-        #donacion {
-          padding: 70px 28px;
-        }
-
-        .features-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .ods-strip {
-          padding: 18px 28px;
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-
-        footer {
-          padding: 44px 28px 28px;
-        }
-
-        .footer-grid {
-          grid-template-columns: 1fr 1fr;
-          gap: 32px;
-        }
-
-        .cta-section {
-          padding: 70px 28px;
-        }
-
-        .metric-cards {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .donate-banner {
-          padding: 36px 28px;
-        }
-
-        .donate-banner::before {
-          display: none;
-        }
-
+        /* Donate: colapsar a columna única antes de que se rompa */
         .donate-grid {
           grid-template-columns: 1fr;
-          gap: 48px;
+          gap: 0;
         }
-
         .donate-divider {
           flex-direction: row;
           position: static;
           transform: none;
+          margin: 36px 0;
         }
-
         .donate-divider::before,
         .donate-divider::after {
           width: auto;
           height: 1px;
           flex: 1;
         }
-
-        .donate-qr {
-          padding-left: 0;
-        }
-
-        .transparency-row {
-          grid-template-columns: 1fr 1fr;
-        }
+        .donate-qr { padding-left: 0; }
+        .btn-donate-web { width: 100%; justify-content: center; }
       }
 
-      @media (max-width: 560px) {
-        .footer-grid {
-          grid-template-columns: 1fr;
-        }
+      /* ════════════════════════════════════════
+         RESPONSIVE — MOBILE  ≤ 768px
+      ════════════════════════════════════════ */
+      @media (max-width: 768px) {
+        nav { padding: 16px 20px; }
 
-        .footer-bottom {
+        /* Hero — ocultar imagen, centrar solo el texto */
+        .hero {
+          display: flex;
           flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: unset;
+          height: auto;
+          padding: 100px 24px 48px;
+          gap: 0;
           text-align: center;
         }
-        .device-card {
-          background-size: 400px;
-          height: 400px;
+        .hero::before, .hero::after { display: none; }
+        .hero { padding: 100px 16px 24px; }
+        .hero-bento { grid-template-columns: 1fr; gap: 12px; }
+        .bcard-headline { grid-column: 1; min-height: auto; padding: 32px 24px; }
+        .bcard-device { display: none; }
+        .device-card { display: none; }
+        .hero-badge { margin: 0 auto 20px; }
+        .hero-desc { margin: 0 auto 32px; font-size: 0.95rem; }
+        .hero-ctas { justify-content: center; width: 100%; }
+        .btn-primary, .btn-secondary { flex: 1; min-width: 130px; padding: 14px 16px; font-size: 0.9rem; }
+
+        /* ODS — label arriba centrado, chips abajo */
+        .ods-strip {
+          padding: 10px 14px;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
         }
+        .ods-label { font-size: 0.58rem; text-align: center; }
+        .ods-items { gap: 6px; flex-wrap: wrap; justify-content: center; }
+        .ods-chip { font-size: 0.6rem; padding: 3px 8px; }
+
+        /* Sections */
+        section { padding: 52px 20px; }
+        #donacion { padding: 52px 20px; }
+        .section-sub { margin-bottom: 32px; font-size: 0.92rem; }
+
+        /* Steps — acordeón limpio en mobile */
+        .steps {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          border-radius: 0;
+          border: none;
+          overflow: visible;
+        }
+        .step {
+          padding: 0;
+          border-radius: 0;
+          border: none;
+          border-bottom: 1px solid transparent;
+          background: transparent;
+          transform: none !important;
+          box-shadow: none !important;
+          position: relative;
+        }
+        .step:not(:last-child)::after {
+          content: "";
+          display: block;
+          height: 1px;
+          background: linear-gradient(to right, transparent, var(--border) 20%, var(--border) 80%, transparent);
+        }
+        .step:last-child { border-bottom: none; }
+        .step::before { display: none; }
+
+        /* Número + header row */
+        .step-accordion-header {
+          display: flex !important;
+          align-items: center;
+          gap: 10px;
+          padding: 16px 4px;
+          cursor: pointer;
+          pointer-events: auto;
+          user-select: none;
+          transition: opacity 0.2s;
+        }
+        .step-accordion-header:active { opacity: 0.6; }
+
+        /* Número */
+        .step-num {
+          display: inline !important;
+          font-family: "DM Sans", sans-serif;
+          font-size: 0.75rem;
+          font-weight: 500;
+          color: var(--sage);
+          width: 16px;
+          flex-shrink: 0;
+        }
+
+        /* Ícono sin caja */
+        .step-icon {
+          width: auto; height: auto;
+          background: none !important;
+          box-shadow: none !important;
+          border-radius: 0;
+          font-size: 1.05rem;
+          margin-bottom: 0;
+          flex-shrink: 0;
+          line-height: 1;
+        }
+
+        /* Título */
+        .step-accordion-header h4 {
+          flex: 1;
+          font-size: 0.95rem;
+          font-weight: 500;
+          margin-bottom: 0;
+          color: var(--charcoal);
+        }
+
+        /* Chevron */
+        .step-chevron {
+          display: block !important;
+          width: 15px; height: 15px;
+          flex-shrink: 0;
+          color: var(--sage);
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step.open .step-chevron {
+          transform: rotate(180deg);
+          color: var(--sage-dark);
+        }
+
+        /* Cuerpo — transición suave con opacity */
+        .step-accordion-body {
+          display: block !important;
+          max-height: 0 !important;
+          overflow: hidden !important;
+          opacity: 0;
+          padding: 0 !important;
+          transition:
+            max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.35s ease,
+            padding 0.35s ease !important;
+        }
+        .step.open .step-accordion-body {
+          max-height: 200px !important;
+          opacity: 1;
+          padding: 0 0 14px 28px !important;
+        }
+        .step-accordion-body p {
+          font-size: 0.875rem;
+          color: var(--mid);
+          line-height: 1.7;
+          margin: 0;
+        }
+
+        /* Features */
+        .features-grid { grid-template-columns: 1fr; gap: 36px; }
+        .feature-item { padding: 14px; }
+
+        /* Impact — grid 2x2 compacto */
+        #impact { padding: 12px 14px !important; }
+        .impact-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .impact-stat { flex: unset; border-right: none; padding: 8px 10px; background: rgba(255,255,255,0.04); border-radius: 10px; gap: 8px; }
+        .impact-stat-val { font-size: 1rem; }
+        .impact-stat-label { font-size: 0.56rem; }
+        .impact-stat-emoji { font-size: 1rem; }
+
+        /* Donate banner */
+        .donate-banner { padding: 28px 20px; }
+        .donate-banner::before { display: none; }
+        .donate-banner h3 { font-size: 1.25rem; }
+        .donate-banner p { font-size: 0.87rem; }
+
+        /* Donate grid — columna única */
+        .donate-grid { grid-template-columns: 1fr !important; gap: 0; }
+        .donate-divider { flex-direction: row; position: static; transform: none; margin: 28px 0; }
+        .donate-divider::before, .donate-divider::after { width: auto; height: 1px; flex: 1; }
+        .donate-qr { padding-left: 0; }
+        .qr-svg-wrap { width: 160px; height: 160px; }
+        .amount-pills { gap: 8px; }
+        .amount-pill { padding: 8px 16px; font-size: 0.85rem; }
+        .btn-donate-web { width: 100%; justify-content: center; }
+
+        /* Transparency */
+        .transparency-row { padding: 20px 16px; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+
+        /* CTA */
+        .cta-section { padding: 70px 40px; }
+        .cta-section .hero-ctas { gap: 12px; }
+        .cta-section .btn-primary,
+        .cta-section .btn-secondary { padding: 13px 24px; font-size: 0.88rem; }
+
+        .link-short { display: none; }
+        .link-full  { display: inline; }
+
+        /* Footer — brand arriba, links en grid 2 col */
+        footer { padding: 40px 20px 20px; }
+        .footer-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 28px 20px;
+        }
+        .footer-brand {
+          grid-column: 1 / -1;
+        }
+        .footer-col h5 { margin-bottom: 12px; }
+        .footer-col ul { gap: 9px; }
+        .footer-col ul li a { font-size: 0.8rem; }
+        .footer-col:last-child { grid-column: 1 / -1; }
+        .footer-col:last-child ul li a { font-size: 0.78rem; word-break: break-all; }
+        .footer-bottom { flex-direction: column; text-align: center; gap: 8px; }
+        .footer-bottom-links { flex-wrap: wrap; justify-content: center; }
+      }
+
+      /* ════════════════════════════════════════
+         RESPONSIVE — SMALL  ≤ 480px
+      ════════════════════════════════════════ */
+      @media (max-width: 480px) {
+        .hero { padding: 100px 12px 20px; }
+        .bcard { padding: 22px 20px; border-radius: 18px; }
+        .bcard-headline { padding: 28px 20px; }
+        .bcard-device { display: none; }
+        .device-card { display: none; }
+        h1 { font-size: 1.9rem; }
+        .mobile-menu a { font-size: 1.15rem; padding: 11px 20px; }
+        .mobile-menu .m-donate { font-size: 0.95rem; }
+        .mobile-menu { padding: 80px 20px 32px; gap: 4px; }
+        section { padding: 44px 16px; }
+        #donacion { padding: 44px 16px; }
+        footer { padding: 36px 16px 20px; }
+
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.6rem; }
+
+        .hero-ctas { flex-direction: column; width: 100%; }
+        .btn-primary, .btn-secondary { width: 100%; text-align: center; min-width: unset; }
+
+        .metric-cards { grid-template-columns: 1fr 1fr; }
+        .metric-cards .metric-card:last-child { grid-column: 1 / -1; }
+
+        .donate-banner { padding: 22px 16px; border-radius: 14px; }
+
+        .transparency-row { grid-template-columns: 1fr; padding: 18px 14px; }
+
+        .ods-strip { padding: 8px 14px; }
+        .ods-label { font-size: 0.58rem; }
+        .ods-chip { font-size: 0.62rem; padding: 3px 8px; }
       }
     </style>
   </head>
   <body>
+    <div class="nav-progress" id="navProgress"></div>
+
     <!-- NAV -->
     <nav>
-      <div class="logo">
-        Eco
-        <span>Sentinel</span>
-        Feeder
-      </div>
+      <a href="#" class="logo">Eco<span>Sentinel</span> Feeder</a>
+
+      <!-- Desktop menu -->
       <ul>
         <li><a href="#como-funciona">Cómo funciona</a></li>
         <li><a href="#features">Características</a></li>
-        <li><a href="#impact">Impacto</a></li>
-        <li><a href="/donar" class="nav-donate">❤ Donar</a></li>
+        <li><a href="#feeders">Feeders</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#donacion" class="nav-donate">Donar</a></li>
         <li>
-          <a
-            href="https://github.com/WilliamsACE/EcoSentinelFeeder/tree/master"
-            target="_blank"
-            class="nav-github"
-          >
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
-              />
-            </svg>
+          <a href="https://github.com/WilliamsACE/EcoSentinelFeeder/tree/master" target="_blank" class="nav-github">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
             GitHub
           </a>
         </li>
       </ul>
+
+      <!-- Hamburger button -->
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </nav>
 
+    <!-- Mobile overlay menu -->
+    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menú de navegación">
+      <a href="#como-funciona" class="menu-link">Cómo funciona</a>
+      <a href="#features" class="menu-link">Características</a>
+      <a href="#feeders" class="menu-link">Feeders</a>
+      <a href="#contacto" class="menu-link">Contacto</a>
+      <div class="mobile-menu-divider"></div>
+      <a href="#donacion" class="menu-link m-donate">Donar</a>
+      <a href="https://github.com/WilliamsACE/EcoSentinelFeeder/tree/master" target="_blank" class="menu-link m-github">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        Ver en GitHub
+      </a>
+    </div>
+
     <!-- HERO -->
-    <section class="hero" style="padding-top: 120px">
+    <section class="hero">
       <div class="hero-text">
-        <div class="hero-badge">
-          <div class="bdot"></div>
-          Tecnología con propósito
-        </div>
-        <h1>
-          Alimentación
-          <em>inteligente</em>
-          para quienes más lo necesitan
-        </h1>
-        <p class="hero-desc">
-          EcoSentinel Feeder es un dispensador autónomo que usa inteligencia
-          artificial para detectar y alimentar a perros y gatos de la calle, de
-          forma precisa, segura y sin desperdicio.
-        </p>
+        <div class="hero-badge"><div class="bdot"></div>Tecnología con propósito</div>
+        <h1>Alimentación <em>inteligente</em> para quienes más lo necesitan</h1>
+        <p class="hero-desc">EcoSentinel Feeder es un dispensador autónomo que usa inteligencia artificial para detectar y alimentar a perros y gatos de la calle, de forma precisa, segura y sin desperdicio.</p>
         <div class="hero-ctas">
           <a href="#como-funciona" class="btn-primary">Ver cómo funciona</a>
           <a href="#donacion" class="btn-secondary">★ Apoyar el proyecto</a>
@@ -1870,542 +1921,270 @@
 
     <!-- ODS STRIP -->
     <div class="ods-strip">
-      <div class="ods-label">Objetivos de Desarrollo Sostenible</div>
+      <div class="ods-label">ODS</div>
       <div class="ods-items">
-        <div class="ods-chip">
-          <span class="num">15</span>
-          Vida de Ecosistemas Terrestres
-        </div>
-        <div class="ods-chip">
-          <span class="num">12</span>
-          Ciudades y Comunidades Sostenibles
-        </div>
+        <div class="ods-chip"><span class="num">15</span> Vida de Ecosistemas Terrestres</div>
+        <div class="ods-chip"><span class="num">12</span> Ciudades y Comunidades Sostenibles</div>
       </div>
     </div>
+
+    <hr class="section-divider">
+
+    <!-- IMPACT -->
+    <section id="impact">
+      <div class="impact-strip">
+        <div class="impact-stat fade-in">
+          <span class="impact-stat-emoji">🐾</span>
+          <div>
+            <div class="impact-stat-val">+62</div>
+            <div class="impact-stat-label">animales alimentados</div>
+          </div>
+        </div>
+        <div class="impact-stat fade-in">
+          <span class="impact-stat-emoji">🤖</span>
+          <div>
+            <div class="impact-stat-val">94%</div>
+            <div class="impact-stat-label">precisión de la IA</div>
+          </div>
+        </div>
+        <div class="impact-stat fade-in">
+          <span class="impact-stat-emoji">📡</span>
+          <div>
+            <div class="impact-stat-val">24/7</div>
+            <div class="impact-stat-label">monitoreo en tiempo real</div>
+          </div>
+        </div>
+        <div class="impact-stat fade-in">
+          <span class="impact-stat-emoji">🌿</span>
+          <div>
+            <div class="impact-stat-val">ODS 11 · 15</div>
+            <div class="impact-stat-label">objetivos de desarrollo</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
 
     <!-- CÓMO FUNCIONA -->
     <section id="como-funciona">
       <div class="section-label">Proceso</div>
-      <h2>
-        Simple, eficiente
-        <br />
-        <em>y completamente automático</em>
-      </h2>
-      <p class="section-sub">
-        El dispositivo opera de forma autónoma en espacios urbanos y
-        comunitarios. Aquí te explicamos cómo funciona paso a paso.
-      </p>
+      <h2>Simple, eficiente<br><em>y completamente automático</em></h2>
+      <p class="section-sub">El dispositivo opera de forma autónoma en espacios urbanos y comunitarios. Aquí te explicamos cómo funciona paso a paso.</p>
       <div class="steps">
         <div class="step fade-in">
-          <div class="step-icon">📡</div>
-          <h4>Detección</h4>
-          <p>
-            El sensor de movimiento detecta presencia. La cámara captura la
-            imagen para su análisis.
-          </p>
+          <div class="step-accordion-header">
+            <span class="step-num">1</span>
+            <div class="step-icon">📡</div>
+            <h4>Detección</h4>
+            <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="step-accordion-body">
+            <p>El sensor de movimiento detecta presencia. La cámara captura la imagen para su análisis.</p>
+          </div>
         </div>
         <div class="step fade-in">
-          <div class="step-icon">🤖</div>
-          <h4>Clasificación con IA</h4>
-          <p>
-            El modelo de IA identifica si es un perro, gato, humano u otro. Solo
-            los animales válidos reciben comida.
-          </p>
+          <div class="step-accordion-header">
+            <span class="step-num">2</span>
+            <div class="step-icon">🤖</div>
+            <h4>Clasificación con IA</h4>
+            <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="step-accordion-body">
+            <p>El modelo de IA identifica si es un perro, gato, humano u otro. Solo los animales válidos reciben comida.</p>
+          </div>
         </div>
         <div class="step fade-in">
-          <div class="step-icon">⚖️</div>
-          <h4>Dispensación precisa</h4>
-          <p>
-            Una celda de carga controla con exactitud la cantidad de alimento
-            liberada según la especie detectada.
-          </p>
+          <div class="step-accordion-header">
+            <span class="step-num">3</span>
+            <div class="step-icon">⚖️</div>
+            <h4>Dispensación precisa</h4>
+            <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="step-accordion-body">
+            <p>Una celda de carga controla con exactitud la cantidad de alimento liberada según la especie detectada.</p>
+          </div>
         </div>
         <div class="step fade-in">
-          <div class="step-icon">📊</div>
-          <h4>Registro y monitoreo</h4>
-          <p>
-            Cada evento se almacena en la plataforma web: especie, confianza de
-            la IA, cantidad y horario.
-          </p>
+          <div class="step-accordion-header">
+            <span class="step-num">4</span>
+            <div class="step-icon">📊</div>
+            <h4>Registro y monitoreo</h4>
+            <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="step-accordion-body">
+            <p>Cada evento se almacena en la plataforma web: especie, confianza de la IA, cantidad y horario.</p>
+          </div>
         </div>
         <div class="step fade-in">
-          <div class="step-icon">🔔</div>
-          <h4>Alertas inteligentes</h4>
-          <p>
-            El sistema detecta fallos como atascos o errores de pesaje y
-            notifica al responsable en tiempo real.
-          </p>
+          <div class="step-accordion-header">
+            <span class="step-num">5</span>
+            <div class="step-icon">🔔</div>
+            <h4>Alertas inteligentes</h4>
+            <svg class="step-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="step-accordion-body">
+            <p>El sistema detecta fallos como atascos o errores de pesaje y notifica al responsable en tiempo real.</p>
+          </div>
         </div>
       </div>
     </section>
+
+    <hr class="section-divider">
 
     <!-- FEATURES -->
     <section id="features">
       <div class="features-grid">
         <div>
           <div class="section-label">Características</div>
-          <h2>
-            Todo lo que necesita un sistema
-            <em>verdaderamente inteligente</em>
-          </h2>
-          <p class="section-sub">
-            Diseñado para ser económico, resistente y fácil de mantener en
-            entornos urbanos.
-          </p>
+          <h2>Todo lo que necesita un sistema <em>verdaderamente inteligente</em></h2>
+          <p class="section-sub">Diseñado para ser económico, resistente y fácil de mantener en entornos urbanos.</p>
           <div class="features-list">
             <div class="feature-item fade-in">
               <div class="feat-icon">🎯</div>
               <div class="feat-text">
                 <h4>IA de clasificación animal</h4>
-                <p>
-                  Distingue perros de gatos con alta precisión. No dispensa ante
-                  humanos u otras especies no deseadas.
-                </p>
+                <p>Distingue perros de gatos con alta precisión. No dispensa ante humanos u otras especies no deseadas.</p>
               </div>
             </div>
             <div class="feature-item fade-in">
               <div class="feat-icon">🌐</div>
               <div class="feat-text">
                 <h4>Plataforma web de monitoreo</h4>
-                <p>
-                  Visualiza en tiempo real el nivel de batería, alimento
-                  disponible, historial de eventos y gráficas de consumo.
-                </p>
+                <p>Visualiza en tiempo real el nivel de batería, alimento disponible, historial de eventos y gráficas de consumo.</p>
               </div>
             </div>
             <div class="feature-item fade-in">
               <div class="feat-icon">♻️</div>
               <div class="feat-text">
                 <h4>Cero desperdicio de alimento</h4>
-                <p>
-                  Porciones medidas con celda de carga. Cada animal recibe lo
-                  que necesita, ni más ni menos.
-                </p>
+                <p>Porciones medidas con celda de carga. Cada animal recibe lo que necesita, ni más ni menos.</p>
               </div>
             </div>
             <div class="feature-item fade-in">
               <div class="feat-icon">🔒</div>
               <div class="feat-text">
                 <h4>Seguridad y tolerancia a fallos</h4>
-                <p>
-                  Detecta atascos y errores de pesaje automáticamente y alerta
-                  al responsable para atención oportuna.
-                </p>
+                <p>Detecta atascos y errores de pesaje automáticamente y alerta al responsable para atención oportuna.</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="fade-in">
-          <div class="platform-preview">
-            <div class="platform-header">
-              <div class="window-dots">
-                <div class="wdot red"></div>
-                <div class="wdot yellow"></div>
-                <div class="wdot green"></div>
-              </div>
-              <div class="platform-title">EcoSentinel Dashboard</div>
-            </div>
-            <div class="metric-cards">
-              <div class="metric-card">
-                <div class="m-label">Perros</div>
-                <div class="m-val">83</div>
-                <div class="m-change">↑ +12 hoy</div>
-              </div>
-              <div class="metric-card">
-                <div class="m-label">Gatos</div>
-                <div class="m-val">59</div>
-                <div class="m-change">↑ +7 hoy</div>
-              </div>
-              <div class="metric-card">
-                <div class="m-label">Alimento</div>
-                <div class="m-val">1.4kg</div>
-                <div class="m-change">dispensado</div>
-              </div>
-            </div>
-            <div class="chart-area">
-              <div
-                class="bar dog"
-                style="height: 55%; animation-delay: 0.1s"
-              ></div>
-              <div
-                class="bar cat"
-                style="height: 35%; animation-delay: 0.15s"
-              ></div>
-              <div
-                class="bar dog"
-                style="height: 70%; animation-delay: 0.2s"
-              ></div>
-              <div
-                class="bar cat"
-                style="height: 45%; animation-delay: 0.25s"
-              ></div>
-              <div
-                class="bar dog"
-                style="height: 85%; animation-delay: 0.3s"
-              ></div>
-              <div
-                class="bar cat"
-                style="height: 60%; animation-delay: 0.35s"
-              ></div>
-              <div
-                class="bar dog"
-                style="height: 65%; animation-delay: 0.4s"
-              ></div>
-              <div
-                class="bar cat"
-                style="height: 75%; animation-delay: 0.45s"
-              ></div>
-              <div
-                class="bar dog"
-                style="height: 90%; animation-delay: 0.5s"
-              ></div>
-              <div
-                class="bar cat"
-                style="height: 55%; animation-delay: 0.55s"
-              ></div>
-              <div
-                class="bar dog"
-                style="height: 78%; animation-delay: 0.6s"
-              ></div>
-              <div
-                class="bar cat"
-                style="height: 40%; animation-delay: 0.65s"
-              ></div>
-            </div>
-            <div class="event-row">
-              <span class="event-tag perro">🐕 Perro</span>
-              Dispensados 85g · Confianza 96%
-              <span class="event-time">14:32</span>
-            </div>
-            <div class="event-row">
-              <span class="event-tag gato">🐈 Gato</span>
-              Dispensados 60g · Confianza 91%
-              <span class="event-time">14:18</span>
-            </div>
-            <div class="event-row">
-              <span class="event-tag alerta">⚠️ Alerta</span>
-              Humano detectado, sin dispensación
-              <span class="event-time">13:55</span>
-            </div>
+        <div class="fade-in mockup-wrap">
+          <div class="mockup-duo">
+            <img
+              src="{% static 'images/laptopmockup.png' %}"
+              alt="Dashboard en laptop"
+              class="mockup-laptop"
+            />
+            <img
+              src="{% static 'images/cellphonemockup.png' %}"
+              alt="Dashboard en celular"
+              class="mockup-phone"
+            />
           </div>
+          <div class="mockup-duo-mobile"></div>
         </div>
       </div>
     </section>
 
-    <!-- IMPACT -->
-    <section id="impact">
-      <div class="section-label">Impacto</div>
-      <h2>
-        Tecnología que cuida
-        <br />
-        <em>a los más vulnerables</em>
-      </h2>
-      <p class="section-sub">
-        EcoSentinel Feeder conecta la inteligencia artificial con el bienestar
-        animal y el cuidado del entorno urbano.
-      </p>
-      <div class="impact-grid">
-        <div class="impact-card fade-in">
-          <span class="ic-emoji">🐕🐈</span>
-          <h4>Bienestar animal</h4>
-          <p>
-            Garantiza acceso regular a alimento para perros y gatos callejeros,
-            reduciendo el hambre en comunidades urbanas.
-          </p>
-        </div>
-        <div class="impact-card fade-in">
-          <span class="ic-emoji">🌿</span>
-          <h4>ODS 15 — Vida terrestre</h4>
-          <p>
-            Contribuye a la coexistencia armónica entre fauna urbana y
-            comunidades humanas, protegiendo ecosistemas locales.
-          </p>
-        </div>
-        <div class="impact-card fade-in">
-          <span class="ic-emoji">🌆</span>
-          <h4>ODS 11 — Ciudades y Comunidades Sostenibles</h4>
-          <p>
-            Al reducir el desperdicio de alimento y optimizar recursos, apoya
-            indirectamente la acción climática comunitaria.
-          </p>
-        </div>
-        <div class="impact-card fade-in">
-          <span class="ic-emoji">📚</span>
-          <h4>Valor educativo</h4>
-          <p>
-            Los datos recopilados ayudan a investigadores y comunidades a
-            entender mejor el comportamiento y necesidades de la fauna urbana.
-          </p>
-        </div>
-      </div>
-    </section>
+    <hr class="section-divider">
 
     <!-- DONACIÓN -->
     <section id="donacion">
-      <div class="donate-banner fade-in">
-        <div class="donate-banner-badge">100% financiado por la comunidad</div>
-        <h3>
-          Tu donación mantiene vivo
-          <br />
-          <em>este proyecto y a quienes lo necesitan</em>
-        </h3>
-        <p>
-          Cada peso aportado se destina directamente al alimento, mantenimiento
-          y expansión de los dispensadores. Sin intermediarios, con total
-          transparencia.
-        </p>
-      </div>
+      <div class="section-label">Apoya el proyecto</div>
+      <h2 style="margin-bottom: 40px;">Haz una <em>donación</em></h2>
 
-      <div class="donate-amounts-label fade-in">Elige cómo quieres apoyar</div>
-
-      <div style="position: relative" class="fade-in">
+      <div style="position:relative" class="fade-in">
         <div class="donate-grid" id="donar-ahora">
+
+          <!-- TRANSFERENCIA -->
           <div class="donate-web">
-            <h3>💳 Donar en línea</h3>
-            <p>
-              Selecciona el monto que desees o escribe el tuyo. Pasa el cursor
-              sobre cada opción para ver su impacto real.
-            </p>
-            <div class="amount-pills">
-              <button class="amount-pill" onclick="selectAmount(this, 50)">
-                $50
-                <span class="impact-tip">≈ 1 día de comida para 1 animal</span>
-              </button>
-              <button class="amount-pill" onclick="selectAmount(this, 100)">
-                $100
-                <span class="impact-tip">
-                  ≈ 2 días de comida para 2 animales
-                </span>
-              </button>
-              <button
-                class="amount-pill active"
-                onclick="selectAmount(this, 200)"
-              >
-                $200
-                <span class="impact-tip">
-                  ≈ 1 semana de comida para 1 feeder
-                </span>
-              </button>
-              <button class="amount-pill" onclick="selectAmount(this, 500)">
-                $500
-                <span class="impact-tip">≈ 1 mes de operación básica</span>
-              </button>
-              <button
-                class="amount-pill"
-                onclick="selectAmount(this, 'custom')"
-              >
-                Otro Monto
-                <span class="impact-tip">Elige una opción personalizada</span>
+            <h3>🏦 Transferencia bancaria</h3>
+
+            <div class="bank-card">
+              <div class="bank-card-top">
+                <div class="bank-chip"></div>
+                <span class="bank-name">Banco Azteca</span>
+              </div>
+              <div class="bank-number" id="cardNumber">5534 6702 0830 7136</div>
+              <div class="bank-holder">Néstor Daniel Tec Valdez</div>
+              <button class="bank-copy-btn" onclick="copyCard()" id="copyBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copiar número
               </button>
             </div>
-            <div class="custom-amount">
-              <a
-                href="https://buy.stripe.com/test_9B6bJ1gb9gn86i00A00Jq03"
-                class="btn-donate-web"
-                id="donateBtn"
-                target="_blank"
-              >
-                Donar
-                <span id="donateAmount">$200</span>
-                →
-              </a>
-            </div>
-            <p class="donate-note">
-              🔒 Pago seguro · Puedes donar una vez o de forma recurrente
-            </p>
-            <p class="donate-note" style="margin-top: 6px">
-              💚 También aceptamos donaciones de alimento para mascotas
-            </p>
           </div>
 
           <div class="donate-divider"><span>o bien</span></div>
 
+          <!-- PAYPAL -->
           <div class="donate-qr">
-            <h3>📱 Escanear QR</h3>
-            <p>
-              Cada dispensador EcoSentinel Feeder instalado en tu comunidad
-              tiene un código QR pegado. Escanéalo con tu teléfono para donar en
-              segundos, sin necesidad de buscar la página.
-            </p>
-            <div class="qr-card">
-              <div class="qr-svg-wrap">
-                <img
-                  src="{% static 'images/qrDonate.png' %}"
-                  style="height: 240px"
-                />
-              </div>
-              <p class="qr-label">
-                Escanea este código para donar directamente
-                <br />
-                desde cualquier dispositivo físico EcoSentinel
-              </p>
-              <div class="qr-url">ecosentinel.mx/donar</div>
-              <div class="qr-badge-row">
-                <span class="qr-badge">📱 ApplePay</span>
-                <span class="qr-badge">🤖 GooglePay</span>
-                <span class="qr-badge">💳 Credit Card</span>
-              </div>
-            </div>
-            <div class="device-hint">
-              <div class="device-hint-icon">📦</div>
-              <div class="device-hint-text">
-                <strong>¿Ves un EcoSentinel Feeder cerca?</strong>
-                <span>
-                  Cada dispensador instalado tiene este QR pegado en un lugar
-                  visible. Escanéalo para apoyar directamente el feeder de tu
-                  comunidad.
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            <h3>
+              <img src="{% static 'images/paypalicon.png' %}" alt="PayPal" style="width:22px;height:22px;object-fit:contain;flex-shrink:0" />
+              PayPal
+            </h3>
 
-      <div class="transparency-row fade-in">
-        <div class="transparency-item">
-          <div class="ti-icon">🍽️</div>
-          <strong>Alimento directo</strong>
-          <span>
-            El 80% se destina a compra de alimento para los dispensadores
-            activos.
-          </span>
-        </div>
-        <div class="transparency-item">
-          <div class="ti-icon">🔧</div>
-          <strong>Mantenimiento</strong>
-          <span>
-            El 15% cubre reparaciones, baterías y componentes electrónicos.
-          </span>
-        </div>
-        <div class="transparency-item">
-          <div class="ti-icon">📡</div>
-          <strong>Expansión</strong>
-          <span>
-            El 5% se destina a instalar nuevos feeders en comunidades
-            vulnerables.
-          </span>
-        </div>
-        <div class="transparency-item">
-          <div class="ti-icon">📊</div>
-          <strong>100% transparente</strong>
-          <span>
-            Publicamos un reporte mensual con el detalle de cada peso recibido y
-            gastado.
-          </span>
-        </div>
-      </div>
-    </section>
-
-    <!-- SOBRE EL PROYECTO -->
-    <section class="about-section" id="sobre">
-      <div class="about-inner">
-        <!-- Columna izquierda: grid editorial de fotos -->
-        <div class="about-grid fade-in">
-          <!-- Foto vertical grande: columna 1, ambas filas -->
-          <div class="ag-item tall">
-            <img
-              src="https://images.pexels.com/photos/1938126/pexels-photo-1938126.jpeg"
-              alt="Perro callejero"
-              loading="lazy"
-            />
-            <a
-              href="https://instagram.com/ecosentinelfeeder"
-              target="_blank"
-              class="ag-ig-badge"
-            >
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                />
-              </svg>
-              <div class="ag-ig-badge-text">
-                <span class="ag-ig-badge-handle">@ecosentinelfeeder</span>
-                <span class="ag-ig-badge-label">Ver en Instagram</span>
-              </div>
+            <a href="https://paypal.me/WilliamsACE" target="_blank" class="paypal-btn">
+              <img src="{% static 'images/paypalicon.png' %}" alt="PayPal" style="width:16px;height:16px;object-fit:contain;flex-shrink:0;filter:brightness(1.5)" />
+              Donar con PayPal →
             </a>
           </div>
 
-          <!-- Foto cuadrada superior derecha — gato -->
-          <div class="ag-item">
-            <div class="ag-tag">Comunidad</div>
-            <img
-              src="https://images.pexels.com/photos/3865544/pexels-photo-3865544.jpeg"
-              alt="Gato callejero"
-              loading="lazy"
-            />
-          </div>
-
-          <!-- Foto cuadrada inferior derecha — hardware -->
-          <div class="ag-item">
-            <div class="ag-tag">Hardware</div>
-            <img
-              src="https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg"
-              alt="Electrónica del dispositivo"
-              loading="lazy"
-            />
-          </div>
         </div>
+      </div>
 
-        <!-- Columna derecha: panel oscuro con texto -->
-        <div class="about-left fade-in">
-          <div class="about-divider"></div>
-          <div class="section-label">El proyecto</div>
-          <h2>
-            Tecnología hecha
-            <br />
-            <em>con propósito real</em>
-          </h2>
-          <p>
-            EcoSentinel Feeder nació en una universidad con una convicción
-            simple: la tecnología debe servir a quienes no tienen voz.
-            Estudiantes diseñaron, construyeron y programaron cada parte, desde
-            el modelo de IA hasta el hardware físico.
-          </p>
-          <p>
-            Código abierto, sin fines de lucro, impulsado por amor a los
-            animales de la calle.
-          </p>
+      <!-- Banner discreto al fondo -->
+      <div class="donate-footer-banner fade-in">
+        <div class="donate-footer-banner-text">
+          <p class="donate-footer-title">Tu donación mantiene vivo <em>este proyecto y a quienes lo necesitan</em></p>
+          <p class="donate-footer-sub">Cada peso va directo al alimento, mantenimiento y expansión de los dispensadores. Sin intermediarios.</p>
+        </div>
+        <a href="/donar" class="donate-footer-btn">Saber más →</a>
+      </div>
 
-          <a
-            href="https://instagram.com/ecosentinelfeeder"
-            target="_blank"
-            class="ig-pill"
-          >
-            <div class="ig-pill-icon">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                />
-              </svg>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- MAPA DE FEEDERS -->
+    <section id="feeders">
+      <div class="section-label">Red activa</div>
+      <h2>Feeders en tu <em>comunidad</em></h2>
+      <p class="section-sub" style="margin-bottom:40px">Cada punto en el mapa es un dispensador activo alimentando animales hoy. Puedes escanear el QR de cualquiera para donar directamente a ese feeder.</p>
+      <div class="map-layout">
+        <div class="map-container">
+          <div id="feeder-map"></div>
+        </div>
+        <div class="map-sidebar">
+          <p class="map-sidebar-title">Feeders instalados</p>
+          <div id="feeder-sidebar-list">
+            <!-- Se llena dinámicamente desde /api/dashboard/ -->
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div class="feeder-card" style="opacity:.45;pointer-events:none">
+                <div class="feeder-card-dot" style="background:var(--border)"></div>
+                <div><div class="feeder-card-name" style="background:var(--border);border-radius:4px;height:12px;width:120px"></div></div>
+              </div>
+              <div class="feeder-card" style="opacity:.25;pointer-events:none">
+                <div class="feeder-card-dot" style="background:var(--border)"></div>
+                <div><div class="feeder-card-name" style="background:var(--border);border-radius:4px;height:12px;width:90px"></div></div>
+              </div>
             </div>
-            <div class="ig-pill-text">
-              <span class="ig-pill-handle">@ecosentinelfeeder</span>
-              <span class="ig-pill-sub">Instagram</span>
-            </div>
-          </a>
+          </div>
+          <p class="map-cta-note">¿Quieres un feeder en tu colonia?<br><a href="#contacto" style="color:var(--sage-dark);font-weight:500">Contáctanos →</a></p>
         </div>
       </div>
     </section>
 
+    <hr class="section-divider">
+
     <!-- CTA -->
     <section class="cta-section" id="contacto">
-      <div class="section-label" style="position: relative">Contacto</div>
-      <h2>
-        ¿Quieres saber más sobre
-        <em>EcoSentinel Feeder</em>
-        ?
-      </h2>
-      <p>
-        Estamos construyendo una solución accesible, comunitaria y escalable
-        para el bienestar de animales de la calle. Únete a la conversación.
-      </p>
+      <div class="section-label" style="position:relative">Contacto</div>
+      <h2>¿Quieres saber más sobre <em>EcoSentinel Feeder</em>?</h2>
+      <p>Estamos construyendo una solución accesible, comunitaria y escalable para el bienestar de animales de la calle. Únete a la conversación.</p>
       <div class="hero-ctas">
-        <a
-          href="/cdn-cgi/l/email-protection#86eee9eae7c6e3e5e9f5e3e8f2efe8e3eaa8ebfe"
-          class="btn-primary"
-        >
-          Contáctanos
-        </a>
+        <a href="mailto:ecosentinelfeeder@gmail.com" class="btn-primary">Contáctanos</a>
         <a href="#como-funciona" class="btn-secondary">Ver el funcionamiento</a>
       </div>
     </section>
@@ -2414,188 +2193,503 @@
     <footer>
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#" class="footer-brand-logo">
-            Eco
-            <span>Sentinel</span>
-            Feeder
-          </a>
-          <p>
-            Dispensadores autónomos con IA para alimentar a perros y gatos de la
-            calle. Tecnología con propósito, código abierto.
-          </p>
+          <a href="#" class="footer-brand-logo">Eco<span>Sentinel</span> Feeder</a>
+          <p>Dispensadores autónomos con IA para alimentar a perros y gatos de la calle. Tecnología con propósito, código abierto.</p>
           <div class="footer-social">
-            <a
-              href="https://github.com/WilliamsACE/EcoSentinelFeeder/tree/master"
-              target="_blank"
-              class="social-btn"
-              title="GitHub"
-            >
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
-                />
-              </svg>
+            <a href="https://github.com/WilliamsACE/EcoSentinelFeeder/tree/master" target="_blank" class="social-btn" title="GitHub">
+              <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
             </a>
-            <a
-              href="https://instagram.com/ecosentinelfeeder"
-              target="_blank"
-              class="social-btn"
-              title="Instagram"
-            >
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                />
-              </svg>
+            <a href="https://instagram.com/ecosentinelfeeder" target="_blank" class="social-btn" title="Instagram">
+              <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
           </div>
         </div>
         <div class="footer-col">
           <h5>Proyecto</h5>
           <ul>
-            <li>
-              <a href="#como-funciona">
-                <span class="fi">⚙️</span>
-                Cómo funciona
-              </a>
-            </li>
-            <li>
-              <a href="#features">
-                <span class="fi">✨</span>
-                Características
-              </a>
-            </li>
-            <li>
-              <a href="#impact">
-                <span class="fi">🌿</span>
-                Impacto
-              </a>
-            </li>
-            <li>
-              <a href="#donacion">
-                <span class="fi">❤</span>
-                Donar
-              </a>
-            </li>
+            <li><a href="#como-funciona"><span class="fi">⚙️</span>Cómo funciona</a></li>
+            <li><a href="#features"><span class="fi">✨</span>Características</a></li>
+            <li><a href="#impact"><span class="fi">🌿</span>Impacto</a></li>
+            <li><a href="#donacion"><span class="fi">❤</span>Donar</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h5>Código abierto</h5>
           <ul>
-            <li>
-              <a
-                href="https://github.com/WilliamsACE/EcoSentinelFeeder/tree/master"
-                target="_blank"
-              >
-                <span class="fi">📦</span>
-                Repositorio
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/WilliamsACE/EcoSentinelFeeder/issues"
-                target="_blank"
-              >
-                <span class="fi">🐛</span>
-                Reportar issue
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/WilliamsACE/EcoSentinelFeeder/pulls"
-                target="_blank"
-              >
-                <span class="fi">🤝</span>
-                Aportar al repositorio
-              </a>
-            </li>
+            <li><a href="https://github.com/WilliamsACE/EcoSentinelFeeder/tree/master" target="_blank"><span class="fi">📦</span>Repositorio</a></li>
+            <li><a href="https://github.com/WilliamsACE/EcoSentinelFeeder/issues" target="_blank"><span class="fi">🐛</span>Reportar issue</a></li>
+            <li><a href="https://github.com/WilliamsACE/EcoSentinelFeeder/pulls" target="_blank"><span class="fi">🤝</span>Aportar al repositorio</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h5>Contacto</h5>
           <ul>
-            <li>
-              <a
-                href="/cdn-cgi/l/email-protection#deb6b1b2bf9ebbbdb1adbbb0aab7b0bbb2f0b3a6"
-              >
-                <span class="fi">✉️</span>
-                <span
-                  class="__cf_email__"
-                  data-cfemail="c8a0a7a4a988adaba7bbada6bca1a6ada4e6a5b0"
-                >
-                  [email&#160;protected]
-                </span>
-              </a>
-            </li>
-            <li>
-              <a href="https://ecosentinel.mx/donar" target="_blank">
-                <span class="fi">🔗</span>
-                ecosentinel.mx/donar
-              </a>
-            </li>
+            <li><a href="mailto:ecosentinelfeeder@gmail.com"><span class="fi">✉️</span>ecosentinelfeeder@gmail.com</a></li>
+            <li><a href="https://ecosentinel.mx/donar" target="_blank"><span class="fi">🔗</span>ecosentinel.mx/donar</a></li>
           </ul>
         </div>
       </div>
-
       <div class="footer-bottom">
-        <span class="footer-bottom-logo">
-          Eco
-          <span>Sentinel</span>
-          Feeder
-        </span>
+        <span class="footer-bottom-logo">Eco<span>Sentinel</span> Feeder</span>
         <span>Tecnología con propósito · ODS 15 &amp; 11</span>
         <div class="footer-bottom-links">
-          <a
-            href="https://github.com/WilliamsACE/EcoSentinelFeeder"
-            target="_blank"
-          >
-            GitHub
-          </a>
+          <a href="https://github.com/WilliamsACE/EcoSentinelFeeder" target="_blank">GitHub</a>
           <span class="sep">·</span>
-          <a
-            href="/cdn-cgi/l/email-protection#8ee6e1e2efceebede1fdebe0fae7e0ebe2a0e3f6"
-          >
-            Contacto
-          </a>
+          <a href="mailto:ecosentinelfeeder@gmail.com">Contacto</a>
         </div>
       </div>
     </footer>
 
     <script>
-      // Fade-in on scroll
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-              observer.unobserve(e.target);
-            }
-          });
-        },
-        { threshold: 0.1 },
-      );
-      document
-        .querySelectorAll(".fade-in")
-        .forEach((el) => observer.observe(el));
+      // ── Nav scroll progress bar
+      const navProgress = document.getElementById("navProgress");
+      function updateNavProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        if (navProgress) navProgress.style.width = pct + "%";
+      }
+      window.addEventListener("scroll", updateNavProgress, { passive: true });
 
-      // Donation amount selector
+      // ── Counter animado en impact stats
+      function animateCounter(el, target, suffix = "", prefix = "") {
+        const isPlus = String(target).startsWith("+");
+        const num = parseInt(String(target).replace(/[^0-9]/g, ""));
+        const duration = 1200;
+        const start = performance.now();
+        function step(now) {
+          const progress = Math.min((now - start) / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          const current = Math.round(ease * num);
+          el.textContent = prefix + (isPlus ? "+" : "") + current.toLocaleString() + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      const impactSection = document.getElementById("impact");
+      let impactAnimated = false;
+      if (impactSection) {
+        const impactObs = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting && !impactAnimated) {
+            impactAnimated = true;
+            const stats = [
+              { el: document.querySelector(".impact-stat:nth-child(1) .impact-stat-val"), target: "+62" },
+              { el: document.querySelector(".impact-stat:nth-child(2) .impact-stat-val"), target: "94",  suffix: "%" },
+              { el: document.querySelector(".impact-stat:nth-child(3) .impact-stat-val"), target: "24",  suffix: "/7" },
+            ];
+            stats.forEach(({ el, target, suffix }) => {
+              if (el) animateCounter(el, target, suffix || "");
+            });
+          }
+        }, { threshold: 0.5 });
+        impactObs.observe(impactSection);
+      }
+
+      // ── Parallax suave en hero al mover el mouse
+      const heroEl = document.querySelector(".hero");
+      if (heroEl && window.matchMedia("(hover: hover)").matches) {
+        heroEl.addEventListener("mousemove", e => {
+          const { left, top, width, height } = heroEl.getBoundingClientRect();
+          const x = (e.clientX - left - width / 2) / width;
+          const y = (e.clientY - top - height / 2) / height;
+          heroEl.style.setProperty("--px", x * 18 + "px");
+          heroEl.style.setProperty("--py", y * 12 + "px");
+        });
+        heroEl.addEventListener("mouseleave", () => {
+          heroEl.style.setProperty("--px", "0px");
+          heroEl.style.setProperty("--py", "0px");
+        });
+      }
+
+      // ── Scroll fade-in
+      const observer = new IntersectionObserver(
+        (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } }),
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
+      // ── Hamburger menu
+      const hamburger = document.getElementById("hamburger");
+      const mobileMenu = document.getElementById("mobileMenu");
+      let menuOpen = false;
+      function toggleMenu(open) {
+        menuOpen = open;
+        hamburger.classList.toggle("open", open);
+        hamburger.setAttribute("aria-expanded", open);
+        if (open) {
+          mobileMenu.style.display = "flex";
+          requestAnimationFrame(() => mobileMenu.classList.add("open"));
+          document.body.style.overflow = "hidden";
+        } else {
+          mobileMenu.classList.remove("open");
+          document.body.style.overflow = "";
+          setTimeout(() => { if (!menuOpen) mobileMenu.style.display = "none"; }, 300);
+        }
+      }
+      hamburger.addEventListener("click", () => toggleMenu(!menuOpen));
+      mobileMenu.querySelectorAll("a").forEach(link => link.addEventListener("click", () => toggleMenu(false)));
+      mobileMenu.addEventListener("click", (e) => { if (e.target === mobileMenu) toggleMenu(false); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menuOpen) toggleMenu(false); });
+
+      // ── Donation amount selector
       function selectAmount(btn, amount) {
-        document
-          .querySelectorAll(".amount-pill")
-          .forEach((p) => p.classList.remove("active"));
+        document.querySelectorAll(".amount-pill").forEach(p => p.classList.remove("active"));
         btn.classList.add("active");
         const donateBtn = document.getElementById("donateBtn");
         const donateAmount = document.getElementById("donateAmount");
-        if (amount === "custom") {
-          donateAmount.textContent = "Monto";
-          donateBtn.href =
-            "https://buy.stripe.com/test_9B6bJ1gb9gn86i00A00Jq03";
-        } else {
-          donateAmount.textContent = "$" + amount;
-          donateBtn.href =
-            "https://buy.stripe.com/test_9B6bJ1gb9gn86i00A00Jq03";
+        donateAmount.textContent = amount === "custom" ? "Monto" : "$" + amount;
+        donateBtn.href = "https://buy.stripe.com/test_9B6bJ1gb9gn86i00A00Jq03";
+      }
+
+      // ── Copy card number
+      function copyCard() {
+        const number = "5534670208307136";
+        navigator.clipboard.writeText(number).then(() => {
+          const btn = document.getElementById("copyBtn");
+          btn.classList.add("copied");
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!`;
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar número`;
+          }, 2200);
+        });
+      }
+
+      // ══════════════════════════════════════════
+      // PROGRESS BAR
+      // ══════════════════════════════════════════
+      const GOAL   = 3000;
+      const RAISED = 1840;   // ← cambia este valor cada mes
+      const DONORS = 24;     // ← donadores del mes
+      const pct = Math.min(100, Math.round((RAISED / GOAL) * 100));
+
+      // Days left in month
+      const now = new Date();
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      const daysLeft = lastDay - now.getDate();
+
+      // Messages
+      const msgs = pct === 0
+        ? ["¡Animate a ser el primero! 🐾",
+           "Sé quien arranque el cambio 💚",
+           "El primer paso es tuyo →"]
+        : pct < 30
+        ? [`Solo faltan $${(GOAL-RAISED).toLocaleString()} para la meta 🎯`,
+           `${DONORS} personas ya donaron este mes 🙌`,
+           `Cada peso alimenta a un animal real 🐕`,
+           `${daysLeft} días para completar la meta ⏳`]
+        : pct < 70
+        ? [`¡Vamos a más de la mitad! 🚀`,
+           `${DONORS} donadores este mes, ¡súmate!`,
+           `Faltan $${(GOAL-RAISED).toLocaleString()} · ¡casi llegamos!`,
+           `Tu donación se convierte en comida hoy 🍽️`]
+        : pct < 100
+        ? [`¡A solo $${(GOAL-RAISED).toLocaleString()} de la meta! 🔥`,
+           `${DONORS} personas ya donaron · ¡no te quedes fuera!`,
+           `La meta está al alcance, ¡ayúdanos! 💪`]
+        : [`¡Meta del mes alcanzada! 🎉 Gracias`,
+           `${DONORS} personas lo hicieron posible 💚`,
+           `Todos los animales comen este mes 🐕🐈`];
+
+      // Animate fill on scroll
+      const fillEl   = document.getElementById("progressFill");
+      const raisedEl = document.getElementById("progressRaised");
+      const pctEl    = document.getElementById("progressPct");
+      const goalEl   = document.getElementById("progressGoal");
+      const donorsEl = document.getElementById("progressDonors");
+      const daysEl   = document.getElementById("progressDaysLeft");
+      const msgEl    = document.getElementById("progressMsg");
+      const blockEl  = document.getElementById("progressBlock");
+
+      // Solo ejecutar si los elementos existen en el DOM
+      if (goalEl)   goalEl.textContent   = "$" + GOAL.toLocaleString();
+      if (raisedEl) raisedEl.textContent = "$" + RAISED.toLocaleString();
+      if (pctEl)    pctEl.textContent    = pct + "% recaudado";
+      if (donorsEl) donorsEl.innerHTML   = `<strong>${DONORS}</strong> donadores este mes`;
+      if (daysEl)   daysEl.innerHTML     = `<strong>${daysLeft}</strong> días restantes`;
+
+      if (fillEl && blockEl) {
+        let progressStarted = false;
+        const progressObserver = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting && !progressStarted) {
+            progressStarted = true;
+            setTimeout(() => { fillEl.style.width = pct + "%"; }, 200);
+          }
+        }, { threshold: 0.3 });
+        progressObserver.observe(blockEl);
+      } else {
+        console.warn("[PROGRESS] Elementos del progress bar no encontrados en el DOM — ¿falta el HTML del bloque de donación?");
+      }
+
+      // Rotating messages
+      let msgIdx = 0;
+      if (msgEl) {
+        msgEl.textContent = msgs[0];
+        if (msgs.length > 1) {
+          setInterval(() => {
+            msgEl.classList.add("slide-out");
+            setTimeout(() => {
+              msgIdx = (msgIdx + 1) % msgs.length;
+              msgEl.textContent = msgs[msgIdx];
+              msgEl.classList.remove("slide-out");
+              msgEl.classList.add("slide-in");
+              setTimeout(() => msgEl.classList.remove("slide-in"), 350);
+            }, 340);
+          }, 2500);
         }
       }
+
+      // ═══════════════════════════════════════════════
+      //  MAPA LEAFLET — basado en dashboard, sin datos sensibles, siempre light
+      // ═══════════════════════════════════════════════
+      let _homeMap = null;
+      let _homeTile = null;
+      let _homeMarkers = [];
+      let _homeFeeders = [];
+      let _mapReady = false;
+
+      const _SC = { online: "#4d8c52", warn: "#c97b4b", offline: "#8a9f8b" };
+      const _SL = { online: "● En línea", warn: "⚠ Alerta", offline: "✕ Sin conexión" };
+
+      // ── DEBUG: verificar que el elemento del mapa existe al cargar el script
+      const _mapEl = document.getElementById("feeder-map");
+      console.log("[MAP] Elemento #feeder-map encontrado:", _mapEl);
+      if (_mapEl) {
+        const _rect = _mapEl.getBoundingClientRect();
+        console.log("[MAP] Dimensiones iniciales del contenedor:", {
+          width: _rect.width,
+          height: _rect.height,
+          top: _rect.top,
+          visible: _rect.top < window.innerHeight
+        });
+      }
+
+      // Siempre light_all (home no tiene dark mode)
+      function _tileUrl() {
+        return "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+      }
+
+      function _mkIcon(color) {
+        return L.divIcon({
+          className: "",
+          html: `<div style="width:38px;height:38px;background:white;border:2.5px solid ${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 3px 14px rgba(0,0,0,.18)">🐾</div>`,
+          iconSize: [38, 38],
+          iconAnchor: [19, 19],
+          popupAnchor: [0, -22]
+        });
+      }
+
+      // Popup sin batería, comida ni agua — solo nombre, id, animales hoy y status
+      function _mkPopup(f) {
+        const c = _SC[f.status] || _SC.offline;
+        const animals = (f.dogsToday || 0) + (f.catsToday || 0);
+        return `<div style="font-family:'DM Sans',sans-serif;padding:4px 2px;min-width:190px">
+          <div style="font-size:.58rem;text-transform:uppercase;letter-spacing:.13em;color:#8a9f8b">${f.id}</div>
+          <div style="font-size:.97rem;font-weight:500;color:#2d3a2e;margin:3px 0 10px">${f.name}</div>
+          <div style="font-size:.75rem;color:#5a6b5b;line-height:1.7">
+            🐾 ${animals} animales alimentados hoy
+          </div>
+          <div style="margin-top:9px;padding-top:8px;border-top:1px solid #e2d9cc;font-size:.68rem;color:${c};font-weight:500">
+            ${_SL[f.status] || "✕ Sin conexión"} <span style="color:#8a9f8b;font-weight:300;margin-left:8px">${f.lastSync || ""}</span>
+          </div>
+        </div>`;
+      }
+
+      function _addHomePins(feeders) {
+        console.log("[MAP] _addHomePins → intentando agregar", feeders.length, "pin(s)");
+        feeders.forEach((f, i) => {
+          if (!f.lat || !f.lng) {
+            console.warn("[MAP] Feeder sin coordenadas, omitido:", f);
+            return;
+          }
+          console.log(`[MAP] Pin ${i}: ${f.name} (${f.lat}, ${f.lng}) status=${f.status}`);
+          const m = L.marker([f.lat, f.lng], {
+            icon: _mkIcon(_SC[f.status] || _SC.offline)
+          })
+          .addTo(_homeMap)
+          .bindPopup(_mkPopup(f), { maxWidth: 230, className: "esf-popup" });
+          m.on("click", () => {
+            document.querySelectorAll(".feeder-card").forEach(c => c.classList.remove("active"));
+            const card = document.getElementById("fc-" + i);
+            if (card) card.classList.add("active");
+          });
+          _homeMarkers.push(m);
+        });
+        console.log("[MAP] Marcadores agregados al mapa:", _homeMarkers.length);
+      }
+
+      function renderMapSidebar(feeders) {
+        console.log("[MAP] renderMapSidebar →", feeders.length, "feeder(s)");
+        const list = document.getElementById("feeder-sidebar-list");
+        if (!list) {
+          console.error("[MAP] No se encontró #feeder-sidebar-list en el DOM");
+          return;
+        }
+        if (feeders.length === 0) {
+          list.innerHTML = `<p style="font-size:.82rem;color:var(--light-mid);text-align:center;padding:20px 0">Sin feeders registrados aún</p>`;
+          return;
+        }
+        list.innerHTML = feeders.map((f, i) => {
+          const animals = (f.dogsToday || 0) + (f.catsToday || 0);
+          const dotClass = f.status === "online" ? "on" : f.status === "warn" ? "warn-dot" : "off";
+          return `<div class="feeder-card" id="fc-${i}" onclick="flyToFeeder(${i})">
+            <div class="feeder-card-dot ${dotClass}"></div>
+            <div>
+              <div class="feeder-card-name">${f.name}</div>
+              <div class="feeder-card-sub">${f.id} · ${f.status === "online" ? "Activo" : f.status === "warn" ? "Alerta" : "Sin conexión"}</div>
+            </div>
+            <div class="feeder-card-stat">
+              <div class="val">${animals}</div>
+              <div class="unit">hoy</div>
+            </div>
+          </div>`;
+        }).join("");
+        console.log("[MAP] Sidebar renderizado correctamente");
+      }
+
+      function flyToFeeder(i) {
+        console.log("[MAP] flyToFeeder →", i);
+        document.querySelectorAll(".feeder-card").forEach(c => c.classList.remove("active"));
+        const card = document.getElementById("fc-" + i);
+        if (card) card.classList.add("active");
+        const f = _homeFeeders[i];
+        if (!f) {
+          console.warn("[MAP] flyToFeeder: no se encontró feeder con índice", i);
+          return;
+        }
+        console.log("[MAP] flyTo:", f.lat, f.lng);
+        _homeMap.flyTo([f.lat, f.lng], 15, { duration: 0.8 });
+        setTimeout(() => _homeMarkers[i] && _homeMarkers[i].openPopup(), 900);
+      }
+
+      async function loadMapFeeders() {
+        console.log("[MAP] loadMapFeeders → llamando /api/dashboard/");
+        try {
+          const res = await fetch("/api/dashboard/", {
+            headers: { Accept: "application/json" },
+            signal: AbortSignal.timeout(10000)
+          });
+          console.log("[MAP] Respuesta HTTP:", res.status, res.statusText);
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          console.log("[MAP] JSON recibido:", data);
+          const feeders = (data.feeders || []).filter(f => f.lat && f.lng);
+          console.log("[MAP] Feeders con coordenadas:", feeders.length, "de", (data.feeders || []).length, "totales");
+          _homeFeeders = feeders;
+          _addHomePins(feeders);
+          if (feeders.length > 0) {
+            const bounds = L.latLngBounds(feeders.map(f => [f.lat, f.lng]));
+            console.log("[MAP] fitBounds →", bounds.toBBoxString());
+            _homeMap.fitBounds(bounds, { padding: [48, 48], maxZoom: 14 });
+          } else {
+            console.warn("[MAP] Sin feeders con coordenadas, el mapa queda en la posición default");
+          }
+          renderMapSidebar(feeders);
+        } catch (err) {
+          console.error("[MAP] Error en loadMapFeeders:", err.message, err);
+          document.getElementById("feeder-sidebar-list").innerHTML =
+            `<p style="font-size:.8rem;color:var(--light-mid);text-align:center;padding:16px 0">No se pudo cargar la información de los feeders</p>`;
+        }
+      }
+
+      function initMap() {
+        console.log("[MAP] initMap() llamado — _mapReady:", _mapReady);
+        if (_mapReady) {
+          console.warn("[MAP] initMap: mapa ya inicializado, se omite");
+          return;
+        }
+        _mapReady = true;
+
+        const el = document.getElementById("feeder-map");
+        const rect = el ? el.getBoundingClientRect() : null;
+        console.log("[MAP] Dimensiones de #feeder-map al inicializar:", rect);
+
+        _homeMap = L.map("feeder-map", {
+          center: [25.6728356714816, -100.25332267854714],
+          zoom: 13,
+          zoomControl: true,
+          scrollWheelZoom: false
+        });
+        console.log("[MAP] L.map creado");
+
+        _homeTile = L.tileLayer(_tileUrl(), {
+          attribution: "© CartoDB",
+          maxZoom: 19,
+          subdomains: "abcd"
+        }).addTo(_homeMap);
+        console.log("[MAP] TileLayer agregado:", _tileUrl());
+
+        _homeMap.invalidateSize();
+        console.log("[MAP] invalidateSize() #1 llamado");
+
+        setTimeout(() => {
+          if (_homeMap) {
+            _homeMap.invalidateSize();
+            console.log("[MAP] invalidateSize() #2 llamado (800ms después)");
+          }
+        }, 800);
+
+        loadMapFeeders();
+      }
+
+      // Init al entrar al viewport
+      const _mapObs = new IntersectionObserver((entries) => {
+        console.log("[MAP] IntersectionObserver disparado — isIntersecting:", entries[0].isIntersecting);
+        if (entries[0].isIntersecting) { initMap(); _mapObs.disconnect(); }
+      }, { threshold: 0 });
+      _mapObs.observe(document.getElementById("feeder-map"));
+      console.log("[MAP] IntersectionObserver registrado en #feeder-map");
+
+      window.addEventListener("load", () => {
+        const el = document.getElementById("feeder-map");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          console.log("[MAP] window.load → mapa visible en viewport:", rect.top < window.innerHeight);
+          if (rect.top < window.innerHeight) initMap();
+        }
+      });
+
+      // ═══════════════════════════════════════════════
+      //  ANIMACIONES AVANZADAS
+      // ═══════════════════════════════════════════════
+
+      // ── ACORDEÓN DE STEPS ──
+      document.querySelectorAll(".step-accordion-header").forEach(header => {
+        header.addEventListener("click", () => {
+          if (window.innerWidth > 768) return;
+          const step = header.closest(".step");
+          const isOpen = step.classList.contains("open");
+          document.querySelectorAll(".step").forEach(s => s.classList.remove("open"));
+          if (!isOpen) step.classList.add("open");
+        });
+      });
+
+      // ── 3. TILT 3D en step cards
+      document.querySelectorAll(".step").forEach(card => {
+        card.addEventListener("mousemove", e => {
+          card.style.transition = "transform 0.05s linear, box-shadow 0.05s linear";
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width  - 0.5;
+          const y = (e.clientY - r.top)  / r.height - 0.5;
+          card.style.transform = `perspective(600px) rotateY(${x * 12}deg) rotateX(${-y * 10}deg) translateY(-6px)`;
+          card.style.boxShadow = `${-x * 10}px ${y * 10}px 30px rgba(45,58,46,0.18)`;
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transition = "transform 0.35s ease, box-shadow 0.35s ease";
+          card.style.transform = "";
+          card.style.boxShadow = "";
+        });
+      });
+
+      // ── 6. HOVER GLOW en impact stats
+      document.querySelectorAll(".impact-stat").forEach(stat => {
+        stat.addEventListener("mouseenter", () => {
+          const val = stat.querySelector(".impact-stat-val");
+          if (val) { val.classList.add("counting"); setTimeout(() => val.classList.remove("counting"), 400); }
+        });
+      });
+
     </script>
   </body>
 </html>
