@@ -1,1217 +1,2665 @@
-
-<!DOCTYPE html>
+{% load static %}
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EcoSentinel Dashboard — Documentación JS</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg: #0f1117;
-      --surface: #181c24;
-      --surface2: #1e2330;
-      --border: #2a2f3d;
-      --border2: #343b4f;
-      --text: #e2e8f0;
-      --muted: #7c8799;
-      --accent: #7a9e7e;
-      --accent2: #c97b4b;
-      --accent3: #5a9bc0;
-      --danger: #e05353;
-      --ok: #4ead54;
-      --warn: #e09c40;
-      --code-bg: #12151d;
-      --code-border: #252a38;
-      --tag-bg: rgba(122,158,126,0.12);
-      --tag-color: #7a9e7e;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* ── SIDEBAR TOC ── */
-    .toc {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      width: 260px;
-      flex-shrink: 0;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      padding: 28px 0 40px;
-    }
-    .toc-logo {
-      padding: 0 20px 20px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 12px;
-    }
-    .toc-logo-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1rem;
-      color: var(--accent);
-      display: block;
-    }
-    .toc-logo-sub {
-      font-size: 0.65rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-top: 2px;
-    }
-    .toc-section {
-      font-size: 0.58rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      padding: 16px 20px 6px;
-      font-weight: 500;
-    }
-    .toc a {
-      display: block;
-      padding: 6px 20px;
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.16s, background 0.16s;
-      border-left: 2px solid transparent;
-    }
-    .toc a:hover {
-      color: var(--text);
-      background: rgba(122,158,126,0.06);
-    }
-    .toc a.active {
-      color: var(--accent);
-      border-left-color: var(--accent);
-      background: rgba(122,158,126,0.08);
-    }
-    .toc a.sub {
-      padding-left: 32px;
-      font-size: 0.72rem;
-    }
-
-    /* ── MAIN ── */
-    .main {
-      flex: 1;
-      min-width: 0;
-      padding: 48px 56px 80px 52px;
-      max-width: 900px;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      margin-bottom: 56px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid var(--border);
-    }
-    .hero-eyebrow {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .hero-eyebrow::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-    h1 {
-      font-family: 'Fraunces', serif;
-      font-size: 2.6rem;
-      font-weight: 300;
-      color: var(--text);
-      line-height: 1.15;
-      margin-bottom: 16px;
-    }
-    h1 em {
-      color: var(--accent);
-      font-style: italic;
-    }
-    .hero-desc {
-      font-size: 0.95rem;
-      color: var(--muted);
-      max-width: 620px;
-      line-height: 1.7;
-    }
-    .hero-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-    .tag {
-      font-size: 0.67rem;
-      padding: 3px 10px;
-      border-radius: 100px;
-      background: var(--tag-bg);
-      color: var(--tag-color);
-      border: 1px solid rgba(122,158,126,0.2);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .tag.orange { background: rgba(201,123,75,0.1); color: var(--accent2); border-color: rgba(201,123,75,0.2); }
-    .tag.blue { background: rgba(90,155,192,0.1); color: var(--accent3); border-color: rgba(90,155,192,0.2); }
-
-    /* ── SECTIONS ── */
-    .doc-section {
-      margin-bottom: 56px;
-      scroll-margin-top: 32px;
-    }
-    h2 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.6rem;
-      font-weight: 300;
-      color: var(--text);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    h2 .icon { font-size: 1.3rem; }
-    .section-rule {
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      margin-bottom: 24px;
-    }
-    h3 {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin: 28px 0 10px;
-    }
-    h4 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--accent2);
-      margin: 20px 0 8px;
-    }
-    p {
-      font-size: 0.875rem;
-      color: #c0cad8;
-      margin-bottom: 12px;
-    }
-    strong { color: var(--text); font-weight: 500; }
-    em { color: var(--warn); font-style: normal; }
-
-    /* ── CODE ── */
-    pre {
-      background: var(--code-bg);
-      border: 1px solid var(--code-border);
-      border-radius: 10px;
-      padding: 18px 20px;
-      overflow-x: auto;
-      margin: 12px 0 20px;
-      position: relative;
-    }
-    pre .lang-label {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 0.58rem;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-    code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      line-height: 1.75;
-      color: #a8d0e6;
-    }
-    p code, li code {
-      background: var(--code-bg);
-      border: 1px solid var(--code-border);
-      border-radius: 4px;
-      padding: 1px 6px;
-      font-size: 0.75rem;
-      color: #a8d0e6;
-    }
-
-    /* Syntax highlight colors */
-    .kw { color: #c678dd; }   /* keywords */
-    .fn { color: #61afef; }   /* functions */
-    .st { color: #98c379; }   /* strings */
-    .cm { color: #5c6370; font-style: italic; } /* comments */
-    .nm { color: #e5c07b; }   /* numbers */
-    .var { color: #e06c75; }  /* variables */
-    .prop { color: #56b6c2; } /* properties */
-
-    /* ── INFO BOX ── */
-    .info-box {
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      border-left: 3px solid var(--accent);
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin: 14px 0 20px;
-      font-size: 0.82rem;
-      color: #b0bbc9;
-      line-height: 1.65;
-    }
-    .info-box.warn { border-left-color: var(--warn); }
-    .info-box.danger { border-left-color: var(--danger); }
-    .info-box.tip { border-left-color: var(--accent3); }
-    .info-box .box-title {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-weight: 500;
-      margin-bottom: 5px;
-    }
-    .info-box.warn .box-title { color: var(--warn); }
-    .info-box.danger .box-title { color: var(--danger); }
-    .info-box.tip .box-title { color: var(--accent3); }
-    .info-box .box-title { color: var(--accent); }
-
-    /* ── TABLE ── */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.78rem;
-      margin: 12px 0 24px;
-    }
-    th {
-      text-align: left;
-      padding: 8px 14px;
-      background: var(--surface2);
-      color: var(--muted);
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 500;
-      border-bottom: 1px solid var(--border);
-    }
-    td {
-      padding: 9px 14px;
-      border-bottom: 1px solid var(--border);
-      color: #c0cad8;
-      vertical-align: top;
-    }
-    td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--accent2); font-size: 0.72rem; }
-    tr:last-child td { border-bottom: none; }
-
-    /* ── FLOW DIAGRAM ── */
-    .flow {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin: 16px 0 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .flow-node {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-size: 0.72rem;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text);
-    }
-    .flow-node.api { border-color: var(--accent); color: var(--accent); }
-    .flow-node.fn  { border-color: var(--accent2); color: var(--accent2); }
-    .flow-node.ui  { border-color: var(--accent3); color: var(--accent3); }
-    .flow-arrow { color: var(--muted); font-size: 0.8rem; }
-
-    /* ── FUNCTION CARD ── */
-    .fn-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    .fn-card-header {
-      padding: 12px 18px;
-      background: var(--code-bg);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .fn-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      color: var(--accent2);
-    }
-    .fn-badge {
-      font-size: 0.58rem;
-      padding: 2px 8px;
-      border-radius: 100px;
-      font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .fn-badge.async { background: rgba(90,155,192,0.12); color: var(--accent3); border: 1px solid rgba(90,155,192,0.2); }
-    .fn-badge.sync  { background: rgba(122,158,126,0.12); color: var(--accent);  border: 1px solid rgba(122,158,126,0.2); }
-    .fn-badge.iife  { background: rgba(201,123,75,0.12);  color: var(--accent2); border: 1px solid rgba(201,123,75,0.2); }
-    .fn-card-body { padding: 14px 18px; font-size: 0.82rem; color: #b0bbc9; }
-    .fn-card-body p { margin-bottom: 8px; }
-
-    /* ── SCROLL ── */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 100px; }
-
-    @media (max-width: 820px) {
-      .toc { display: none; }
-      .main { padding: 28px 20px 60px; }
-      h1 { font-size: 1.8rem; }
-    }
-  </style>
-</head>
-<body>
-
-<!-- TOC -->
-<aside class="toc">
-  <div class="toc-logo">
-    <span class="toc-logo-title">EcoSentinel Feeder</span>
-    <span class="toc-logo-sub">Documentación JavaScript</span>
-  </div>
-
-  <div class="toc-section">Introducción</div>
-  <a href="#overview">Arquitectura general</a>
-  <a href="#libraries">Librerías externas</a>
-
-  <div class="toc-section">Módulos</div>
-  <a href="#skeleton">Skeleton / CSS dinámico</a>
-  <a href="#navigation">Navegación de secciones</a>
-  <a href="#notifications">Sistema de notificaciones</a>
-  <a href="#render">Funciones de render</a>
-  <a class="sub" href="#renderFeeders">renderFeeders()</a>
-  <a class="sub" href="#addHistoryEvent">addHistoryEvent()</a>
-  <a class="sub" href="#updateCharts">updateCharts()</a>
-  <a href="#sync">Sincronización con Django</a>
-  <a class="sub" href="#syncDashboard">syncDashboard()</a>
-  <a class="sub" href="#syncHistory">syncHistory()</a>
-  <a href="#map">Mapa Leaflet</a>
-  <a href="#charts">Gráficas Chart.js</a>
-  <a href="#filters">Filtros de historial</a>
-  <a href="#config">Configuración local</a>
-  <a href="#modal">Modal borrar datos</a>
-  <a href="#mobile">Sidebar móvil</a>
-  <a href="#banner">Banner recomendación</a>
-
-  <div class="toc-section">Referencias</div>
-  <a href="#api-contract">Contrato del API</a>
-  <a href="#ids">IDs del DOM</a>
-  <a href="#fallos">Fallos comunes</a>
-</aside>
-
-<!-- MAIN CONTENT -->
-<main class="main">
-
-  <!-- HERO -->
-  <div class="hero" id="overview">
-    <div class="hero-eyebrow">Documentación técnica</div>
-    <h1>JavaScript del<br><em>Dashboard EcoSentinel</em></h1>
-    <p class="hero-desc">
-      Todo lo que necesitas saber para entender, mantener y depurar el JavaScript del dashboard. Cubre Chart.js, Leaflet, el sistema de polling con Django, notificaciones, configuración persistente y el sistema responsive.
-    </p>
-    <div class="hero-tags">
-      <span class="tag">Chart.js 4.4</span>
-      <span class="tag blue">Leaflet 1.9</span>
-      <span class="tag orange">Django REST</span>
-      <span class="tag">localStorage</span>
-      <span class="tag">sessionStorage</span>
-      <span class="tag blue">setInterval polling</span>
-    </div>
-  </div>
-
-  <!-- ARQUITECTURA -->
-  <section class="doc-section" id="overview">
-    <h2><span class="icon">🏗️</span> Arquitectura general</h2>
-    <div class="section-rule"></div>
-
-    <p>El dashboard es un <strong>archivo HTML único</strong> (sin build system, sin frameworks). Todo el JavaScript vive en un solo bloque <code>&lt;script&gt;</code> al final del <code>&lt;body&gt;</code>. No hay módulos ES6, no hay imports — es JavaScript vanilla puro, compatible con cualquier navegador moderno.</p>
-
-    <h3>Flujo de datos general</h3>
-    <div class="flow">
-      <div class="flow-node api">Django API</div>
-      <div class="flow-arrow">→ fetch()</div>
-      <div class="flow-node fn">syncDashboard()</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn">renderFeeders()</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node ui">DOM / KPIs / Gauges</div>
-    </div>
-    <div class="flow">
-      <div class="flow-node api">Django API</div>
-      <div class="flow-arrow">→ fetch()</div>
-      <div class="flow-node fn">syncHistory()</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn">addHistoryEvent()</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node ui">Tabla historial</div>
-    </div>
-    <div class="flow">
-      <div class="flow-node fn">renderFeeders()</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn">updateCharts()</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node ui">Chart.js instances</div>
-    </div>
-
-    <h3>Orden de ejecución al cargar</h3>
-    <pre><code><span class="cm">// 1. IIFE — inyecta CSS de skeletons en &lt;head&gt;</span>
-<span class="kw">(function</span>() { document.head.appendChild(styleEl) })();
-
-<span class="cm">// 2. IIFE — crea el banner de error encima del contenido</span>
-<span class="kw">(function</span>() { content.insertBefore(errorBanner, ...) })();
-
-<span class="cm">// 3. Constantes + event listeners de navegación</span>
-<span class="kw">const</span> <span class="var">SECTION_TITLES</span> = { ... };
-
-<span class="cm">// 4. Inicialización al final del script (arranque)</span>
-<span class="fn">initMapSmall</span>();       <span class="cm">// inicia el mapa pequeño del resumen</span>
-<span class="fn">renderNotifications</span>(); <span class="cm">// pinta los paneles de alerta vacíos</span>
-<span class="fn">syncDashboard</span>();       <span class="cm">// primera carga de feeders y gráficas</span>
-<span class="fn">syncHistory</span>();         <span class="cm">// primera carga del historial</span>
-<span class="fn">cargarSettings</span>();      <span class="cm">// lee localStorage y rellena los inputs de config</span>
-<span class="fn">setInterval</span>(<span class="fn">syncDashboard</span>, _sd0 * <span class="nm">1000</span>); <span class="cm">// polling cada 30s (configurable)</span>
-<span class="fn">setInterval</span>(<span class="fn">syncHistory</span>,   _sh0 * <span class="nm">1000</span>); <span class="cm">// polling cada 15s (configurable)</span></code></pre>
-  </section>
-
-  <!-- LIBRERÍAS -->
-  <section class="doc-section" id="libraries">
-    <h2><span class="icon">📦</span> Librerías externas</h2>
-    <div class="section-rule"></div>
-    <p>Se cargan vía CDN en el <code>&lt;head&gt;</code>. Si cambia la URL del CDN o la versión, actualiza los <code>&lt;script src="..."&gt;</code> correspondientes.</p>
-
-    <table>
-      <thead><tr><th>Librería</th><th>Versión</th><th>Qué hace en el proyecto</th></tr></thead>
-      <tbody>
-        <tr><td>Chart.js</td><td>4.4.1</td><td>Las tres gráficas: barras de dispensación, doughnut de especies y línea de tendencia semanal. Se accede via la variable global <code>Chart</code>.</td></tr>
-        <tr><td>Leaflet</td><td>1.9.4</td><td>Los dos mapas interactivos (resumen y sección Mapa). Se accede via la variable global <code>L</code>. Los tiles vienen de CartoDB (no necesita API key).</td></tr>
-        <tr><td>Google Fonts</td><td>—</td><td>Playfair Display (títulos), DM Sans (cuerpo), JetBrains Mono (no se usa en JS pero sí en docs). Requiere conexión a internet.</td></tr>
-      </tbody>
-    </table>
-
-    <div class="info-box warn">
-      <div class="box-title">⚠ Sin conexión a internet</div>
-      Si el dashboard se abre sin internet, Leaflet y Chart.js fallarán silenciosamente y los mapas / gráficas no se renderizarán. Para uso offline, descarga las librerías y cámbialas a rutas locales.
-    </div>
-  </section>
-
-  <!-- SKELETON -->
-  <section class="doc-section" id="skeleton">
-    <h2><span class="icon">💀</span> Skeleton / CSS dinámico</h2>
-    <div class="section-rule"></div>
-    <p>El primer bloque de JS inyecta estilos en el <code>&lt;head&gt;</code> mediante una <strong>IIFE</strong> (función autoejecutable). Esto sirve para mantener el CSS de los estados de carga separado del CSS principal del <code>&lt;style&gt;</code>.</p>
-
-    <h3>Clases que genera</h3>
-    <table>
-      <thead><tr><th>Clase</th><th>Descripción</th></tr></thead>
-      <tbody>
-        <tr><td>.skel</td><td>Animación shimmer base. Fondo degradado animado que simula que algo está cargando.</td></tr>
-        <tr><td>.skel-kpi</td><td>Placeholder rectangular grande para los números KPI (70px × 2.4rem).</td></tr>
-        <tr><td>.skel-text</td><td>Placeholder de línea de texto (altura 0.75rem).</td></tr>
-        <tr><td>.skel-circle</td><td>Placeholder circular para los gauges SVG (64×64px).</td></tr>
-        <tr><td>.skel-row</td><td>Fila de tabla con shimmer. Se elimina cuando llegan datos reales.</td></tr>
-        <tr><td>.sync-dot.loading</td><td>Punto naranja pulsante en el topbar mientras hay petición en curso.</td></tr>
-        <tr><td>.sync-dot.error</td><td>Punto rojo fijo cuando hay error de conexión.</td></tr>
-        <tr><td>.error-banner</td><td>Banner rojo en la parte superior del contenido para errores de red.</td></tr>
-        <tr><td>.error-banner.visible</td><td>Muestra el banner (display:flex). Se oculta solo tras 7 segundos.</td></tr>
-        <tr><td>.esf-popup</td><td>Estilo personalizado para los popups de Leaflet (borde, shadow, tipografía).</td></tr>
-        <tr><td>.danger-btn</td><td>Botón en color rojo (borrar datos, cerrar sesión).</td></tr>
-        <tr><td>#delete-confirm-btn.ready</td><td>Activa el botón de confirmar borrado cuando el input dice "aceptar".</td></tr>
-      </tbody>
-    </table>
-
-    <div class="info-box tip">
-      <div class="box-title">💡 Por qué se inyectan via JS</div>
-      Para que los skeletons sean opcionales y no ensucie el <code>&lt;style&gt;</code> principal. Si en el futuro quieres quitarlos, simplemente elimina la IIFE y todas las referencias a clases <code>.skel-*</code> en el HTML.
-    </div>
-  </section>
-
-  <!-- NAVEGACIÓN -->
-  <section class="doc-section" id="navigation">
-    <h2><span class="icon">🧭</span> Navegación de secciones</h2>
-    <div class="section-rule"></div>
-    <p>El dashboard es una <strong>SPA falsa</strong>: todo el HTML de todas las secciones existe en el DOM desde el inicio, pero solo una tiene <code>display:block</code> a la vez. No hay routing real.</p>
-
-    <div class="fn-card">
-      <div class="fn-card-header">
-        <span class="fn-name">switchSection(id)</span>
-        <span class="fn-badge sync">sync</span>
-      </div>
-      <div class="fn-card-body">
-        <p>Muestra la sección con <code>id="section-{id}"</code> y oculta todas las demás. Actualiza el título del topbar y marca el nav-item activo.</p>
-        <p><strong>Efectos secundarios importantes:</strong> si <code>id === "mapa"</code> llama a <code>initMapFull()</code> con 60ms de delay (para que el elemento sea visible antes de que Leaflet mida su tamaño). Si <code>id === "donaciones"</code> llama a <code>syncDonaciones()</code>.</p>
-      </div>
-    </div>
-
-    <pre><code><span class="cm">// Cómo añadir una nueva sección:</span>
-<span class="cm">// 1. Agrega el ID al objeto de títulos:</span>
-<span class="kw">const</span> <span class="var">SECTION_TITLES</span> = {
-  <span class="prop">mi-nueva-seccion</span>: <span class="st">"Mi nueva sección"</span>,
-  ...
-};
-
-<span class="cm">// 2. Crea el HTML de la sección:</span>
-<span class="cm">// &lt;section id="section-mi-nueva-seccion" class="page-section"&gt;</span>
-
-<span class="cm">// 3. Crea el nav-item en el sidebar:</span>
-<span class="cm">// &lt;a class="nav-item" data-section="mi-nueva-seccion"&gt;</span>
-
-<span class="cm">// Listo. El event listener ya lo conecta automáticamente:</span>
-document.<span class="fn">querySelectorAll</span>(<span class="st">'.nav-item[data-section]'</span>).<span class="fn">forEach</span>(el =&gt; {
-  el.<span class="fn">addEventListener</span>(<span class="st">'click'</span>, e =&gt; {
-    e.<span class="fn">preventDefault</span>();
-    <span class="fn">switchSection</span>(el.dataset.section);
-  });
-});</code></pre>
-
-    <div class="info-box warn">
-      <div class="box-title">⚠ En móvil, switchSection está envuelta</div>
-      Al final del script, <code>window.switchSection</code> es reemplazada por una versión que también llama a <code>closeMobileSidebar()</code>. Si llamas a <code>switchSection()</code> desde cualquier punto, el sidebar se cierra automáticamente en móvil.
-    </div>
-  </section>
-
-  <!-- NOTIFICACIONES -->
-  <section class="doc-section" id="notifications">
-    <h2><span class="icon">🔔</span> Sistema de notificaciones</h2>
-    <div class="section-rule"></div>
-    <p>Las notificaciones se almacenan en <code>notifStore</code>, un array en memoria. <strong>No persiste entre recargas.</strong> Cada vez que el array cambia, se llama a <code>renderNotifications()</code> que repinta todos los contenedores de alertas.</p>
-
-    <h3>Estructura de una notificación</h3>
-    <pre><code>{
-  <span class="prop">type</span>:        <span class="st">"danger"</span> | <span class="st">"warn"</span> | <span class="st">"ok"</span>,  <span class="cm">// determina el color del punto</span>
-  <span class="prop">title</span>:       <span class="st">"ESF-001 — Niveles bajos"</span>,
-  <span class="prop">description</span>: <span class="st">"Batería: 12% · Dog food: 8%"</span>,
-  <span class="prop">time</span>:        <span class="st">"14:32"</span>,
-  <span class="prop">location</span>:   <span class="st">"Del Valle"</span>
-}</code></pre>
-
-    <h3>Funciones disponibles</h3>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">addNotification(notif)</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body">
-        <p>Agrega al inicio del array y llama a <code>renderNotifications()</code>. Las notificaciones duplicadas (mismo título) se filtran en <code>syncDashboard()</code> antes de llamar a esta función.</p>
-      </div>
-    </div>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">clearNotifications()</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body"><p>Vacía el array y repinta. Se llama desde el botón "Marcar todas".</p></div>
-    </div>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">renderNotifications()</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body">
-        <p>Repinta simultáneamente los contenedores <code>#notif-list-resumen</code> y <code>#notif-list-alertas</code>. También actualiza los badges de conteo en el topbar, en el sidebar y en la campana. Ambos contenedores ven siempre los mismos datos.</p>
-      </div>
-    </div>
-
-    <div class="info-box">
-      <div class="box-title">Evitar duplicados</div>
-      En <code>syncDashboard()</code>, antes de llamar a <code>addNotification()</code>, se verifica si ya existe una notificación con el mismo título: <code>notifStore.find(n =&gt; n.title === a.title)</code>. Así el polling no genera alertas repetidas cada 30 segundos.
-    </div>
-  </section>
-
-  <!-- RENDER FUNCTIONS -->
-  <section class="doc-section" id="render">
-    <h2><span class="icon">🎨</span> Funciones de render</h2>
-    <div class="section-rule"></div>
-    <p>Estas funciones reciben datos del API y los pintan en el DOM. Son puras respecto al DOM: leen datos, escriben HTML. No hacen peticiones de red.</p>
-
-    <!-- renderFeeders -->
-    <h4 id="renderFeeders">renderFeeders(feeders)</h4>
-    <p>Recibe el array de feeders del API y actualiza <strong>seis áreas del DOM</strong> en una sola llamada:</p>
-    <table>
-      <thead><tr><th>Área</th><th>Elemento DOM</th><th>Descripción</th></tr></thead>
-      <tbody>
-        <tr><td>KPIs</td><td>#kpi-animals, #kpi-food, #kpi-online, #kpi-alerts</td><td>Los 4 números grandes del resumen.</td></tr>
-        <tr><td>KPI subs</td><td>#kpi-animals-sub, etc.</td><td>Texto descriptivo debajo de cada KPI.</td></tr>
-        <tr><td>Sidebar list</td><td>#sidebar-feeder-list</td><td>La lista de feeders activos en el menú lateral.</td></tr>
-        <tr><td>Estado rápido</td><td>#feeder-quick-list</td><td>Las tarjetas con mini-gauges de barra del resumen.</td></tr>
-        <tr><td>Detail grid</td><td>#feeders-detail-grid</td><td>Las tarjetas grandes con gauges SVG del resumen.</td></tr>
-        <tr><td>Map name</td><td>#mapNameID</td><td>La ubicación mostrada debajo del título del mapa.</td></tr>
-      </tbody>
-    </table>
-
-    <p>También llama a <code>_refreshMapPins(feeders)</code> para actualizar los marcadores del mapa, y a <code>renderFeederCards(feeders)</code> para la sección "Todos los feeders".</p>
-
-    <h3>Cálculo de los KPIs</h3>
-    <pre><code><span class="cm">// Animales: suma de perros + gatos de todos los feeders hoy</span>
-animals += (f.dogsToday || <span class="nm">0</span>) + (f.catsToday || <span class="nm">0</span>);
-
-<span class="cm">// Alimento: aprox 85g por perro, 60g por gato</span>
-kg += ((f.dogsToday || <span class="nm">0</span>) * <span class="nm">85</span> + (f.catsToday || <span class="nm">0</span>) * <span class="nm">60</span>) / <span class="nm">1000</span>;
-
-<span class="cm">// Feeders online vs alertas</span>
-<span class="kw">if</span> (f.status === <span class="st">"online"</span>) online++;
-<span class="kw">else if</span> (f.status === <span class="st">"warn"</span>) alerts++; <span class="cm">// "offline" no cuenta en alertas</span></code></pre>
-
-    <h3>Gauges SVG — cómo funciona el círculo</h3>
-    <pre><code><span class="cm">// El círculo SVG usa stroke-dasharray + stroke-dashoffset para el progreso</span>
-<span class="cm">// Circunferencia = 2 * π * r = 2 * 3.14159 * 26 ≈ 163.4</span>
-<span class="kw">const</span> pct = (v) =&gt; Math.<span class="fn">round</span>(<span class="nm">163.4</span> * (<span class="nm">1</span> - v / <span class="nm">100</span>));
-
-<span class="cm">// Ejemplo: batería al 75% → dashoffset = 163.4 * 0.25 = 40.85</span>
-<span class="cm">// dashoffset=0 → círculo completo. dashoffset=163.4 → círculo vacío.</span></code></pre>
-
-    <div class="info-box tip">
-      <div class="box-title">💡 Colores de los gauges</div>
-      El color del trazo cambia según el valor: <strong style="color:#e05353">rojo</strong> si &lt; 20%, <strong style="color:#e09c40">naranja</strong> si &lt; 40%, <strong style="color:#4ead54">verde</strong> si ≥ 40%. Excepción: el gauge de agua siempre es azul claro (<code>#a8c8e8</code>).
-    </div>
-
-    <!-- addHistoryEvent -->
-    <h4 id="addHistoryEvent">addHistoryEvent(ev)</h4>
-    <p>Inserta una fila nueva al principio de las dos tablas de historial (<code>#history-body</code> y <code>#history-body-extended</code>). Limita a <strong>20 filas</strong> eliminando la última cuando se supera ese límite.</p>
-
-    <h3>Estructura del evento</h3>
-    <pre><code>{
-  <span class="prop">time</span>:       <span class="st">"14:32"</span>,
-  <span class="prop">feederId</span>:  <span class="st">"ESF-001"</span>,
-  <span class="prop">feederName</span>:<span class="st">"Del Valle"</span>,
-  <span class="prop">species</span>:   <span class="st">"perro"</span> | <span class="st">"gato"</span> | <span class="st">"alerta"</span>, <span class="cm">// clase CSS de la badge</span>
-  <span class="prop">emoji</span>:     <span class="st">"🐕"</span>,
-  <span class="prop">label</span>:     <span class="st">"Perro"</span>,
-  <span class="prop">grams</span>:     <span class="nm">85</span>,          <span class="cm">// 0 si no aplica</span>
-  <span class="prop">confidence</span>:<span class="nm">94</span>          <span class="cm">// porcentaje de precisión IA, 0-100</span>
-}</code></pre>
-
-    <!-- updateCharts -->
-    <h4 id="updateCharts">updateCharts(dispensa, species, trend)</h4>
-    <p>Actualiza los tres charts de Chart.js con datos nuevos. Cada parámetro puede ser <code>null</code> o <code>undefined</code> — la función verifica antes de actualizar.</p>
-  </section>
-
-  <!-- SYNC -->
-  <section class="doc-section" id="sync">
-    <h2><span class="icon">🔄</span> Sincronización con Django</h2>
-    <div class="section-rule"></div>
-    <p>El dashboard usa <strong>polling HTTP</strong> (no WebSockets). Cada N segundos hace un <code>fetch()</code> al API de Django y actualiza el DOM. Los intervalos son configurables desde la sección Configuración.</p>
-
-    <div class="fn-card" id="syncDashboard">
-      <div class="fn-card-header"><span class="fn-name">syncDashboard()</span><span class="fn-badge async">async</span></div>
-      <div class="fn-card-body">
-        <p>Llama a <code>GET /api/dashboard/</code>. Espera un JSON con la estructura:</p>
-        <pre style="margin:8px 0"><code>{
-  <span class="prop">feeders</span>: [ <span class="cm">/* array de feeders */</span> ],
-  <span class="prop">charts</span>: {
-    <span class="prop">dispensa</span>: { <span class="prop">labels</span>: [], <span class="prop">dogs</span>: [], <span class="prop">cats</span>: [] },
-    <span class="prop">species</span>:  { <span class="prop">dogs</span>: <span class="nm">84</span>, <span class="prop">cats</span>: <span class="nm">58</span> },
-    <span class="prop">trend</span>:    { <span class="prop">labels</span>: [], <span class="prop">dogs</span>: [], <span class="prop">cats</span>: [] }
-  },
-  <span class="prop">alerts</span>: [ <span class="cm">/* opcional — array de notifs */</span> ]
-}</code></pre>
-        <p>Timeout: 10 segundos (<code>AbortSignal.timeout(10000)</code>). Si falla, muestra el error-banner 7 segundos.</p>
-      </div>
-    </div>
-
-    <div class="fn-card" id="syncHistory">
-      <div class="fn-card-header"><span class="fn-name">syncHistory()</span><span class="fn-badge async">async</span></div>
-      <div class="fn-card-body">
-        <p>Llama a <code>GET /api/history/?limit=20</code>. Espera:</p>
-        <pre style="margin:8px 0"><code>{ <span class="prop">events</span>: [ <span class="cm">/* array de eventos para addHistoryEvent() */</span> ] }</code></pre>
-        <p>Timeout: 8 segundos. Los errores solo van a consola, no al banner de error.</p>
-      </div>
-    </div>
-
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">refreshData()</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body"><p>Llama a ambas funciones en paralelo con <code>Promise.all()</code>. Desactiva el botón "Actualizar" durante la carga.</p></div>
-    </div>
-
-    <h3>Variables de los intervalos de polling</h3>
-    <pre><code><span class="kw">let</span> <span class="var">_syncDashInterval</span>, <span class="var">_syncHistInterval</span>;
-
-<span class="cm">// Se inicializan con los valores de localStorage (o 30s / 15s por defecto)</span>
-<span class="kw">const</span> _sd0 = <span class="fn">parseInt</span>(localStorage.<span class="fn">getItem</span>(<span class="st">"cfg_sync_d"</span>) || <span class="st">"30"</span>);
-<span class="kw">const</span> _sh0 = <span class="fn">parseInt</span>(localStorage.<span class="fn">getItem</span>(<span class="st">"cfg_sync_h"</span>) || <span class="st">"15"</span>);
-
-<span class="cm">// guardarIntervalos() los reinicia con los nuevos valores:</span>
-<span class="fn">clearInterval</span>(_syncDashInterval);
-<span class="fn">clearInterval</span>(_syncHistInterval);
-_syncDashInterval = <span class="fn">setInterval</span>(<span class="fn">syncDashboard</span>, sd * <span class="nm">1000</span>);
-_syncHistInterval = <span class="fn">setInterval</span>(<span class="fn">syncHistory</span>,   sh * <span class="nm">1000</span>);</code></pre>
-
-    <div class="info-box warn">
-      <div class="box-title">⚠ CSRF en peticiones POST</div>
-      La función <code>executeDelete()</code> hace un <code>POST</code> y necesita el token CSRF de Django. Lo obtiene con <code>_getCookie("csrftoken")</code> que lee la cookie que Django pone automáticamente. Si Django tiene <code>CSRF_COOKIE_HTTPONLY = True</code> en settings, esto fallará — esa opción debe estar en <code>False</code>.
-    </div>
-
-    <h3>Estado del sync en el topbar</h3>
-    <pre><code><span class="cm">// _setSyncStatus cambia el punto de color y el texto</span>
-<span class="fn">_setSyncStatus</span>(<span class="st">"loading"</span>, <span class="st">"Sincronizando…"</span>);  <span class="cm">// punto naranja pulsante</span>
-<span class="fn">_setSyncStatus</span>(<span class="st">"ok"</span>,      <span class="st">"Última sync: 14:32"</span>);<span class="cm">// punto verde estático</span>
-<span class="fn">_setSyncStatus</span>(<span class="st">"error"</span>,   <span class="st">"Error de conexión"</span>);  <span class="cm">// punto rojo fijo</span></code></pre>
-  </section>
-
-  <!-- MAPA -->
-  <section class="doc-section" id="map">
-    <h2><span class="icon">🗺️</span> Mapa Leaflet</h2>
-    <div class="section-rule"></div>
-    <p>Hay <strong>dos instancias independientes</strong> de Leaflet: una en el resumen (<code>_mapSmall</code>) y otra en la sección Mapa completo (<code>_mapFull</code>). Comparten los mismos marcadores lógicamente pero son instancias distintas.</p>
-
-    <table>
-      <thead><tr><th>Variable</th><th>Descripción</th></tr></thead>
-      <tbody>
-        <tr><td>_mapSmall</td><td>Mapa del resumen. Se inicia en <code>initMapSmall()</code> al cargar la página. Elemento: <code>#feeder-map</code>.</td></tr>
-        <tr><td>_mapFull</td><td>Mapa de la sección "Mapa". Se inicia lazy en <code>initMapFull()</code> la primera vez que se visita. Elemento: <code>#real-map</code>.</td></tr>
-        <tr><td>_mapMarkers</td><td>Array de objetos <code>{ id, marker, map }</code>. Permite saber qué markers pertenecen a qué instancia.</td></tr>
-        <tr><td>_lastFeeders</td><td>Copia del último array de feeders. Se usa para inicializar <code>_mapFull</code> con los pins correctos si se visita la sección después de la primera sync.</td></tr>
-        <tr><td>_SC</td><td>Colores de status: <code>{ online: "#4d8c52", warn: "#c97b4b", offline: "#8a9f8b" }</code></td></tr>
-        <tr><td>_SL</td><td>Labels de status: <code>{ online: "● En línea", warn: "⚠ Alerta", offline: "✕ Sin conexión" }</code></td></tr>
-      </tbody>
-    </table>
-
-    <h3>Funciones del mapa</h3>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">_mkIcon(color)</span><span class="fn-badge sync">privada</span></div>
-      <div class="fn-card-body"><p>Crea un <code>L.divIcon</code> personalizado: círculo blanco con borde del color del status y emoji 🐾 dentro. Los íconos SVG de Leaflet por defecto son feos — esta función los reemplaza.</p></div>
-    </div>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">_mkPopup(f)</span><span class="fn-badge sync">privada</span></div>
-      <div class="fn-card-body"><p>Genera el HTML del popup que aparece al hacer clic en un pin. Muestra ID, nombre, batería, comida perros/gatos, agua y estado. Los valores bajos (&lt;20%) se muestran en rojo.</p></div>
-    </div>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">_refreshMapPins(feeders)</span><span class="fn-badge sync">privada</span></div>
-      <div class="fn-card-body"><p>Elimina todos los markers actuales y los recrea con los datos nuevos. Se llama desde <code>renderFeeders()</code>. Opera en ambas instancias si están inicializadas.</p></div>
-    </div>
-
-    <h3>Tiles del mapa</h3>
-    <pre><code><span class="cm">// Mapa pequeño (resumen) — con etiquetas de nombres</span>
-<span class="st">"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"</span>
-
-<span class="cm">// Mapa completo — sin etiquetas, más limpio</span>
-<span class="st">"https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"</span>
-
-<span class="cm">// Cambiar a OpenStreetMap estándar (si CartoDB falla):</span>
-<span class="st">"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"</span></code></pre>
-
-    <h3>Coordenadas por defecto</h3>
-    <pre><code><span class="cm">// Centro inicial: Del Valle, CDMX</span>
-center: [<span class="nm">25.6728356714816</span>, <span class="nm">-100.25332267854714</span>]
-
-<span class="cm">// Para cambiar la ubicación por defecto, edita ambas instancias:</span>
-<span class="cm">// initMapSmall() → zoom: 15</span>
-<span class="cm">// initMap()      → zoom: 13</span></code></pre>
-
-    <div class="info-box warn">
-      <div class="box-title">⚠ Problema clásico de Leaflet: mapa gris</div>
-      Si el mapa aparece gris o incompleto, es porque Leaflet se inicializó cuando el elemento estaba oculto (<code>display:none</code>). Por eso <code>switchSection("mapa")</code> espera 60ms con <code>setTimeout</code> antes de llamar a <code>initMapFull()</code>. Si ves el mapa gris, aumenta ese delay a 100–200ms.
-    </div>
-
-    <div class="info-box danger">
-      <div class="box-title">🚨 z-index y el sidebar móvil</div>
-      Leaflet crea elementos con z-index hasta ~1000. El sidebar móvil usa <code>z-index: 1100</code> y el overlay <code>z-index: 1099</code> para garantizar que el sidebar aparezca encima del mapa en pantallas pequeñas.
-    </div>
-  </section>
-
-  <!-- CHARTS -->
-  <section class="doc-section" id="charts">
-    <h2><span class="icon">📈</span> Gráficas Chart.js</h2>
-    <div class="section-rule"></div>
-    <p>Hay tres instancias de Chart.js, todas creadas al cargar la página (no lazy). Se actualizan llamando a <code>chart.data.datasets[i].data = nuevosValores</code> seguido de <code>chart.update()</code>.</p>
-
-    <h3>Configuración global compartida</h3>
-    <pre><code>Chart.defaults.color = <span class="st">"#8a9f8b"</span>;           <span class="cm">// color de todos los textos</span>
-Chart.defaults.font.family = <span class="st">"'DM Sans'"</span>;  <span class="cm">// fuente de labels y tooltips</span>
-Chart.defaults.font.size = <span class="nm">11</span>;
-
-<span class="cm">// Objeto de tooltip reutilizado en los 3 charts:</span>
-<span class="kw">const</span> <span class="var">TT</span> = {
-  backgroundColor: <span class="st">"white"</span>,
-  borderColor: <span class="st">"#e2d9cc"</span>,
-  borderWidth: <span class="nm">1</span>,
-  titleColor: <span class="st">"#2d3a2e"</span>,
-  bodyColor: <span class="st">"#5a6b5b"</span>,
-  padding: <span class="nm">10</span>
-};</code></pre>
-
-    <table>
-      <thead><tr><th>Variable</th><th>Tipo</th><th>Descripción</th></tr></thead>
-      <tbody>
-        <tr><td>dispensingChart</td><td>bar</td><td>Barras de dispensación por hora (últimas 12h). Dataset 0 = perros (naranja), Dataset 1 = gatos (azul).</td></tr>
-        <tr><td>speciesChart</td><td>doughnut</td><td>Distribución perros vs gatos. No es responsive (tamaño fijo 140×140). Datos: array de dos números.</td></tr>
-        <tr><td>trendChart</td><td>line</td><td>Tendencia semanal de 7/30/90 días. Tiene gradientes de área bajo la curva. Tooltips en modo "index" (muestra ambas líneas al hover).</td></tr>
-      </tbody>
-    </table>
-
-    <h3>Actualizar un chart manualmente</h3>
-    <pre><code><span class="cm">// Cambiar datos del chart de tendencia:</span>
-trendChart.data.labels = [<span class="st">"Lun"</span>, <span class="st">"Mar"</span>, <span class="st">"Mié"</span>];
-trendChart.data.datasets[<span class="nm">0</span>].data = [<span class="nm">12</span>, <span class="nm">8</span>, <span class="nm">15</span>]; <span class="cm">// perros</span>
-trendChart.data.datasets[<span class="nm">1</span>].data = [<span class="nm">7</span>,  <span class="nm">4</span>, <span class="nm">9</span>];  <span class="cm">// gatos</span>
-trendChart.<span class="fn">update</span>();
-
-<span class="cm">// Destruir y recrear si hay problemas de render:</span>
-dispensingChart.<span class="fn">destroy</span>();
-<span class="cm">// ... luego new Chart(...)</span></code></pre>
-
-    <h3>Gradientes del trendChart</h3>
-    <pre><code><span class="cm">// Los gradientes se crean con el contexto del canvas ANTES de new Chart()</span>
-<span class="cm">// Si el canvas cambia de tamaño, los gradientes no se actualizan solos.</span>
-<span class="cm">// En ese caso, destruye y recrea el chart.</span>
-<span class="kw">const</span> gDog = trendCtx.<span class="fn">createLinearGradient</span>(<span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">180</span>);
-gDog.<span class="fn">addColorStop</span>(<span class="nm">0</span>,   <span class="st">"rgba(201,123,75,0.22)"</span>);
-gDog.<span class="fn">addColorStop</span>(<span class="nm">1</span>,   <span class="st">"rgba(201,123,75,0)"</span>);</code></pre>
-  </section>
-
-  <!-- FILTROS -->
-  <section class="doc-section" id="filters">
-    <h2><span class="icon">🔍</span> Filtros de historial</h2>
-    <div class="section-rule"></div>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">filterHistory(btn, tbodyId)</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body">
-        <p>Recibe el botón clickeado y el ID del <code>&lt;tbody&gt;</code> a filtrar. Muestra u oculta filas según la clase de la badge <code>.ht-species</code> dentro de cada <code>&lt;tr&gt;</code>.</p>
-        <p>Para filtro <code>"todos"</code> muestra todo. Para <code>"perro"</code>, <code>"gato"</code> o <code>"alerta"</code>, verifica si la badge tiene esa clase CSS.</p>
-      </div>
-    </div>
-
-    <pre><code><span class="cm">// La función busca el botón activo dentro del grupo hermano más cercano:</span>
-btn.<span class="fn">closest</span>(<span class="st">".history-filters, .card-header"</span>)
-   .<span class="fn">querySelectorAll</span>(<span class="st">".hf-btn[data-filter]"</span>)
-   .<span class="fn">forEach</span>(b =&gt; b.classList.<span class="fn">remove</span>(<span class="st">"active"</span>));
-btn.classList.<span class="fn">add</span>(<span class="st">"active"</span>);</code></pre>
-
-    <div class="info-box tip">
-      <div class="box-title">💡 Botones 7D/30D/90D</div>
-      Esos botones no tienen <code>data-filter</code>, por eso tienen su propio listener con el selector <code>.hf-btn:not([data-filter])</code>. Solo cambian el estilo activo — la lógica de cargar 30 o 90 días de datos todavía no está implementada (queda pendiente conectarla al API).
-    </div>
-  </section>
-
-  <!-- CONFIG -->
-  <section class="doc-section" id="config">
-    <h2><span class="icon">⚙️</span> Configuración local (localStorage)</h2>
-    <div class="section-rule"></div>
-    <p>Los umbrales de alerta y los intervalos de sync se guardan en <code>localStorage</code> del navegador. Persisten entre sesiones y recargas del mismo usuario en el mismo dispositivo.</p>
-
-    <table>
-      <thead><tr><th>Clave localStorage</th><th>Default</th><th>Descripción</th></tr></thead>
-      <tbody>
-        <tr><td>cfg_bat</td><td>15</td><td>Batería mínima (%) para alerta.</td></tr>
-        <tr><td>cfg_water</td><td>15</td><td>Agua mínima (%) para notificación.</td></tr>
-        <tr><td>cfg_dog</td><td>10</td><td>Comida perros mínima (%).</td></tr>
-        <tr><td>cfg_cat</td><td>10</td><td>Comida gatos mínima (%).</td></tr>
-        <tr><td>cfg_sync_d</td><td>30</td><td>Segundos entre llamadas a <code>/api/dashboard/</code>.</td></tr>
-        <tr><td>cfg_sync_h</td><td>15</td><td>Segundos entre llamadas a <code>/api/history/</code>.</td></tr>
-      </tbody>
-    </table>
-
-    <div class="info-box">
-      <div class="box-title">Importante sobre los umbrales</div>
-      Los valores de <code>cfg_bat</code>, <code>cfg_water</code>, etc. se guardan en localStorage pero actualmente <strong>no se usan en la lógica de alertas del JS</strong>. Las alertas se generan del lado del servidor Django. Estos valores están pensados para ser enviados al backend en una futura implementación.
-    </div>
-
-    <h3>Limpiar la configuración guardada</h3>
-    <pre><code><span class="cm">// En la consola del navegador para restablecer todo:</span>
-localStorage.<span class="fn">removeItem</span>(<span class="st">"cfg_bat"</span>);
-localStorage.<span class="fn">removeItem</span>(<span class="st">"cfg_sync_d"</span>);
-<span class="cm">// o limpiar todo de golpe:</span>
-localStorage.<span class="fn">clear</span>();
-location.<span class="fn">reload</span>();</code></pre>
-  </section>
-
-  <!-- MODAL -->
-  <section class="doc-section" id="modal">
-    <h2><span class="icon">🗑️</span> Modal — borrar todos los datos</h2>
-    <div class="section-rule"></div>
-    <p>El modal de confirmación requiere que el usuario escriba literalmente <strong>"aceptar"</strong> para habilitar el botón de borrado. Hace un <code>POST /api/data/delete-all/</code> con el token CSRF.</p>
-
-    <table>
-      <thead><tr><th>Función</th><th>Qué hace</th></tr></thead>
-      <tbody>
-        <tr><td>openDeleteModal()</td><td>Muestra el modal (<code>display:flex</code>), resetea el input y enfoca el campo.</td></tr>
-        <tr><td>closeDeleteModal()</td><td>Oculta el modal. También se dispara al clic en el backdrop o con <code>Escape</code>.</td></tr>
-        <tr><td>checkDeleteInput()</td><td>Se llama en cada <code>oninput</code>. Habilita el botón solo si el valor es exactamente "aceptar".</td></tr>
-        <tr><td>executeDelete()</td><td>Hace el POST, limpia el DOM (tablas + notificaciones) y llama <code>syncDashboard()</code> + <code>syncHistory()</code> para recargar datos frescos.</td></tr>
-        <tr><td>_getCookie(name)</td><td>Utilidad para leer cookies del navegador. Se usa para obtener el <code>csrftoken</code> de Django.</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- MOBILE -->
-  <section class="doc-section" id="mobile">
-    <h2><span class="icon">📱</span> Sidebar móvil</h2>
-    <div class="section-rule"></div>
-
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">toggleMobileSidebar()</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body"><p>Agrega/quita la clase <code>.open</code> al sidebar y al overlay. Cuando el sidebar está abierto, bloquea el scroll del body con <code>document.body.style.overflow = "hidden"</code>.</p></div>
-    </div>
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">closeMobileSidebar()</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body"><p>Cierra el sidebar. Se llama desde: el overlay (clic fuera), cada <code>switchSection()</code> (envuelta), y puede llamarse manualmente.</p></div>
-    </div>
-
-    <h3>El wrapper de switchSection</h3>
-    <pre><code><span class="cm">// Al final del script, switchSection original se reemplaza:</span>
-(<span class="kw">function</span>() {
-  <span class="kw">const</span> origSwitch = switchSection;
-  window.switchSection = <span class="kw">function</span>(id) {
-    <span class="fn">origSwitch</span>(id);
-    <span class="fn">closeMobileSidebar</span>(); <span class="cm">// siempre cierra al navegar</span>
-  };
-})();</code></pre>
-
-    <h3>z-index hierarchy en móvil</h3>
-    <table>
-      <thead><tr><th>Elemento</th><th>z-index</th><th>Por qué</th></tr></thead>
-      <tbody>
-        <tr><td>Topbar (.topbar)</td><td>100</td><td>Encima del contenido normal.</td></tr>
-        <tr><td>Sidebar desktop</td><td>200</td><td>Encima del topbar en desktop.</td></tr>
-        <tr><td>Leaflet tiles</td><td>200–400</td><td>Interno de Leaflet.</td></tr>
-        <tr><td>Leaflet controls</td><td>hasta ~1000</td><td>Popups y controles de Leaflet.</td></tr>
-        <tr><td>Overlay móvil</td><td>1099</td><td>Encima de Leaflet.</td></tr>
-        <tr><td>Sidebar móvil (.open)</td><td>1100</td><td>Encima de todo, incluyendo Leaflet.</td></tr>
-        <tr><td>Modal borrar datos</td><td>9999</td><td>Siempre encima de todo.</td></tr>
-        <tr><td>Banner móvil</td><td>2000</td><td>Encima del sidebar.</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- BANNER -->
-  <section class="doc-section" id="banner">
-    <h2><span class="icon">🖥️</span> Banner de recomendación móvil</h2>
-    <div class="section-rule"></div>
-    <p>Aparece en la parte inferior como un toast flotante al entrar desde un dispositivo móvil. Se detecta por ancho de pantalla (<code>window.innerWidth ≤ 768</code>) o User Agent.</p>
-
-    <div class="fn-card">
-      <div class="fn-card-header"><span class="fn-name">closeMobileBanner()</span><span class="fn-badge sync">sync</span></div>
-      <div class="fn-card-body"><p>Oculta el banner con animación fade+slide. Guarda en <code>sessionStorage</code> la clave <code>mobile_banner_dismissed = "1"</code> para que no vuelva a aparecer en la misma sesión (desaparece al cerrar el tab, pero no al recargar dentro de la misma sesión).</p></div>
-    </div>
-
-    <pre><code><span class="cm">// La IIFE que decide si mostrar el banner:</span>
-(<span class="kw">function</span> showMobileBannerIfNeeded() {
-  <span class="kw">const</span> isMobile = window.innerWidth &lt;= <span class="nm">768</span> ||
-    <span class="nm">/Android|iPhone|iPad|iPod|Mobile/i</span>.<span class="fn">test</span>(navigator.userAgent);
-  <span class="kw">if</span> (!isMobile) <span class="kw">return</span>;
-
-  <span class="kw">let</span> dismissed = <span class="kw">false</span>;
-  <span class="kw">try</span> { dismissed = sessionStorage.<span class="fn">getItem</span>(<span class="st">"mobile_banner_dismissed"</span>) === <span class="st">"1"</span>; } 
-  <span class="kw">catch</span>(e) {}
-  <span class="kw">if</span> (dismissed) <span class="kw">return</span>;
-
-  <span class="fn">setTimeout</span>(() =&gt; { banner.style.display = <span class="st">"flex"</span>; }, <span class="nm">800</span>); <span class="cm">// delay 800ms</span>
-})();</code></pre>
-
-    <div class="info-box tip">
-      <div class="box-title">💡 Forzar que aparezca en desarrollo</div>
-      En la consola del navegador: <code>sessionStorage.removeItem("mobile_banner_dismissed")</code> y recarga la página con el DevTools en modo móvil.
-    </div>
-  </section>
-
-  <!-- API CONTRACT -->
-  <section class="doc-section" id="api-contract">
-    <h2><span class="icon">🔌</span> Contrato del API Django</h2>
-    <div class="section-rule"></div>
-    <p>El dashboard espera estos endpoints de Django. Si la estructura del JSON cambia, el dashboard falla silenciosamente (o con errores en consola).</p>
-
-    <h3>GET /api/dashboard/</h3>
-    <pre><code>{
-  <span class="prop">"feeders"</span>: [
-    {
-      <span class="prop">"id"</span>:         <span class="st">"ESF-001"</span>,
-      <span class="prop">"name"</span>:       <span class="st">"Del Valle"</span>,
-      <span class="prop">"location"</span>:  <span class="st">"Del Valle, CDMX"</span>,
-      <span class="prop">"status"</span>:    <span class="st">"online"</span>,   <span class="cm">// "online" | "warn" | "offline"</span>
-      <span class="prop">"lastSync"</span>:  <span class="st">"hace 2 min"</span>,
-      <span class="prop">"battery"</span>:   <span class="nm">78</span>,          <span class="cm">// 0-100</span>
-      <span class="prop">"foodDog"</span>:   <span class="nm">65</span>,          <span class="cm">// 0-100</span>
-      <span class="prop">"foodCat"</span>:   <span class="nm">42</span>,          <span class="cm">// 0-100</span>
-      <span class="prop">"water"</span>:     <span class="nm">88</span>,          <span class="cm">// 0-100</span>
-      <span class="prop">"dogsToday"</span>: <span class="nm">14</span>,
-      <span class="prop">"catsToday"</span>: <span class="nm">8</span>,
-      <span class="prop">"aiAccuracy"</span>:<span class="nm">94</span>,          <span class="cm">// opcional</span>
-      <span class="prop">"lat"</span>:       <span class="nm">25.6728</span>,    <span class="cm">// opcional — si no hay, no se pone pin</span>
-      <span class="prop">"lng"</span>:      <span class="nm">-100.2533</span>,
-      <span class="prop">"alertMessage"</span>: <span class="kw">null</span>     <span class="cm">// string o null</span>
-    }
-  ],
-  <span class="prop">"charts"</span>: {
-    <span class="prop">"dispensa"</span>: { <span class="prop">"labels"</span>: [<span class="st">"08:00"</span>, ...], <span class="prop">"dogs"</span>: [<span class="nm">3</span>, ...], <span class="prop">"cats"</span>: [<span class="nm">1</span>, ...] },
-    <span class="prop">"species"</span>:  { <span class="prop">"dogs"</span>: <span class="nm">84</span>, <span class="prop">"cats"</span>: <span class="nm">58</span> },
-    <span class="prop">"trend"</span>:    { <span class="prop">"labels"</span>: [<span class="st">"Lun"</span>, ...], <span class="prop">"dogs"</span>: [<span class="nm">12</span>, ...], <span class="prop">"cats"</span>: [<span class="nm">7</span>, ...] }
-  },
-  <span class="prop">"alerts"</span>: [   <span class="cm">// opcional — array de notificaciones a insertar</span>
-    {
-      <span class="prop">"type"</span>: <span class="st">"danger"</span>,
-      <span class="prop">"title"</span>: <span class="st">"ESF-001 — Batería crítica"</span>,
-      <span class="prop">"description"</span>: <span class="st">"Batería al 8%"</span>,
-      <span class="prop">"time"</span>: <span class="st">"14:22"</span>,
-      <span class="prop">"location"</span>: <span class="st">"Del Valle"</span>
-    }
-  ]
-}</code></pre>
-
-    <h3>GET /api/history/?limit=20</h3>
-    <pre><code>{
-  <span class="prop">"events"</span>: [
-    {
-      <span class="prop">"time"</span>:       <span class="st">"14:32"</span>,
-      <span class="prop">"feederId"</span>:  <span class="st">"ESF-001"</span>,
-      <span class="prop">"feederName"</span>:<span class="st">"Del Valle"</span>,
-      <span class="prop">"species"</span>:   <span class="st">"perro"</span>,   <span class="cm">// "perro" | "gato" | "alerta"</span>
-      <span class="prop">"emoji"</span>:     <span class="st">"🐕"</span>,
-      <span class="prop">"label"</span>:     <span class="st">"Perro"</span>,
-      <span class="prop">"grams"</span>:     <span class="nm">85</span>,
-      <span class="prop">"confidence"</span>:<span class="nm">94</span>
-    }
-  ]
-}</code></pre>
-
-    <h3>GET /api/donaciones/</h3>
-    <pre><code>{
-  <span class="prop">"balance"</span>:   { <span class="prop">"available"</span>: <span class="nm">15000</span>, <span class="prop">"pending"</span>: <span class="nm">3000</span>, <span class="prop">"currency"</span>: <span class="st">"mxn"</span> },
-  <span class="prop">"mes"</span>:       { <span class="prop">"total"</span>: <span class="nm">8500</span>, <span class="prop">"count"</span>: <span class="nm">12</span> },
-  <span class="prop">"donadores"</span>: <span class="nm">8</span>,
-  <span class="prop">"charges"</span>:   [ <span class="cm">/* array de cargos Stripe */</span> ],
-  <span class="prop">"payouts"</span>:   [ <span class="cm">/* array de payouts Stripe */</span> ]
-}</code></pre>
-
-    <h3>POST /api/data/delete-all/</h3>
-    <p>No necesita body. Retorna 200 OK si tuvo éxito. Requiere header <code>X-CSRFToken</code>.</p>
-  </section>
-
-  <!-- IDs DEL DOM -->
-  <section class="doc-section" id="ids">
-    <h2><span class="icon">🏷️</span> IDs del DOM que usa el JS</h2>
-    <div class="section-rule"></div>
-    <p>Si cambias un ID en el HTML sin actualizar el JS (o viceversa), esa parte del dashboard dejará de funcionar silenciosamente.</p>
-
-    <table>
-      <thead><tr><th>ID</th><th>Modificado por</th></tr></thead>
-      <tbody>
-        <tr><td>kpi-animals, kpi-food, kpi-online, kpi-alerts</td><td>renderFeeders()</td></tr>
-        <tr><td>kpi-animals-sub, kpi-food-sub, kpi-online-sub, kpi-alerts-sub</td><td>renderFeeders()</td></tr>
-        <tr><td>sidebar-feeder-list</td><td>renderFeeders()</td></tr>
-        <tr><td>feeder-quick-list</td><td>renderFeeders()</td></tr>
-        <tr><td>feeders-detail-grid</td><td>renderFeeders()</td></tr>
-        <tr><td>mapNameID</td><td>renderFeeders()</td></tr>
-        <tr><td>feeder-map</td><td>initMapSmall() — instancia Leaflet</td></tr>
-        <tr><td>real-map</td><td>initMapFull() — instancia Leaflet</td></tr>
-        <tr><td>dispensingChart, speciesChart, trendChart</td><td>new Chart(...)</td></tr>
-        <tr><td>history-body, history-body-extended</td><td>addHistoryEvent(), syncHistory()</td></tr>
-        <tr><td>notif-list-resumen, notif-list-alertas</td><td>renderNotifications()</td></tr>
-        <tr><td>notif-badge, notif-badge-alertas, badge-alertas</td><td>renderNotifications()</td></tr>
-        <tr><td>topbar-notif-dot</td><td>renderNotifications()</td></tr>
-        <tr><td>page-title</td><td>switchSection()</td></tr>
-        <tr><td>sync-dot, last-sync-text</td><td>_setSyncStatus()</td></tr>
-        <tr><td>error-banner, error-text</td><td>_showError()</td></tr>
-        <tr><td>refreshBtn</td><td>refreshData()</td></tr>
-        <tr><td>feeders-cards-container</td><td>renderFeederCards()</td></tr>
-        <tr><td>delete-modal, delete-confirm-input, delete-confirm-btn</td><td>modal functions</td></tr>
-        <tr><td>sidebar-overlay, mobile-banner</td><td>mobile functions</td></tr>
-        <tr><td>cfg-bat, cfg-water, cfg-dog, cfg-cat</td><td>cargarSettings(), guardarUmbrales()</td></tr>
-        <tr><td>cfg-sync-dashboard, cfg-sync-history</td><td>cargarSettings(), guardarIntervalos()</td></tr>
-        <tr><td>don-balance, don-mes, don-donadores, don-pendiente</td><td>syncDonaciones()</td></tr>
-        <tr><td>don-charges-body, don-payouts-body</td><td>syncDonaciones()</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- FALLOS COMUNES -->
-  <section class="doc-section" id="fallos">
-    <h2><span class="icon">🚨</span> Fallos comunes y cómo debuggear</h2>
-    <div class="section-rule"></div>
-
-    <h3>El mapa aparece gris o incompleto</h3>
-    <div class="info-box warn">
-      <p><strong>Causa:</strong> Leaflet se inicializó cuando el elemento estaba oculto.<br>
-      <strong>Fix:</strong> Aumenta el delay en <code>switchSection()</code>: <code>setTimeout(initMapFull, 150)</code>.<br>
-      <strong>Fix alternativo:</strong> Abre DevTools → consola → escribe <code>_mapFull.invalidateSize()</code>.</p>
-    </div>
-
-    <h3>Los charts no se actualizan</h3>
-    <div class="info-box warn">
-      <p><strong>Causa:</strong> El API devuelve arrays vacíos o la estructura del JSON no coincide.<br>
-      <strong>Debug:</strong> En consola: <code>dispensingChart.data</code> para ver los datos actuales.<br>
-      <strong>Fix:</strong> Verifica que <code>/api/dashboard/</code> devuelva <code>charts.dispensa.labels</code> con elementos.</p>
-    </div>
-
-    <h3>Las notificaciones se duplican</h3>
-    <div class="info-box warn">
-      <p><strong>Causa:</strong> El API está mandando alertas con títulos distintos cada vez.<br>
-      <strong>Debug:</strong> En consola: <code>notifStore</code> para ver el array completo.<br>
-      <strong>Fix:</strong> Asegúrate que el título de la alerta sea consistente entre llamadas del API.</p>
-    </div>
-
-    <h3>El dashboard no carga datos (todo en skeleton)</h3>
-    <div class="info-box danger">
-      <p><strong>Causa:</strong> El endpoint <code>/api/dashboard/</code> devuelve error o no está disponible.<br>
-      <strong>Debug:</strong> Abre DevTools → Network → busca la llamada a <code>/api/dashboard/</code> → revisa el status y el body.<br>
-      <strong>Causas frecuentes:</strong> Django no está corriendo, CORS bloqueado, la URL del API cambió.</p>
-    </div>
-
-    <h3>El sidebar móvil no cierra / está debajo del mapa</h3>
-    <div class="info-box warn">
-      <p><strong>Causa z-index:</strong> Algo tiene z-index mayor a 1100.<br>
-      <strong>Causa no cierra:</strong> El overlay no está en el DOM o su <code>onclick</code> no está conectado.<br>
-      <strong>Debug:</strong> En consola: <code>document.getElementById('sidebar-overlay')</code> — debe existir.</p>
-    </div>
-
-    <h3>Error "Cannot read properties of null" en consola</h3>
-    <div class="info-box danger">
-      <p><strong>Causa:</strong> El JS busca un elemento por ID que no existe en el HTML.<br>
-      <strong>Fix general:</strong> Casi todo el código ya usa comprobaciones defensivas (<code>if (el)</code>). Si aparece este error, busca el ID mencionado en la tabla de IDs de arriba y verifica que exista en el HTML.</p>
-    </div>
-
-    <h3>Comandos útiles de consola</h3>
-    <pre><code><span class="cm">// Ver todos los feeders del último sync</span>
-_lastFeeders
-
-<span class="cm">// Ver notificaciones activas</span>
-notifStore
-
-<span class="cm">// Forzar un sync inmediato</span>
-<span class="fn">syncDashboard</span>()
-
-<span class="cm">// Invalidar tamaño del mapa si se ve mal</span>
-_mapSmall.<span class="fn">invalidateSize</span>()
-_mapFull.<span class="fn">invalidateSize</span>()
-
-<span class="cm">// Agregar una notificación de prueba manualmente</span>
-<span class="fn">addNotification</span>({ type:<span class="st">"warn"</span>, title:<span class="st">"Test"</span>, description:<span class="st">"Prueba"</span>, time:<span class="st">"12:00"</span>, location:<span class="st">"Test"</span> })
-
-<span class="cm">// Ir a una sección programáticamente</span>
-<span class="fn">switchSection</span>(<span class="st">"donaciones"</span>)
-
-<span class="cm">// Resetear banner de móvil para que vuelva a aparecer</span>
-sessionStorage.<span class="fn">removeItem</span>(<span class="st">"mobile_banner_dismissed"</span>)
-
-<span class="cm">// Borrar toda la configuración guardada</span>
-localStorage.<span class="fn">clear</span>()</code></pre>
-  </section>
-
-</main>
-
-<script>
-  // Highlight active TOC link on scroll
-  const sections = document.querySelectorAll('.doc-section');
-  const links = document.querySelectorAll('.toc a');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        links.forEach(l => l.classList.remove('active'));
-        const id = e.target.id;
-        const l = document.querySelector(`.toc a[href="#${id}"]`);
-        if (l) l.classList.add('active');
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoSentinel Feeder — Documentación v1.0</title>
+    <link
+      rel="shortcut icon"
+      href="{% static 'images/EcoSentinelIcon.ico' %}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --cream: #fdf8f0;
+        --warm-white: #fffcf7;
+        --warm-white2: #fff9f2;
+        --sage: #7a9e7e;
+        --sage-light: #a8c5ac;
+        --sage-dark: #4d7a52;
+        --terracotta: #c97b4b;
+        --terracotta-light: #e8a97a;
+        --sky: #a8c8e8;
+        --sky-dark: #5a9bc0;
+        --charcoal: #2d3a2e;
+        --mid: #5a6b5b;
+        --light-mid: #8a9f8b;
+        --border: #e2d9cc;
+        --border2: #d4c9ba;
+        --ok: #4d8c52;
+        --warn: #b86a1a;
+        --danger: #c03030;
+        --code-bg: #f4efe6;
+        --code-border: #ddd0be;
+        --sidebar-w: 228px;
+        --topnav-h: 60px;
       }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-  sections.forEach(s => obs.observe(s));
-</script>
-</body>
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--cream);
+        color: var(--charcoal);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        line-height: 1.7;
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.016;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+      }
+
+      /* TOP NAV */
+      .topnav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 300;
+        height: var(--topnav-h);
+        background: rgba(253, 248, 240, 0.95);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px 0 24px;
+        gap: 20px;
+      }
+      .nav-brand {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .nav-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.05rem;
+        color: var(--sage-dark);
+        letter-spacing: 0.02em;
+      }
+      .nav-logo span {
+        color: var(--terracotta);
+        font-style: italic;
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nav-version {
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.06em;
+        color: var(--sage-dark);
+        font-weight: 500;
+        background: rgba(77, 122, 82, 0.1);
+        border: 1px solid rgba(77, 122, 82, 0.22);
+        padding: 3px 10px;
+        border-radius: 100px;
+      }
+      .nav-badge {
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--light-mid);
+        font-weight: 500;
+        background: var(--border);
+        padding: 3px 9px;
+        border-radius: 100px;
+      }
+
+      /* LAYOUT */
+      .shell {
+        display: flex;
+        padding-top: var(--topnav-h);
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+      .doc-sidebar {
+        position: fixed;
+        top: var(--topnav-h);
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--warm-white);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        padding-bottom: 32px;
+      }
+      .sb-section {
+        padding: 20px 18px 6px;
+      }
+      .sb-section-label {
+        font-size: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--light-mid);
+        font-weight: 600;
+        padding: 0 4px 8px;
+        display: block;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 4px;
+      }
+      .sb-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 8px;
+        border-radius: 8px;
+        font-size: 0.79rem;
+        color: var(--mid);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.16s;
+        border-left: 2px solid transparent;
+        user-select: none;
+      }
+      .sb-link:hover {
+        color: var(--charcoal);
+        background: rgba(122, 158, 126, 0.07);
+      }
+      .sb-link.active {
+        color: var(--sage-dark);
+        border-left-color: var(--sage-dark);
+        background: rgba(77, 122, 82, 0.07);
+        font-weight: 500;
+      }
+      .sb-link .sb-icon {
+        font-size: 0.8rem;
+        width: 18px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      /* MAIN */
+      .main-content {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* HERO */
+      .hero {
+        padding: 56px 56px 0;
+        max-width: 820px;
+      }
+      .hero-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+      }
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.63rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--sage-dark);
+        font-weight: 600;
+        background: rgba(77, 122, 82, 0.08);
+        border: 1px solid rgba(77, 122, 82, 0.2);
+        padding: 4px 12px;
+        border-radius: 100px;
+      }
+      .hero-eyebrow::before {
+        content: "📡";
+        font-size: 0.8rem;
+      }
+      .hero-version-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: "DM Mono", monospace;
+        font-size: 0.63rem;
+        letter-spacing: 0.05em;
+        color: var(--terracotta);
+        font-weight: 500;
+        background: rgba(201, 123, 75, 0.08);
+        border: 1px solid rgba(201, 123, 75, 0.25);
+        padding: 4px 12px;
+        border-radius: 100px;
+      }
+      .hero-version-badge::before {
+        content: "🏷️";
+        font-size: 0.75rem;
+      }
+      .hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.2rem, 4vw, 3.4rem);
+        font-weight: 700;
+        line-height: 1.1;
+        color: var(--charcoal);
+        margin-bottom: 6px;
+      }
+      .hero h1 em {
+        color: var(--terracotta);
+        font-style: italic;
+      }
+      .hero-sub {
+        font-size: 0.98rem;
+        color: var(--mid);
+        font-weight: 300;
+        max-width: 520px;
+        margin-top: 14px;
+        line-height: 1.72;
+      }
+
+      /* MODE SWITCHER */
+      .mode-switcher-wrap {
+        padding: 30px 56px 46px;
+      }
+      .mode-switcher {
+        display: inline-flex;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 5px;
+        gap: 4px;
+        box-shadow: 0 2px 12px rgba(45, 58, 46, 0.06);
+      }
+      .mode-btn {
+        padding: 10px 28px;
+        border-radius: 10px;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.86rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.22s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--mid);
+        background: transparent;
+      }
+      .mode-btn .mb-icon {
+        font-size: 0.95rem;
+      }
+      .mode-btn .mb-label {
+        font-weight: 500;
+      }
+      .mode-btn .mb-desc {
+        font-size: 0.68rem;
+        font-weight: 300;
+        color: var(--light-mid);
+        display: block;
+        text-align: left;
+        margin-top: 1px;
+      }
+      .mode-btn:hover {
+        color: var(--charcoal);
+      }
+      .mode-btn.active {
+        background: var(--sage-dark);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(77, 122, 82, 0.28);
+      }
+      .mode-btn.active .mb-desc {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      /* PANELS */
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
+      .doc-wrap {
+        padding: 0 56px 100px;
+        max-width: 860px;
+      }
+
+      /* SECTION LABEL */
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--light-mid);
+        font-weight: 600;
+        margin-bottom: 32px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .section-label::before {
+        content: "";
+        width: 26px;
+        height: 1.5px;
+        background: var(--terracotta);
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+
+      /* DOC BLOCK */
+      .doc-block {
+        margin-bottom: 68px;
+      }
+      .doc-block-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .db-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 3px;
+      }
+      .db-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.42rem;
+        font-weight: 600;
+        color: var(--charcoal);
+        line-height: 1.25;
+        margin-bottom: 4px;
+      }
+      .db-sub {
+        font-size: 0.72rem;
+        color: var(--light-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 500;
+      }
+      .db-body {
+        font-size: 0.93rem;
+        color: var(--mid);
+        line-height: 1.75;
+        margin-bottom: 22px;
+      }
+      .db-body strong {
+        color: var(--charcoal);
+        font-weight: 500;
+      }
+      .db-body em {
+        color: var(--terracotta);
+        font-style: normal;
+        font-weight: 500;
+      }
+
+      /* IMAGE WRAPPER */
+      .doc-img-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        margin-bottom: 8px;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--warm-white);
+        border: 1.5px dashed var(--border2);
+      }
+      .doc-img-wrap::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 24px,
+          rgba(122, 158, 126, 0.022) 24px,
+          rgba(122, 158, 126, 0.022) 25px
+        );
+        pointer-events: none;
+      }
+      .doc-img-wrap img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 15px;
+      }
+      .img-fallback {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .img-fallback .if-icon {
+        font-size: 1.7rem;
+        opacity: 0.28;
+      }
+      .img-fallback .if-name {
+        font-family: "DM Mono", monospace;
+        font-size: 0.68rem;
+        color: var(--sage-dark);
+        background: rgba(77, 122, 82, 0.1);
+        border: 1px solid rgba(77, 122, 82, 0.2);
+        padding: 3px 12px;
+        border-radius: 100px;
+        letter-spacing: 0.04em;
+      }
+      .img-fallback .if-dims {
+        font-size: 0.58rem;
+        color: var(--border2);
+        font-family: "DM Mono", monospace;
+      }
+      .doc-img-wrap img.loaded + .img-fallback {
+        display: none;
+      }
+      .img-caption {
+        font-size: 0.71rem;
+        color: var(--light-mid);
+        font-style: italic;
+        margin-bottom: 0;
+      }
+
+      /* FEATURE LIST */
+      .feature-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 18px 0 0;
+      }
+      .feature-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.9rem;
+        color: var(--mid);
+        line-height: 1.55;
+      }
+      .feature-list li::before {
+        content: attr(data-icon);
+        width: 24px;
+        height: 24px;
+        background: rgba(77, 122, 82, 0.08);
+        border: 1px solid rgba(77, 122, 82, 0.15);
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .feature-list li strong {
+        color: var(--charcoal);
+        font-weight: 500;
+      }
+
+      /* CALLOUT */
+      .callout {
+        border-radius: 13px;
+        padding: 16px 20px;
+        font-size: 0.87rem;
+        line-height: 1.65;
+        margin: 18px 0;
+        display: flex;
+        gap: 13px;
+        align-items: flex-start;
+      }
+      .callout-icon {
+        font-size: 1.15rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .callout.info {
+        background: rgba(90, 155, 192, 0.08);
+        border: 1px solid rgba(90, 155, 192, 0.2);
+        color: var(--sky-dark);
+      }
+      .callout.warn {
+        background: rgba(201, 123, 75, 0.08);
+        border: 1px solid rgba(201, 123, 75, 0.22);
+        color: var(--warn);
+      }
+      .callout.tip {
+        background: rgba(77, 122, 82, 0.08);
+        border: 1px solid rgba(77, 122, 82, 0.18);
+        color: var(--sage-dark);
+      }
+      .callout p {
+        color: var(--charcoal);
+        font-weight: 400;
+      }
+      .callout strong {
+        color: inherit;
+        font-weight: 600;
+      }
+
+      /* STEP FLOW */
+      .step-flow {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin: 22px 0;
+        position: relative;
+      }
+      .step-flow::before {
+        content: "";
+        position: absolute;
+        left: 19px;
+        top: 40px;
+        bottom: 40px;
+        width: 1.5px;
+        background: linear-gradient(to bottom, var(--sage-light), transparent);
+      }
+      .step {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 14px 0;
+      }
+      .step-num {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--warm-white);
+        border: 1.5px solid var(--border2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Lora", serif;
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: var(--sage-dark);
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+      }
+      .step-title {
+        font-weight: 500;
+        font-size: 0.93rem;
+        color: var(--charcoal);
+        margin-bottom: 3px;
+      }
+      .step-desc {
+        font-size: 0.84rem;
+        color: var(--mid);
+        line-height: 1.6;
+      }
+
+      /* CODE BLOCK */
+      .code-block {
+        background: var(--code-bg);
+        border: 1px solid var(--code-border);
+        border-radius: 13px;
+        overflow: hidden;
+        margin: 18px 0;
+        font-size: 0.82rem;
+      }
+      .code-header {
+        background: rgba(210, 198, 182, 0.3);
+        border-bottom: 1px solid var(--code-border);
+        padding: 7px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .code-lang {
+        font-family: "DM Mono", monospace;
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--light-mid);
+        font-weight: 500;
+      }
+      .code-dots {
+        display: flex;
+        gap: 5px;
+      }
+      .code-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .code-dot:nth-child(1) {
+        background: #ff5f56;
+      }
+      .code-dot:nth-child(2) {
+        background: #ffbd2e;
+      }
+      .code-dot:nth-child(3) {
+        background: #27c93f;
+      }
+      pre {
+        padding: 16px 20px;
+        overflow-x: auto;
+        color: var(--charcoal);
+        font-family: "DM Mono", monospace;
+        line-height: 1.7;
+        font-size: 0.82rem;
+      }
+      .kw {
+        color: #4d7a52;
+        font-weight: 500;
+      }
+      .str {
+        color: #c97b4b;
+      }
+      .cmt {
+        color: #9aad9b;
+        font-style: italic;
+      }
+      .num {
+        color: #5a9bc0;
+      }
+      .fn {
+        color: #7984f5;
+      }
+      .prop {
+        color: #b86a1a;
+      }
+
+      /* ARCH GRID */
+      .arch-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 22px 0;
+      }
+      .arch-node {
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        padding: 16px;
+        text-align: center;
+        position: relative;
+      }
+      .arch-node::after {
+        content: "→";
+        position: absolute;
+        right: -14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--border2);
+        font-size: 0.88rem;
+      }
+      .arch-node:last-child::after {
+        display: none;
+      }
+      .an-icon {
+        font-size: 1.5rem;
+        margin-bottom: 7px;
+      }
+      .an-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--charcoal);
+        margin-bottom: 3px;
+      }
+      .an-desc {
+        font-size: 0.67rem;
+        color: var(--light-mid);
+        line-height: 1.4;
+      }
+
+      /* PROP TABLE */
+      .prop-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+        margin: 18px 0;
+      }
+      .prop-table th {
+        text-align: left;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--light-mid);
+        font-weight: 600;
+        padding: 8px 14px;
+        border-bottom: 1.5px solid var(--border);
+        background: var(--warm-white2);
+      }
+      .prop-table td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--mid);
+        vertical-align: top;
+        line-height: 1.5;
+      }
+      .prop-table tr:last-child td {
+        border-bottom: none;
+      }
+      .prop-table td:first-child {
+        font-family: "DM Mono", monospace;
+        font-size: 0.77rem;
+        color: var(--sage-dark);
+        white-space: nowrap;
+      }
+      .prop-table td:nth-child(2) {
+        font-family: "DM Mono", monospace;
+        font-size: 0.73rem;
+        color: var(--terracotta);
+      }
+      .prop-table td:nth-child(3) {
+        color: var(--charcoal);
+      }
+      .type-badge {
+        display: inline-block;
+        font-family: "DM Mono", monospace;
+        font-size: 0.63rem;
+        background: rgba(90, 155, 192, 0.1);
+        color: var(--sky-dark);
+        border: 1px solid rgba(90, 155, 192, 0.25);
+        padding: 1px 7px;
+        border-radius: 4px;
+      }
+
+      /* THEME SWATCHES */
+      .theme-swatches {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 14px 0;
+      }
+      .swatch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+      .swatch-color {
+        width: 46px;
+        height: 46px;
+        border-radius: 11px;
+        border: 1.5px solid rgba(0, 0, 0, 0.08);
+      }
+      .swatch-name {
+        font-family: "DM Mono", monospace;
+        font-size: 0.56rem;
+        color: var(--light-mid);
+        text-align: center;
+      }
+
+      /* PILLS */
+      .pills {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 10px 0;
+      }
+      .pill {
+        font-size: 0.71rem;
+        font-weight: 500;
+        padding: 4px 12px;
+        border-radius: 100px;
+        border: 1px solid;
+      }
+      .pill.green {
+        background: rgba(77, 140, 82, 0.1);
+        border-color: rgba(77, 140, 82, 0.3);
+        color: var(--ok);
+      }
+      .pill.orange {
+        background: rgba(184, 106, 26, 0.1);
+        border-color: rgba(184, 106, 26, 0.3);
+        color: var(--warn);
+      }
+      .pill.red {
+        background: rgba(192, 48, 48, 0.1);
+        border-color: rgba(192, 48, 48, 0.3);
+        color: var(--danger);
+      }
+
+      /* SIMULATOR CTA */
+      .simulator-cta {
+        margin: 0 56px 52px;
+        background: linear-gradient(
+          135deg,
+          rgba(77, 122, 82, 0.07) 0%,
+          rgba(201, 123, 75, 0.06) 100%
+        );
+        border: 1px solid rgba(77, 122, 82, 0.2);
+        border-radius: 18px;
+        padding: 28px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .cta-eyebrow {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--sage-dark);
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .cta-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--charcoal);
+        line-height: 1.3;
+        margin-bottom: 4px;
+      }
+      .cta-desc {
+        font-size: 0.82rem;
+        color: var(--mid);
+      }
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        background: var(--sage-dark);
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 12px 24px;
+        border-radius: 11px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 18px rgba(77, 122, 82, 0.28);
+        transition: all 0.2s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .cta-btn:hover {
+        background: #3d6342;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 22px rgba(77, 122, 82, 0.36);
+      }
+      .cta-btn .cta-arrow {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        transition: transform 0.2s;
+      }
+      .cta-btn:hover .cta-arrow {
+        transform: translateX(3px);
+      }
+
+      /* GITHUB LINK */
+      .gh-link-wrap {
+        margin-top: 18px;
+      }
+      .gh-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 0.83rem;
+        font-weight: 500;
+        color: var(--charcoal);
+        text-decoration: none;
+        background: var(--warm-white);
+        border: 1px solid var(--border);
+        padding: 9px 18px;
+        border-radius: 10px;
+        transition: all 0.18s;
+      }
+      .gh-link:hover {
+        border-color: var(--border2);
+        background: var(--warm-white2);
+        box-shadow: 0 2px 10px rgba(45, 58, 46, 0.08);
+      }
+      .gh-link svg {
+        flex-shrink: 0;
+      }
+
+      /* SECTION DIVIDER */
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--border),
+          transparent
+        );
+        margin: 52px 0;
+      }
+
+      /* FOOTER */
+      footer {
+        margin-left: var(--sidebar-w);
+        border-top: 1px solid var(--border);
+        padding: 26px 56px;
+        font-size: 0.74rem;
+        color: var(--light-mid);
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .footer-text {
+        padding-right: 100px; /* space for the cat */
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      footer strong {
+        color: var(--sage-dark);
+        font-weight: 500;
+      }
+
+      /* ── NEKO HEART ANIMATION ── */
+      #neko-cat {
+        transition: transform 0.15s ease;
+      }
+      #neko-cat:active {
+        transform: scale(0.9);
+      }
+
+      @keyframes heartFloat {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(var(--rot));
+        }
+        15% {
+          opacity: 1;
+          transform: translateY(-18px) scale(1.15) rotate(var(--rot));
+        }
+        80% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(var(--travel)) scale(0.6) rotate(var(--rot2));
+        }
+      }
+
+      .heart-particle {
+        position: fixed;
+        pointer-events: none;
+        z-index: 99999;
+        font-size: 1.1rem;
+        line-height: 1;
+        animation: heartFloat var(--dur) ease-out forwards;
+        user-select: none;
+      }
+
+      /* ANIMATION */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .doc-block {
+        animation: fadeUp 0.45s ease both;
+      }
+      .doc-block:nth-child(1) {
+        animation-delay: 0.04s;
+      }
+      .doc-block:nth-child(2) {
+        animation-delay: 0.09s;
+      }
+      .doc-block:nth-child(3) {
+        animation-delay: 0.14s;
+      }
+      .doc-block:nth-child(4) {
+        animation-delay: 0.19s;
+      }
+      .doc-block:nth-child(5) {
+        animation-delay: 0.24s;
+      }
+
+      /* ── MOBILE MENU TOGGLE ── */
+      .nav-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 8px;
+        color: var(--mid);
+        font-size: 1.1rem;
+        transition: background 0.16s;
+      }
+      .nav-menu-btn:hover {
+        background: rgba(122, 158, 126, 0.1);
+      }
+
+      /* hide GitHub label on small screens */
+      @media (max-width: 480px) {
+        .nav-gh-label {
+          display: none;
+        }
+      }
+
+      /* Sidebar overlay on mobile */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(45, 58, 46, 0.35);
+        backdrop-filter: blur(2px);
+        z-index: 199;
+      }
+      .sidebar-overlay.visible {
+        display: block;
+      }
+
+      /* ── RESPONSIVE: TABLET (≤ 960px) ── */
+      @media (max-width: 960px) {
+        .doc-wrap {
+          padding: 0 32px 80px;
+        }
+        .hero {
+          padding: 40px 32px 0;
+        }
+        .mode-switcher-wrap {
+          padding: 24px 32px 36px;
+        }
+        .simulator-cta {
+          margin: 0 32px 40px;
+        }
+      }
+
+      /* ── RESPONSIVE: MOBILE (≤ 720px) ── */
+      @media (max-width: 720px) {
+        :root {
+          --sidebar-w: 0px;
+        }
+
+        /* Nav */
+        .nav-menu-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Sidebar becomes a slide-in drawer */
+        .doc-sidebar {
+          width: 260px;
+          transform: translateX(-100%);
+          transition: transform 0.28s ease;
+          box-shadow: none;
+        }
+        .doc-sidebar.open {
+          transform: translateX(0);
+          box-shadow: 4px 0 32px rgba(45, 58, 46, 0.18);
+        }
+
+        /* Main */
+        .main-content {
+          margin-left: 0;
+        }
+        .hero {
+          padding: 32px 20px 0;
+        }
+        .hero h1 {
+          font-size: 2rem;
+        }
+        .hero-sub {
+          font-size: 0.9rem;
+        }
+        .hero-top {
+          gap: 8px;
+        }
+
+        .mode-switcher-wrap {
+          padding: 20px 20px 28px;
+        }
+        .mode-switcher {
+          flex-direction: column;
+          width: 100%;
+        }
+        .mode-btn {
+          width: 100%;
+          justify-content: flex-start;
+          padding: 10px 16px;
+        }
+
+        .simulator-cta {
+          margin: 0 20px 36px;
+          padding: 20px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+        .cta-btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .doc-wrap {
+          padding: 0 20px 80px;
+        }
+
+        /* Section label smaller */
+        .section-label {
+          font-size: 0.52rem;
+          margin-bottom: 24px;
+        }
+
+        /* Doc block header */
+        .db-icon {
+          width: 38px;
+          height: 38px;
+          font-size: 1rem;
+        }
+        .db-title {
+          font-size: 1.2rem;
+        }
+        .doc-block {
+          margin-bottom: 48px;
+        }
+
+        /* Code blocks: expand vertically, wrap text */
+        .code-block {
+          font-size: 0.75rem;
+          border-radius: 10px;
+        }
+        pre {
+          font-size: 0.75rem;
+          padding: 12px 14px;
+          overflow-x: visible;
+          white-space: pre-wrap;
+          word-break: break-all;
+        }
+
+        /* Tables: expand and wrap instead of scroll */
+        .prop-table-wrap {
+          overflow-x: visible;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          margin: 18px 0;
+        }
+        .prop-table {
+          margin: 0;
+          min-width: unset;
+          border-radius: 0;
+          word-break: break-word;
+        }
+        .prop-table th,
+        .prop-table td {
+          padding: 8px 10px;
+          font-size: 0.75rem;
+          white-space: normal;
+        }
+        .prop-table td:first-child {
+          white-space: normal;
+          word-break: break-all;
+        }
+
+        /* Arch grid: single column */
+        .arch-grid {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .arch-node::after {
+          display: none;
+        }
+        .arch-node {
+          padding: 12px;
+        }
+
+        /* Theme swatches: scroll */
+        .theme-swatches {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .swatch-color {
+          width: 38px;
+          height: 38px;
+        }
+
+        /* Step flow */
+        .step-flow::before {
+          left: 17px;
+        }
+        .step-num {
+          width: 34px;
+          height: 34px;
+          font-size: 0.8rem;
+        }
+
+        /* Feature list */
+        .feature-list li {
+          font-size: 0.85rem;
+        }
+
+        /* Callout */
+        .callout {
+          padding: 13px 15px;
+          font-size: 0.82rem;
+        }
+
+        /* Footer */
+        footer {
+          margin-left: 0;
+          padding: 20px;
+        }
+        .footer-text {
+          padding-right: 80px;
+          font-size: 0.68rem;
+        }
+        #neko-cat {
+          height: 50px;
+        }
+      }
+
+      /* ── RESPONSIVE: SMALL PHONES (≤ 400px) ── */
+      @media (max-width: 400px) {
+        .hero h1 {
+          font-size: 1.7rem;
+        }
+        .db-title {
+          font-size: 1.08rem;
+        }
+        .hero-eyebrow,
+        .hero-version-badge {
+          font-size: 0.55rem;
+          padding: 3px 9px;
+        }
+        .mode-btn .mb-desc {
+          display: none;
+        }
+        pre {
+          font-size: 0.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOP NAV -->
+    <nav class="topnav">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <button
+          class="nav-menu-btn"
+          onclick="toggleSidebar()"
+          aria-label="Menú"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <a class="nav-brand" href="/">
+          <span class="nav-logo">
+            Eco
+            <span>Sentinel</span>
+            Feeder
+          </span>
+        </a>
+      </div>
+      <div class="nav-right">
+        <a
+          href="https://github.com/WilliamsACE/EcoSentinelFeeder"
+          class="gh-link"
+          target="_blank"
+          rel="noopener"
+          style="padding: 6px 14px"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+            />
+          </svg>
+          <span class="nav-gh-label">GitHub</span>
+        </a>
+        <span class="nav-version">v1.0</span>
+        <span class="nav-badge">Docs</span>
+      </div>
+    </nav>
+
+    <!-- Sidebar overlay for mobile -->
+    <div
+      class="sidebar-overlay"
+      id="sidebar-overlay"
+      onclick="toggleSidebar()"
+    ></div>
+
+    <div class="shell">
+      <!-- SIDEBAR -->
+      <aside class="doc-sidebar" id="doc-sidebar">
+        <div class="sb-panel-user" id="sb-user">
+          <div class="sb-section">
+            <span class="sb-section-label">Guía de usuario</span>
+            <a
+              class="sb-link active"
+              data-target="intro"
+              onclick="scrollToBlock('intro', this)"
+            >
+              <span class="sb-icon">🌿</span>
+              Introducción
+            </a>
+            <a
+              class="sb-link"
+              data-target="mapa-sec"
+              onclick="scrollToBlock('mapa-sec', this)"
+            >
+              <span class="sb-icon">🗺️</span>
+              Mapa de dispositivos
+            </a>
+            <a
+              class="sb-link"
+              data-target="feeders-sec"
+              onclick="scrollToBlock('feeders-sec', this)"
+            >
+              <span class="sb-icon">📡</span>
+              Todos los feeders
+            </a>
+            <a
+              class="sb-link"
+              data-target="historial-sec"
+              onclick="scrollToBlock('historial-sec', this)"
+            >
+              <span class="sb-icon">📋</span>
+              Historial de eventos
+            </a>
+            <a
+              class="sb-link"
+              data-target="alertas-sec"
+              onclick="scrollToBlock('alertas-sec', this)"
+            >
+              <span class="sb-icon">🔔</span>
+              Centro de alertas
+            </a>
+            <a
+              class="sb-link"
+              data-target="config-sec"
+              onclick="scrollToBlock('config-sec', this)"
+            >
+              <span class="sb-icon">⚙️</span>
+              Configuración
+            </a>
+          </div>
+        </div>
+        <div style="display: none" id="sb-dev">
+          <div class="sb-section">
+            <span class="sb-section-label">Para developers</span>
+            <a
+              class="sb-link active"
+              data-target="stack"
+              onclick="scrollToBlock('stack', this)"
+            >
+              <span class="sb-icon">🏗️</span>
+              Stack tecnológico
+            </a>
+            <a
+              class="sb-link"
+              data-target="css-vars"
+              onclick="scrollToBlock('css-vars', this)"
+            >
+              <span class="sb-icon">🎨</span>
+              CSS Variables
+            </a>
+            <a
+              class="sb-link"
+              data-target="secciones-dev"
+              onclick="scrollToBlock('secciones-dev', this)"
+            >
+              <span class="sb-icon">🔀</span>
+              Sistema de secciones
+            </a>
+            <a
+              class="sb-link"
+              data-target="data-struct"
+              onclick="scrollToBlock('data-struct', this)"
+            >
+              <span class="sb-icon">📦</span>
+              Estructura de datos
+            </a>
+            <a
+              class="sb-link"
+              data-target="eventos-dev"
+              onclick="scrollToBlock('eventos-dev', this)"
+            >
+              <span class="sb-icon">🎯</span>
+              Sistema de eventos
+            </a>
+            <a
+              class="sb-link"
+              data-target="notifs-dev"
+              onclick="scrollToBlock('notifs-dev', this)"
+            >
+              <span class="sb-icon">🔔</span>
+              Notificaciones
+            </a>
+            <a
+              class="sb-link"
+              data-target="tema-dev"
+              onclick="scrollToBlock('tema-dev', this)"
+            >
+              <span class="sb-icon">🌗</span>
+              Sistema de tema
+            </a>
+            <a
+              class="sb-link"
+              data-target="gauges-dev"
+              onclick="scrollToBlock('gauges-dev', this)"
+            >
+              <span class="sb-icon">⭕</span>
+              Gauges SVG
+            </a>
+            <a
+              class="sb-link"
+              data-target="leaflet-dev"
+              onclick="scrollToBlock('leaflet-dev', this)"
+            >
+              <span class="sb-icon">🗺️</span>
+              Leaflet / Mapa
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="main-content">
+        <!-- HERO -->
+        <header class="hero">
+          <div class="hero-top">
+            <div class="hero-eyebrow">Documentación oficial</div>
+            <div class="hero-version-badge">Versión 1.0 del dashboard</div>
+          </div>
+          <h1>
+            Panel de control
+            <br />
+            <em>EcoSentinel Feeder</em>
+          </h1>
+          <p class="hero-sub">
+            La interfaz web que extiende el sistema físico de comederos
+            automáticos. Elige tu perfil para ver la guía correcta.
+          </p>
+        </header>
+
+        <!-- MODE SWITCHER -->
+        <div class="mode-switcher-wrap">
+          <div class="mode-switcher">
+            <button
+              class="mode-btn active"
+              onclick="switchMode('user')"
+              id="btn-user"
+            >
+              <span class="mb-icon">👤</span>
+              <div>
+                <span class="mb-label">Usuario</span>
+                <span class="mb-desc">Guía visual paso a paso</span>
+              </div>
+            </button>
+            <button class="mode-btn" onclick="switchMode('dev')" id="btn-dev">
+              <span class="mb-icon">⚙️</span>
+              <div>
+                <span class="mb-label">Developer</span>
+                <span class="mb-desc">Arquitectura, API y código</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- SIMULATOR CTA -->
+        <div class="simulator-cta">
+          <div class="cta-left">
+            <div class="cta-eyebrow">Modo interactivo</div>
+            <div class="cta-title">¿Quieres ver el panel en acción?</div>
+            <div class="cta-desc">
+              Prueba el simulador con datos en vivo — sin necesidad de un feeder
+              físico.
+            </div>
+          </div>
+          <a href="/dashboardSimulator" class="cta-btn">
+            Abrir simulador
+            <span class="cta-arrow">→</span>
+          </a>
+        </div>
+
+        <!-- ══ PANEL USUARIO ══ -->
+        <div id="panel-user" class="panel active">
+          <div class="doc-wrap">
+            <div class="section-label">Introducción · Para usuarios</div>
+
+            <div class="doc-block" id="intro">
+              <div class="doc-block-header">
+                <div class="db-icon">🌿</div>
+                <div class="db-meta">
+                  <div class="db-title">¿Qué es este panel?</div>
+                  <div class="db-sub">Visión general del sistema · v1.0</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Este panel es la
+                <strong>
+                  extensión web del dispositivo EcoSentinel Feeder
+                </strong>
+                — el comedero físico inteligente instalado en la ciudad. La
+                pantalla de inicio muestra el estado global de la red en
+                <strong>4 tarjetas KPI</strong>
+                :
+              </p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <tbody>
+                    <tr>
+                      <td>🐾 Animales detectados hoy</td>
+                      <td>Visitas de perros y gatos en el día.</td>
+                    </tr>
+                    <tr>
+                      <td>⚖️ Comida dispensada</td>
+                      <td>
+                        Kilogramos totales repartidos en todos los feeders.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>📡 Feeders en línea</td>
+                      <td>Comederos activos y reportando.</td>
+                    </tr>
+                    <tr>
+                      <td>⚠️ Alertas activas</td>
+                      <td>
+                        Feeders con batería baja, comida agotada o sin conexión.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="db-body" style="margin-top: 14px">
+                Debajo encontrarás un
+                <strong>mapa mini</strong>
+                y una tabla con los últimos 5 eventos. Haz clic en cualquier
+                fila para ver el detalle completo.
+              </p>
+              <div class="doc-img-wrap">
+                <img
+                  src="{% static 'images/docs/dashboard-resumen.png' %}"
+                  alt="Resumen general"
+                  onload="this.classList.add('loaded')"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="img-fallback">
+                  <span class="if-icon">📊</span>
+                  <span class="if-name">dashboard-resumen.png</span>
+                  <span class="if-dims">1280 × 800 px</span>
+                </div>
+              </div>
+              <p class="img-caption">
+                Pantalla de inicio con KPIs, mapa mini y últimos eventos
+                detectados
+              </p>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label">Secciones del panel</div>
+
+            <div class="doc-block" id="mapa-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">🗺️</div>
+                <div class="db-meta">
+                  <div class="db-title">Mapa de dispositivos</div>
+                  <div class="db-sub">Sección · Mapa</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Muestra la
+                <strong>ubicación de cada feeder</strong>
+                en un mapa interactivo. Los colores de los pins indican el
+                estado:
+              </p>
+              <div class="pills">
+                <span class="pill green">🟢 En línea</span>
+                <span class="pill orange">🟡 Alerta</span>
+                <span class="pill red">🔴 Sin conexión</span>
+              </div>
+              <p class="db-body" style="margin-top: 14px">
+                Haz clic en un pin para ver una tarjeta con el nombre, última
+                sincronización y niveles actuales del feeder.
+              </p>
+              <div class="doc-img-wrap">
+                <img
+                  src="{% static 'images/docs/dashboard-mapa.png' %}"
+                  alt="Mapa de dispositivos"
+                  onload="this.classList.add('loaded')"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="img-fallback">
+                  <span class="if-icon">🗺️</span>
+                  <span class="if-name">dashboard-mapa.png</span>
+                  <span class="if-dims">1280 × 800 px</span>
+                </div>
+              </div>
+              <p class="img-caption">
+                Mapa con popup abierto mostrando el estado de un feeder
+              </p>
+            </div>
+
+            <div class="doc-block" id="feeders-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">📡</div>
+                <div class="db-meta">
+                  <div class="db-title">Todos los feeders</div>
+                  <div class="db-sub">Sección · Feeders</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Tarjetas individuales por cada feeder físico, con
+                <strong>4 gauges circulares</strong>
+                en tiempo real:
+              </p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <tbody>
+                    <tr>
+                      <td>🔋 Batería</td>
+                      <td>Se vuelve rojo al bajar del 20 %.</td>
+                    </tr>
+                    <tr>
+                      <td>🦴 Dog food</td>
+                      <td>Nivel de comida para perros.</td>
+                    </tr>
+                    <tr>
+                      <td>🐟 Cat food</td>
+                      <td>Nivel de comida para gatos.</td>
+                    </tr>
+                    <tr>
+                      <td>💧 Agua</td>
+                      <td>Nivel del depósito.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="db-body" style="margin-top: 14px">
+                Cada tarjeta también muestra visitas de animales del día y la
+                <strong>precisión del modelo de IA</strong>
+                .
+              </p>
+              <div class="doc-img-wrap">
+                <img
+                  src="{% static 'images/docs/dashboard-feeders.png' %}"
+                  alt="Tarjetas feeders"
+                  onload="this.classList.add('loaded')"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="img-fallback">
+                  <span class="if-icon">📡</span>
+                  <span class="if-name">dashboard-feeders.png</span>
+                  <span class="if-dims">1280 × 800 px</span>
+                </div>
+              </div>
+              <p class="img-caption">
+                Cada feeder tiene su propia tarjeta con gauges SVG animados en
+                tiempo real
+              </p>
+            </div>
+
+            <div class="doc-block" id="historial-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">📋</div>
+                <div class="db-meta">
+                  <div class="db-title">Historial de eventos</div>
+                  <div class="db-sub">Sección · Historial</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Registro completo de cada detección hecha por el feeder físico:
+              </p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <tbody>
+                    <tr>
+                      <td>🕐 Hora</td>
+                      <td>Momento de la detección.</td>
+                    </tr>
+                    <tr>
+                      <td>📡 Feeder</td>
+                      <td>Qué unidad lo registró.</td>
+                    </tr>
+                    <tr>
+                      <td>🐾 Especie</td>
+                      <td>Perro 🐶 o gato 🐱 identificados por IA.</td>
+                    </tr>
+                    <tr>
+                      <td>⚖️ Cantidad</td>
+                      <td>Gramos dispensados.</td>
+                    </tr>
+                    <tr>
+                      <td>🎯 Confianza IA</td>
+                      <td>Certeza del modelo en esa detección.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="db-body" style="margin-top: 14px">
+                Clic en una fila para
+                <strong>expandir el detalle</strong>
+                , agregar foto o eliminar el registro.
+              </p>
+              <div class="doc-img-wrap">
+                <img
+                  src="{% static 'images/docs/dashboard-historial.png' %}"
+                  alt="Historial de eventos"
+                  onload="this.classList.add('loaded')"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="img-fallback">
+                  <span class="if-icon">📋</span>
+                  <span class="if-name">dashboard-historial.png</span>
+                  <span class="if-dims">1280 × 800 px</span>
+                </div>
+              </div>
+              <p class="img-caption">
+                Vista del historial completo; clic en una fila muestra el
+                detalle inline
+              </p>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label">Alertas y configuración</div>
+
+            <div class="doc-block" id="alertas-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">🔔</div>
+                <div class="db-meta">
+                  <div class="db-title">Centro de alertas</div>
+                  <div class="db-sub">Sección · Alertas</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Cuando un feeder entra en estado crítico, el panel genera una
+                alerta automática. La
+                <strong>campana</strong>
+                en la barra superior muestra un punto rojo si hay alertas
+                pendientes.
+              </p>
+              <div class="callout warn">
+                <span class="callout-icon">⚠️</span>
+                <p>
+                  Se activan cuando batería, comida o agua caen por debajo del
+                  <strong>20 %</strong>
+                  , o cuando un feeder pierde la conexión.
+                </p>
+              </div>
+              <ul class="feature-list">
+                <li data-icon="🔋">Batería crítica.</li>
+                <li data-icon="🦴">Comida agotada.</li>
+                <li data-icon="💧">Agua baja.</li>
+                <li data-icon="📶">Sin conexión.</li>
+              </ul>
+              <div class="doc-img-wrap">
+                <img
+                  src="{% static 'images/docs/dashboard-alertas.png' %}"
+                  alt="Centro de alertas"
+                  onload="this.classList.add('loaded')"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="img-fallback">
+                  <span class="if-icon">🔔</span>
+                  <span class="if-name">dashboard-alertas.png</span>
+                  <span class="if-dims">1280 × 800 px</span>
+                </div>
+              </div>
+              <p class="img-caption">
+                Centro de alertas con todas las notificaciones pendientes
+                agrupadas por tipo
+              </p>
+            </div>
+
+            <div class="doc-block" id="config-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">⚙️</div>
+                <div class="db-meta">
+                  <div class="db-title">Configuración y temas</div>
+                  <div class="db-sub">Sección · Configuración</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Gestiona la red de feeders y personaliza la apariencia del
+                panel. El
+                <strong>cambio de tema visual</strong>
+                tiene 4 opciones:
+              </p>
+              <ul class="feature-list">
+                <li data-icon="☀️">
+                  <strong>Claro</strong>
+                  — paleta crema, ideal para uso diurno.
+                </li>
+                <li data-icon="🌙">
+                  <strong>Oscuro</strong>
+                  — estilo Discord, menos fatiga de noche.
+                </li>
+                <li data-icon="🌆">
+                  <strong>Dim</strong>
+                  — término medio.
+                </li>
+                <li data-icon="🔄">
+                  <strong>Sistema</strong>
+                  — sigue la preferencia de tu OS automáticamente.
+                </li>
+              </ul>
+              <div class="callout tip">
+                <span class="callout-icon">💡</span>
+                <p>
+                  La preferencia se guarda en el navegador y se aplica al
+                  instante en cada visita.
+                </p>
+              </div>
+              <div class="doc-img-wrap">
+                <img
+                  src="{% static 'images/docs/dashboard-configuracion.png' %}"
+                  alt="Configuración"
+                  onload="this.classList.add('loaded')"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="img-fallback">
+                  <span class="if-icon">⚙️</span>
+                  <span class="if-name">dashboard-configuracion.png</span>
+                  <span class="if-dims">1280 × 800 px</span>
+                </div>
+              </div>
+              <p class="img-caption">
+                Sección de configuración con el selector de los 4 temas
+                disponibles
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- /panel-user -->
+
+        <!-- ══ PANEL DEVELOPER ══ -->
+        <div id="panel-dev" class="panel">
+          <div class="doc-wrap">
+            <div class="section-label">Arquitectura · Para developers</div>
+
+            <div class="doc-block" id="stack">
+              <div class="doc-block-header">
+                <div class="db-icon">🏗️</div>
+                <div class="db-meta">
+                  <div class="db-title">Stack tecnológico</div>
+                  <div class="db-sub">Frontend-only · Sin build step</div>
+                </div>
+              </div>
+              <p class="db-body">
+                El panel es un
+                <strong>único archivo HTML</strong>
+                sin bundler ni build step. Django lo sirve como template; las
+                dependencias se cargan vía CDN.
+              </p>
+              <div class="arch-grid">
+                <div class="arch-node">
+                  <div class="an-icon">🌐</div>
+                  <div class="an-title">Browser</div>
+                  <div class="an-desc">HTML / CSS / JS vanilla</div>
+                </div>
+                <div class="arch-node">
+                  <div class="an-icon">
+                    <img
+                      src="{% static 'images/docs/Django.svg' %}"
+                      alt="Django"
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        object-fit: contain;
+                        display: block;
+                        margin: 0 auto;
+                      "
+                    />
+                  </div>
+                  <div class="an-title">Django</div>
+                  <div class="an-desc">Template engine + REST API</div>
+                </div>
+                <div class="arch-node">
+                  <div class="an-icon">🗄️</div>
+                  <div class="an-title">Database</div>
+                  <div class="an-desc">Feeders · Events · Status</div>
+                </div>
+              </div>
+              <div class="callout info">
+                <span class="callout-icon">📦</span>
+                <p>
+                  Dependencias externas:
+                  <strong>Chart.js 4.4.1</strong>
+                  (gráficas),
+                  <strong>Leaflet 1.9.4</strong>
+                  (mapas), Google Fonts (Playfair Display · DM Sans · Lora · DM
+                  Mono).
+                </p>
+              </div>
+            </div>
+
+            <div class="doc-block" id="css-vars">
+              <div class="doc-block-header">
+                <div class="db-icon">🎨</div>
+                <div class="db-meta">
+                  <div class="db-title">Sistema de diseño — CSS Variables</div>
+                  <div class="db-sub">Theming · :root + [data-theme]</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Todo el color está en
+                <strong>custom properties CSS</strong>
+                definidas en
+                <code>:root</code>
+                . Los temas
+                <code>dark</code>
+                y
+                <code>dim</code>
+                sobreescriben las mismas variables en
+                <code>[data-theme]</code>
+                — sin JS extra.
+              </p>
+              <div class="theme-swatches">
+                <div class="swatch">
+                  <div
+                    class="swatch-color"
+                    style="background: #fdf8f0; border: 1.5px solid #ccc"
+                  ></div>
+                  <div class="swatch-name">--cream</div>
+                </div>
+                <div class="swatch">
+                  <div class="swatch-color" style="background: #4d7a52"></div>
+                  <div class="swatch-name">--sage-dark</div>
+                </div>
+                <div class="swatch">
+                  <div class="swatch-color" style="background: #c97b4b"></div>
+                  <div class="swatch-name">--terracotta</div>
+                </div>
+                <div class="swatch">
+                  <div class="swatch-color" style="background: #5a9bc0"></div>
+                  <div class="swatch-name">--sky-dark</div>
+                </div>
+                <div class="swatch">
+                  <div class="swatch-color" style="background: #2d3a2e"></div>
+                  <div class="swatch-name">--charcoal</div>
+                </div>
+                <div class="swatch">
+                  <div class="swatch-color" style="background: #c03030"></div>
+                  <div class="swatch-name">--danger</div>
+                </div>
+                <div class="swatch">
+                  <div class="swatch-color" style="background: #4d8c52"></div>
+                  <div class="swatch-name">--ok</div>
+                </div>
+                <div class="swatch">
+                  <div class="swatch-color" style="background: #b86a1a"></div>
+                  <div class="swatch-name">--warn</div>
+                </div>
+              </div>
+              <div class="code-block">
+                <div class="code-header">
+                  <div class="code-dots">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                  </div>
+                  <span class="code-lang">CSS</span>
+                </div>
+                <pre><span class="cmt">/* Aplicar tema oscuro al HTML root */</span>
+<span class="fn">applyTheme</span>(<span class="str">'dark'</span>);
+
+<span class="cmt">/* Internamente: */</span>
+document.<span class="prop">documentElement</span>.<span class="fn">setAttribute</span>(<span class="str">'data-theme'</span>, <span class="str">'dark'</span>);
+
+<span class="cmt">/* CSS reacciona automáticamente: */</span>
+[<span class="prop">data-theme</span>=<span class="str">"dark"</span>] {
+  <span class="prop">--cream</span>: <span class="num">#1e1f22</span>;
+  <span class="prop">--sage</span>:  <span class="num">#7984f5</span>;
+  <span class="prop">--terracotta</span>: <span class="num">#a78bfa</span>;
+}</pre>
+              </div>
+            </div>
+
+            <div class="doc-block" id="secciones-dev">
+              <div class="doc-block-header">
+                <div class="db-icon">🔀</div>
+                <div class="db-meta">
+                  <div class="db-title">Sistema de secciones — SPA ligera</div>
+                  <div class="db-sub">Navegación sin router</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Navegación
+                <strong>SPA manual</strong>
+                sin router externo: cada sección es un
+                <code>&lt;div class="page-section"&gt;</code>
+                que se muestra u oculta con la clase
+                <code>active</code>
+                .
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <div class="code-dots">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                  </div>
+                  <span class="code-lang">JavaScript</span>
+                </div>
+                <pre><span class="kw">function</span> <span class="fn">switchSection</span>(id) {
+  document.<span class="fn">querySelectorAll</span>(<span class="str">'.page-section'</span>)
+    .<span class="fn">forEach</span>(s => { s.<span class="prop">classList</span>.<span class="fn">remove</span>(<span class="str">'active'</span>); s.<span class="prop">style</span>.<span class="prop">display</span> = <span class="str">'none'</span>; });
+
+  document.<span class="fn">getElementById</span>(<span class="str">'section-'</span> + id)
+    ?.<span class="prop">classList</span>.<span class="fn">add</span>(<span class="str">'active'</span>);
+
+  <span class="kw">if</span> (id === <span class="str">'mapa'</span>) <span class="fn">setTimeout</span>(initMapFull, <span class="num">60</span>);
+}</pre>
+              </div>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <thead>
+                    <tr>
+                      <th>ID de sección</th>
+                      <th>Título visible</th>
+                      <th>Notas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>resumen</td>
+                      <td>Resumen general</td>
+                      <td>Sección por defecto al cargar</td>
+                    </tr>
+                    <tr>
+                      <td>mapa</td>
+                      <td>Mapa de dispositivos</td>
+                      <td>Inicializa Leaflet al activarse</td>
+                    </tr>
+                    <tr>
+                      <td>analitica</td>
+                      <td>Analítica</td>
+                      <td>Renderiza Chart.js al activarse</td>
+                    </tr>
+                    <tr>
+                      <td>feeders</td>
+                      <td>Todos los feeders</td>
+                      <td>Genera tarjetas con gauges SVG</td>
+                    </tr>
+                    <tr>
+                      <td>alertas</td>
+                      <td>Centro de alertas</td>
+                      <td>Se sincroniza con notifStore[]</td>
+                    </tr>
+                    <tr>
+                      <td>historial</td>
+                      <td>Historial de eventos</td>
+                      <td>Tabla completa paginada</td>
+                    </tr>
+                    <tr>
+                      <td>configuracion</td>
+                      <td>Configuración</td>
+                      <td>Gestión de feeders y tema</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="doc-block" id="data-struct">
+              <div class="doc-block-header">
+                <div class="db-icon">📦</div>
+                <div class="db-meta">
+                  <div class="db-title">Estructura de datos — Feeders</div>
+                  <div class="db-sub">Contrato de datos del backend</div>
+                </div>
+              </div>
+              <p class="db-body">
+                <code>renderFeeders(feeders)</code>
+                espera este contrato. El backend Django debe entregarlo
+                exactamente para que gauges, mapa, sidebar y tabla funcionen
+                correctamente.
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <div class="code-dots">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                  </div>
+                  <span class="code-lang">JSON</span>
+                </div>
+                <pre>{
+  <span class="prop">"id"</span>:        <span class="str">"F-01"</span>,
+  <span class="prop">"name"</span>:      <span class="str">"Parque Central"</span>,
+  <span class="prop">"location"</span>:  <span class="str">"Av. Revolución 42"</span>,
+  <span class="prop">"status"</span>:    <span class="str">"online"</span>,     <span class="cmt">// "online" | "warn" | "offline"</span>
+  <span class="prop">"lastSync"</span>:  <span class="str">"hace 2 min"</span>,
+  <span class="prop">"battery"</span>:   <span class="num">78</span>,
+  <span class="prop">"foodDog"</span>:   <span class="num">55</span>,
+  <span class="prop">"foodCat"</span>:   <span class="num">40</span>,
+  <span class="prop">"water"</span>:     <span class="num">82</span>,
+  <span class="prop">"dogsToday"</span>:  <span class="num">12</span>,
+  <span class="prop">"catsToday"</span>:  <span class="num">7</span>,
+  <span class="prop">"aiAccuracy"</span>: <span class="num">94</span>,
+  <span class="prop">"lat"</span>:        <span class="num">25.6866</span>,
+  <span class="prop">"lng"</span>:       <span class="num">-100.3161</span>
+}</pre>
+              </div>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <thead>
+                    <tr>
+                      <th>Campo</th>
+                      <th>Tipo</th>
+                      <th>Descripción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>status</td>
+                      <td><span class="type-badge">string</span></td>
+                      <td>
+                        "online" | "warn" | "offline" — controla color del pin y
+                        badge
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>battery / foodDog / foodCat / water</td>
+                      <td><span class="type-badge">number</span></td>
+                      <td>0–100. Bajo 20 activa alerta automática.</td>
+                    </tr>
+                    <tr>
+                      <td>aiAccuracy</td>
+                      <td><span class="type-badge">number</span></td>
+                      <td>
+                        Porcentaje de confianza promedio del modelo de visión.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>lat / lng</td>
+                      <td><span class="type-badge">number</span></td>
+                      <td>Coordenadas para el pin de Leaflet.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="doc-block" id="eventos-dev">
+              <div class="doc-block-header">
+                <div class="db-icon">🎯</div>
+                <div class="db-meta">
+                  <div class="db-title">
+                    Sistema de eventos — Detecciones IA
+                  </div>
+                  <div class="db-sub">addHistoryEvent · openEventModal</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Cada detección del feeder físico llega como objeto
+                <strong>event</strong>
+                y se inyecta en la tabla con
+                <code>addHistoryEvent(ev)</code>
+                , replicándose en el resumen (máx. 5) y el historial completo.
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <div class="code-dots">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                  </div>
+                  <span class="code-lang">
+                    JavaScript — Estructura de evento
+                  </span>
+                </div>
+                <pre>{
+  <span class="prop">time</span>:       <span class="str">"14:32"</span>,
+  <span class="prop">feederId</span>:   <span class="str">"F-01"</span>,
+  <span class="prop">feederName</span>: <span class="str">"Parque Central"</span>,
+  <span class="prop">species</span>:    <span class="str">"dog"</span>,    <span class="cmt">// "dog" | "cat" | "alerta"</span>
+  <span class="prop">emoji</span>:      <span class="str">"🐶"</span>,
+  <span class="prop">label</span>:      <span class="str">"Perro"</span>,
+  <span class="prop">grams</span>:      <span class="num">180</span>,
+  <span class="prop">confidence</span>: <span class="num">94</span>
+}</pre>
+              </div>
+            </div>
+
+            <div class="doc-block" id="notifs-dev">
+              <div class="doc-block-header">
+                <div class="db-icon">🔔</div>
+                <div class="db-meta">
+                  <div class="db-title">Sistema de notificaciones</div>
+                  <div class="db-sub">notifStore · renderNotifications</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Las alertas viven en el array global
+                <code>notifStore[]</code>
+                .
+                <code>renderNotifications()</code>
+                actualiza el panel lateral, el badge de la campana y el badge de
+                la sección Alertas.
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <div class="code-dots">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                  </div>
+                  <span class="code-lang">JavaScript</span>
+                </div>
+                <pre><span class="kw">if</span> (f.<span class="prop">battery</span> < <span class="num">20</span>)
+  notifStore.<span class="fn">push</span>({ <span class="prop">type</span>: <span class="str">'danger'</span>, <span class="prop">msg</span>: <span class="str">`🔋 ${f.id} batería crítica`</span> });
+
+<span class="kw">if</span> (f.<span class="prop">foodDog</span> < <span class="num">20</span>)
+  notifStore.<span class="fn">push</span>({ <span class="prop">type</span>: <span class="str">'warn'</span>, <span class="prop">msg</span>: <span class="str">`🦴 ${f.id} comida perro baja`</span> });
+
+<span class="kw">if</span> (f.<span class="prop">status</span> === <span class="str">'offline'</span>)
+  notifStore.<span class="fn">push</span>({ <span class="prop">type</span>: <span class="str">'danger'</span>, <span class="prop">msg</span>: <span class="str">`📶 ${f.id} sin conexión`</span> });
+
+<span class="fn">renderNotifications</span>();</pre>
+              </div>
+            </div>
+
+            <div class="doc-block" id="tema-dev">
+              <div class="doc-block-header">
+                <div class="db-icon">🌗</div>
+                <div class="db-meta">
+                  <div class="db-title">Sistema de tema — applyTheme()</div>
+                  <div class="db-sub">localStorage · prefers-color-scheme</div>
+                </div>
+              </div>
+              <p class="db-body">
+                <code>applyTheme(mode, save?)</code>
+                centraliza el theming en 4 modos:
+                <code>'light'</code>
+                ,
+                <code>'dark'</code>
+                ,
+                <code>'dim'</code>
+                y
+                <code>'auto'</code>
+                . La preferencia se persiste en
+                <code>localStorage</code>
+                con la clave
+                <code>'eco-theme'</code>
+                .
+              </p>
+              <div class="step-flow">
+                <div class="step">
+                  <div class="step-num">1</div>
+                  <div class="step-content">
+                    <div class="step-title">Leer preferencia guardada</div>
+                    <div class="step-desc">
+                      <code>localStorage.getItem('eco-theme') || 'auto'</code>
+                      al iniciar la página.
+                    </div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num">2</div>
+                  <div class="step-content">
+                    <div class="step-title">Resolver modo</div>
+                    <div class="step-desc">
+                      Si es
+                      <code>'auto'</code>
+                      , evaluar
+                      <code>
+                        window.matchMedia('(prefers-color-scheme:
+                        dark)').matches
+                      </code>
+                      .
+                    </div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num">3</div>
+                  <div class="step-content">
+                    <div class="step-title">Aplicar al DOM</div>
+                    <div class="step-desc">
+                      <code>
+                        document.documentElement.setAttribute('data-theme',
+                        resolvedMode)
+                      </code>
+                      — el CSS hace el resto.
+                    </div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-num">4</div>
+                  <div class="step-content">
+                    <div class="step-title">Actualizar tiles del mapa</div>
+                    <div class="step-desc">
+                      En modo dark/dim se aplica
+                      <code>filter: invert + hue-rotate</code>
+                      a las capas de Leaflet.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="doc-block" id="gauges-dev">
+              <div class="doc-block-header">
+                <div class="db-icon">⭕</div>
+                <div class="db-meta">
+                  <div class="db-title">Gauges circulares — SVG puro</div>
+                  <div class="db-sub">stroke-dashoffset · sin librerías</div>
+                </div>
+              </div>
+              <p class="db-body">
+                Gauges renderizados con
+                <strong>SVG inline</strong>
+                via
+                <code>stroke-dashoffset</code>
+                . Radio 26 → circunferencia
+                <code>163.4</code>
+                . Sin librerías externas.
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <div class="code-dots">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                  </div>
+                  <span class="code-lang">JavaScript</span>
+                </div>
+                <pre><span class="cmt">// Convierte % a stroke-dashoffset</span>
+<span class="kw">const</span> <span class="fn">pct</span> = (v) => Math.<span class="fn">round</span>(<span class="num">163.4</span> * (<span class="num">1</span> - v / <span class="num">100</span>));
+
+<span class="cmt">// Batería al 78 %  →  offset ≈ 36</span>
+<span class="cmt">// Comida al 0 %   →  offset = 163.4</span>
+
+`&lt;<span class="prop">circle</span> stroke=<span class="str">"${sBat}"</span>
+  stroke-dasharray=<span class="str">"163.4"</span>
+  stroke-dashoffset=<span class="str">"${pct(f.battery)}"</span>/&gt;`</pre>
+              </div>
+            </div>
+
+            <div class="doc-block" id="leaflet-dev">
+              <div class="doc-block-header">
+                <div class="db-icon">🗺️</div>
+                <div class="db-meta">
+                  <div class="db-title">
+                    Integración Leaflet — Mapa interactivo
+                  </div>
+                  <div class="db-sub">Lazy init · Dark tile filter</div>
+                </div>
+              </div>
+              <p class="db-body">
+                El mapa se inicializa
+                <strong>lazily</strong>
+                con 60 ms de delay al activar la sección, para que el DOM esté
+                visible antes de que Leaflet calcule dimensiones.
+              </p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <tbody>
+                    <tr>
+                      <td>🌙 Tema oscuro</td>
+                      <td>
+                        En modo dark/dim se aplica
+                        <code>
+                          filter: invert(100%) hue-rotate(180deg)
+                          brightness(0.85)
+                        </code>
+                        a las capas del mapa — sin recargar tiles.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>📍 Pins dinámicos</td>
+                      <td>
+                        Generados como divs con clase
+                        <code>.feeder-pin</code>
+                        y actualizados mediante
+                        <code>_refreshMapPins(feeders)</code>
+                        .
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>💬 Popups personalizados</td>
+                      <td>
+                        Clase
+                        <code>esf-popup</code>
+                        con CSS inyectado para seguir el design system del
+                        panel.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="doc-img-wrap">
+                <img
+                  src="{% static 'images/docs/dashboard-mapa-oscuro.png' %}"
+                  alt="Mapa modo oscuro"
+                  onload="this.classList.add('loaded')"
+                  onerror="this.style.display = 'none'"
+                />
+                <div class="img-fallback">
+                  <span class="if-icon">🗺️</span>
+                  <span class="if-name">dashboard-mapa-oscuro.png</span>
+                  <span class="if-dims">1280 × 800 px</span>
+                </div>
+              </div>
+              <p class="img-caption">
+                El mapa invierte sus colores en modo dark mediante un filtro CSS
+                puro, sin recargar tiles
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- /panel-dev -->
+      </div>
+      <!-- /main-content -->
+    </div>
+    <!-- /shell -->
+
+    <footer>
+      <span class="footer-text">
+        <strong>EcoSentinel Feeder</strong>
+        · Documentación v1.0
+        <br />
+        <span style="font-size: 0.68rem; opacity: 0.7">25/03/2026</span>
+      </span>
+
+      <img
+        src="{% static 'images/docs/neko-cat.gif' %}"
+        id="neko-cat"
+        style="
+          height: 60px;
+          position: absolute;
+          right: 16px;
+          bottom: 50%;
+          transform: translateY(50%);
+          cursor: pointer;
+        "
+        onclick="spawnHearts(event)"
+      />
+    </footer>
+
+    <script>
+      // ── SIDEBAR TOGGLE (mobile) ─────────────────────────
+      function toggleSidebar() {
+        const sidebar = document.getElementById("doc-sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+        const isOpen = sidebar.classList.contains("open");
+        sidebar.classList.toggle("open", !isOpen);
+        overlay.classList.toggle("visible", !isOpen);
+        document.body.style.overflow = isOpen ? "" : "hidden";
+      }
+
+      // Close sidebar when a link is tapped on mobile
+      document.querySelectorAll(".sb-link").forEach((l) => {
+        l.addEventListener("click", () => {
+          if (window.innerWidth <= 720) {
+            const sidebar = document.getElementById("doc-sidebar");
+            const overlay = document.getElementById("sidebar-overlay");
+            sidebar.classList.remove("open");
+            overlay.classList.remove("visible");
+            document.body.style.overflow = "";
+          }
+        });
+      });
+
+      // ── MODE SWITCHER ──────────────────────────────────
+      function switchMode(mode) {
+        const isUser = mode === "user";
+        document
+          .getElementById("panel-user")
+          .classList.toggle("active", isUser);
+        document
+          .getElementById("panel-dev")
+          .classList.toggle("active", !isUser);
+        document.getElementById("btn-user").classList.toggle("active", isUser);
+        document.getElementById("btn-dev").classList.toggle("active", !isUser);
+        document.getElementById("sb-user").style.display = isUser
+          ? "block"
+          : "none";
+        document.getElementById("sb-dev").style.display = isUser
+          ? "none"
+          : "block";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        const firstLink = document.querySelector(
+          isUser ? "#sb-user .sb-link" : "#sb-dev .sb-link",
+        );
+        document
+          .querySelectorAll(".sb-link")
+          .forEach((l) => l.classList.remove("active"));
+        if (firstLink) firstLink.classList.add("active");
+      }
+
+      // ── SIDEBAR SCROLL ─────────────────────────────────
+      function scrollToBlock(id, el) {
+        const target = document.getElementById(id);
+        if (!target) return;
+        const panel = el.closest("#sb-user, #sb-dev");
+        if (panel)
+          panel
+            .querySelectorAll(".sb-link")
+            .forEach((l) => l.classList.remove("active"));
+        el.classList.add("active");
+        const top = target.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+
+      // ── SCROLL SPY ─────────────────────────────────────
+      const userTargets = [
+        "intro",
+        "mapa-sec",
+        "feeders-sec",
+        "historial-sec",
+        "alertas-sec",
+        "config-sec",
+      ];
+      const devTargets = [
+        "stack",
+        "css-vars",
+        "secciones-dev",
+        "data-struct",
+        "eventos-dev",
+        "notifs-dev",
+        "tema-dev",
+        "gauges-dev",
+        "leaflet-dev",
+      ];
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          const scrollY = window.scrollY + 110;
+          const isUser = document
+            .getElementById("panel-user")
+            .classList.contains("active");
+          const targets = isUser ? userTargets : devTargets;
+          const sbGroup = document.getElementById(
+            isUser ? "sb-user" : "sb-dev",
+          );
+          let current = targets[0];
+          for (const id of targets) {
+            const el = document.getElementById(id);
+            if (
+              el &&
+              el.getBoundingClientRect().top + window.scrollY <= scrollY
+            )
+              current = id;
+          }
+          sbGroup.querySelectorAll(".sb-link").forEach((l) => {
+            l.classList.toggle("active", l.dataset.target === current);
+          });
+        },
+        { passive: true },
+      );
+
+      // ── NEKO HEART BURST ───────────────────────────────
+      const HEARTS = ["❤️", "🧡", "💛", "💚", "💙", "💜", "🩷", "🤍"];
+
+      function spawnHearts(e) {
+        const cat = document.getElementById("neko-cat");
+        const rect = cat.getBoundingClientRect();
+
+        // Origin: shifted 50% left of cat center, 10% higher
+        const originX = rect.left + rect.width * 0.35; // 50% left → left edge of cat
+        const originY = rect.top - rect.height * 0.3; // 10% higher than top edge
+
+        const count = 3 + Math.floor(Math.random() * 3); // 3-5 hearts (50% of original)
+
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement("span");
+          el.className = "heart-particle";
+          el.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+
+          const spreadX = (Math.random() - 0.5) * 50;
+          const travelY = -(60 + Math.random() * 100) + "px";
+          const rot = (Math.random() - 0.5) * 30 + "deg";
+          const rot2 = (Math.random() - 0.5) * 60 + "deg";
+          const dur = (0.7 + Math.random() * 0.6).toFixed(2) + "s";
+          const delay = (i * 0.045).toFixed(2) + "s";
+          const size = (0.85 + Math.random() * 0.65).toFixed(2);
+
+          el.style.cssText = `
+            left: ${originX + spreadX}px;
+            top:  ${originY}px;
+            font-size: ${size}rem;
+            --rot:    ${rot};
+            --rot2:   ${rot2};
+            --travel: ${travelY};
+            --dur:    ${dur};
+            animation-delay: ${delay};
+          `;
+
+          document.body.appendChild(el);
+
+          const totalMs = (parseFloat(dur) + parseFloat(delay)) * 1000 + 100;
+          setTimeout(() => el.remove(), totalMs);
+        }
+      }
+    </script>
+  </body>
 </html>

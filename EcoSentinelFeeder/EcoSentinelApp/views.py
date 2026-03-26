@@ -38,6 +38,8 @@ def login(request):
 def dashboardDocs(request):
     return render(request, 'dashboardDocs.html')
 
+def dashboardSimulator(request):
+    return render(request, 'dashboardSimulator.html')
 
 @csrf_exempt
 @require_POST

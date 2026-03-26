@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard — EcoSentinel Feeder</title>
+    <title>Simulador — EcoSentinel Feeder</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
@@ -1562,44 +1562,7 @@
         letter-spacing: 0.08em;
       }
 
-      /* ── DONACIONES ── */
-      .pay-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 0.68rem;
-        padding: 2px 8px;
-        border-radius: 100px;
-        font-weight: 500;
-      }
-      .pay-badge.succeeded {
-        background: var(--ok-bg);
-        color: var(--ok);
-        border: 1px solid rgba(77, 140, 82, 0.2);
-      }
-      .pay-badge.pending {
-        background: var(--warn-bg);
-        color: var(--warn);
-        border: 1px solid rgba(184, 106, 26, 0.2);
-      }
-      .pay-badge.failed {
-        background: var(--danger-bg);
-        color: var(--danger);
-        border: 1px solid rgba(192, 48, 48, 0.2);
-      }
-      .pay-badge.paid {
-        background: var(--ok-bg);
-        color: var(--ok);
-        border: 1px solid rgba(77, 140, 82, 0.2);
-      }
-      .pay-badge.in_transit {
-        background: rgba(90, 155, 192, 0.1);
-        color: var(--sky-dark);
-        border: 1px solid rgba(90, 155, 192, 0.2);
-      }
-      .method-icon {
-        font-size: 0.85rem;
-      }
+      
 
       /* ── HISTORY ROW DELETE ── */
       .ht-delete-btn {
@@ -2250,7 +2213,21 @@
           display: none;
         }
       }
-    </style>
+      /* SIMULATOR BANNER */
+      .sim-banner {
+        background: linear-gradient(90deg, rgba(201,123,75,.12), rgba(201,123,75,.06));
+        border: 1px solid rgba(201,123,75,.3);
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-size: .72rem;
+        color: var(--terracotta);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+        </style>
   </head>
   <body>
     <!-- MOBILE SIDEBAR OVERLAY -->
@@ -2332,7 +2309,7 @@
           <span>Sentinel</span>
           Feeder
         </a>
-        <span class="logo-sub">Panel de administración</span>
+        <span class="logo-sub">Simulador del Dashboard | Version 1.0</span>
       </div>
 
       <nav class="sidebar-nav">
@@ -2367,10 +2344,6 @@
         </a>
 
         <div class="sidebar-section-label">Sistema</div>
-        <a class="nav-item" data-section="donaciones">
-          <span class="ni-icon">💚</span>
-          Donaciones
-        </a>
         <a class="nav-item" data-section="configuracion">
           <span class="ni-icon">⚙️</span>
           Configuración
@@ -2453,7 +2426,7 @@
       </div>
 
       <!-- CONTENT -->
-      <div class="content">
+      <div class="content"><div class="sim-banner">🧪 Modo simulador — datos de ejemplo, sin conexión al backend</div>
         <!-- ══════════════════════════════════════
          SECCIÓN: RESUMEN (activa por defecto)
     ══════════════════════════════════════ -->
@@ -3089,146 +3062,7 @@
           </div>
         </section>
 
-        <!-- ══════════════════════════════════════
-         SECCIÓN: DONACIONES
-    ══════════════════════════════════════ -->
-        <section id="section-donaciones" class="page-section">
-          <div class="section-divider" style="margin-top: 0">
-            <div class="sd-label">Donaciones · Stripe</div>
-            <div class="sd-line"></div>
-          </div>
-
-          <!-- KPIs de donaciones -->
-          <div class="kpi-row" style="margin-bottom: 18px">
-            <div class="kpi-card sg">
-              <div class="kpi-label">💚 Balance disponible</div>
-              <div class="kpi-value sg" id="don-balance">—</div>
-              <div class="kpi-change" id="don-balance-sub">
-                <span class="skel skel-text" style="width: 80px"></span>
-              </div>
-            </div>
-            <div class="kpi-card tc">
-              <div class="kpi-label">📥 Donaciones este mes</div>
-              <div class="kpi-value tc" id="don-mes">—</div>
-              <div class="kpi-change" id="don-mes-sub">
-                <span class="skel skel-text" style="width: 80px"></span>
-              </div>
-            </div>
-            <div class="kpi-card sk">
-              <div class="kpi-label">👥 Donadores totales</div>
-              <div class="kpi-value sk" id="don-donadores">—</div>
-              <div class="kpi-change" id="don-donadores-sub">
-                <span class="skel skel-text" style="width: 80px"></span>
-              </div>
-            </div>
-            <div class="kpi-card dn">
-              <div class="kpi-label">🔄 Pendiente de pago</div>
-              <div class="kpi-value dn" id="don-pendiente">—</div>
-              <div class="kpi-change" id="don-pendiente-sub">
-                <span class="skel skel-text" style="width: 80px"></span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Últimas donaciones -->
-          <div class="card" style="margin-bottom: 18px">
-            <div class="card-header">
-              <div>
-                <div class="card-title">💳 Últimas donaciones</div>
-                <div class="card-sub" id="don-charges-sub">
-                  Cargando desde Stripe…
-                </div>
-              </div>
-              <button class="tb-btn" onclick="syncDonaciones()">
-                🔄 Actualizar
-              </button>
-            </div>
-            <div class="history-body">
-              <table class="history-table">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Donador</th>
-                    <th>Monto</th>
-                    <th>Método</th>
-                    <th>Estado</th>
-                    <th>Descripción</th>
-                  </tr>
-                </thead>
-                <tbody id="don-charges-body">
-                  <tr class="skel-row">
-                    <td colspan="6">
-                      <span
-                        class="skel skel-text"
-                        style="width: 100%; display: block; height: 0.8rem"
-                      ></span>
-                    </td>
-                  </tr>
-                  <tr class="skel-row">
-                    <td colspan="6">
-                      <span
-                        class="skel skel-text"
-                        style="width: 90%; display: block; height: 0.8rem"
-                      ></span>
-                    </td>
-                  </tr>
-                  <tr class="skel-row">
-                    <td colspan="6">
-                      <span
-                        class="skel skel-text"
-                        style="width: 95%; display: block; height: 0.8rem"
-                      ></span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Payouts -->
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">
-                  🏦 Transferencias a cuenta bancaria
-                </div>
-                <div class="card-sub">Payouts de Stripe hacia tu banco</div>
-              </div>
-            </div>
-            <div class="history-body">
-              <table class="history-table">
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Monto</th>
-                    <th>Estado</th>
-                    <th>Fecha estimada</th>
-                    <th>Descripción</th>
-                  </tr>
-                </thead>
-                <tbody id="don-payouts-body">
-                  <tr class="skel-row">
-                    <td colspan="5">
-                      <span
-                        class="skel skel-text"
-                        style="width: 100%; display: block; height: 0.8rem"
-                      ></span>
-                    </td>
-                  </tr>
-                  <tr class="skel-row">
-                    <td colspan="5">
-                      <span
-                        class="skel skel-text"
-                        style="width: 85%; display: block; height: 0.8rem"
-                      ></span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
+       
         <!-- ══════════════════════════════════════
          SECCIÓN: CONFIGURACIÓN
     ══════════════════════════════════════ -->
@@ -3612,7 +3446,6 @@
         feeders: "Todos los feeders",
         alertas: "Centro de alertas",
         historial: "Historial de eventos",
-        donaciones: "Donaciones",
         configuracion: "Configuración",
       };
 
@@ -3635,7 +3468,6 @@
         if (titleEl) titleEl.textContent = SECTION_TITLES[id] || id;
         window.scrollTo({ top: 0, behavior: "smooth" });
         if (id === "mapa") setTimeout(initMapFull, 60);
-        if (id === "donaciones") syncDonaciones();
       }
       document.querySelectorAll(".nav-item[data-section]").forEach((el) => {
         el.addEventListener("click", (e) => {
@@ -3918,20 +3750,7 @@
         const tr = btn.closest("tr");
         if (!tr) return;
 
-        // ── Guardar fingerprint en localStorage para que no vuelva en el sync ──
-        try {
-          const ev = tr.dataset.ev ? JSON.parse(tr.dataset.ev) : null;
-          if (ev) {
-            const fp = `${ev.time}|${ev.feederId}|${ev.species}`;
-            const saved = JSON.parse(
-              localStorage.getItem("history_hidden_fps") || "[]",
-            );
-            if (!saved.includes(fp)) {
-              saved.push(fp);
-              localStorage.setItem("history_hidden_fps", JSON.stringify(saved));
-            }
-          }
-        } catch (e) {}
+        // Simulador: no persiste eliminaciones
 
         // Obtener posición para sincronizar ambas tablas
         const tbody = tr.closest("tbody");
@@ -3962,39 +3781,7 @@
       }
 
       function clearHistory() {
-        // Leer los fingerprints de todos los eventos actualmente visibles
-        // y acumularlos con los que ya estaban guardados
-        const existing = [];
-        try {
-          const saved = JSON.parse(
-            localStorage.getItem("history_hidden_fps") || "[]",
-          );
-          existing.push(...saved);
-        } catch (e) {}
-
-        // Cada fila tiene: hora (td[0]), feeder (td[1] .ht-feeder), especie (td[2] .ht-species)
-        const tbody = document.getElementById("history-body-extended");
-        if (tbody) {
-          Array.from(tbody.querySelectorAll("tr")).forEach((tr) => {
-            const tds = tr.querySelectorAll("td");
-            if (tds.length < 3) return;
-            const time = tds[0].textContent.trim();
-            const feeder =
-              tr.querySelector(".ht-feeder")?.textContent.trim() || "";
-            const species =
-              tr
-                .querySelector(".ht-species")
-                ?.className.replace("ht-species", "")
-                .trim() || "";
-            const fp = `${time}|${feeder}|${species}`;
-            if (fp !== "||" && !existing.includes(fp)) existing.push(fp);
-          });
-        }
-        try {
-          localStorage.setItem("history_hidden_fps", JSON.stringify(existing));
-        } catch (e) {}
-
-        // Limpiar el DOM
+        // Simulador: solo limpia el DOM, no persiste
         ["history-body", "history-body-extended"].forEach((id) => {
           const tb = document.getElementById(id);
           if (!tb) return;
@@ -4095,116 +3882,95 @@
         setTimeout(() => b.classList.remove("visible"), 7000);
       }
 
-      // GET /api/dashboard/ → feeders + gráficas
-      async function syncDashboard() {
-        _setSyncStatus("loading", "Sincronizando…");
-        try {
-          const res = await fetch("/api/dashboard/", {
-            headers: { Accept: "application/json" },
-            signal: AbortSignal.timeout(10000),
-          });
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          const data = await res.json();
+      // ═══════════════════════════════════════════════
+      //  SIMULADOR — DATOS SIMULADOS
+      // ═══════════════════════════════════════════════
+      const SIM_FEEDERS = [
+        {
+          id: "ESF-01",
+          name: "Gohan",
+          location: "Av. Revolución 42, Col. Centro",
+          status: "online",
+          lastSync: "hace 2 min",
+          battery: 78,
+          foodDog: 55,
+          foodCat: 18,
+          water: 82,
+          dogsToday: 12,
+          catsToday: 7,
+          aiAccuracy: 94,
+          lat: 25.6728356714816,
+          lng: -100.25332267854714,
+          alertMessage: null,
+        },
+      ];
 
-          renderFeeders(data.feeders);
-          updateCharts(
-            data.charts.dispensa,
-            data.charts.species,
-            data.charts.trend,
-          );
+      const SIM_CHARTS = {
+        dispensa: {
+          labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+          dogs:   [4, 7, 5, 9, 12, 8, 12],
+          cats:   [2, 3, 4, 5, 6, 4, 7],
+        },
+        species: { dogs: 57, cats: 31 },
+        trend: {
+          labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+          dogs:   [4, 7, 5, 9, 12, 8, 12],
+          cats:   [2, 3, 4, 5, 6, 4, 7],
+        },
+      };
 
-          // Alertas del ESP32 vía /api/feeder/alert/
-          if (data.alerts && data.alerts.length > 0) {
-            data.alerts.forEach((a) => {
-              const ya = notifStore.find((n) => n.title === a.title);
-              if (!ya) addNotification(a);
-            });
-          }
-          // Alertas automáticas por status warn
-          data.feeders.forEach((f) => {
-            if (f.status === "warn" && f.alertMessage) {
-              const ya = notifStore.find((n) => n.title.includes(f.id));
-              if (!ya)
-                addNotification({
-                  type: "warn",
-                  title: `${f.id} — Niveles bajos`,
-                  description: `Batería: ${f.battery}% · Dog food: ${f.foodDog}% · Cat food: ${f.foodCat}%`,
-                  time: new Date().toLocaleTimeString("es-MX", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }),
-                  location: f.name,
-                });
-            }
-          });
+      const SIM_ALERTS = [
+        {
+          type: "warn",
+          title: "ESF-01 — Cat food bajo",
+          description: "Cat food al 18 % — reponer pronto",
+          time: new Date().toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" }),
+          location: "Gohan",
+        },
+      ];
 
-          _setSyncStatus(
-            "ok",
-            "Última sync: " + new Date().toLocaleTimeString("es-MX"),
-          );
-        } catch (err) {
-          _setSyncStatus("error", "Error de conexión");
-          _showError("No se pudo conectar con el servidor — " + err.message);
-          console.error("[syncDashboard]", err);
-        }
+      function syncDashboard() {
+        _setSyncStatus("loading", "Cargando simulación…");
+        renderFeeders(SIM_FEEDERS);
+        updateCharts(SIM_CHARTS.dispensa, SIM_CHARTS.species, SIM_CHARTS.trend);
+        // Alertas simuladas (se resetean al recargar — no se persisten)
+        SIM_ALERTS.forEach((a) => {
+          const ya = notifStore.find((n) => n.title === a.title);
+          if (!ya) addNotification(a);
+        });
+        _setSyncStatus("ok", "Simulador activo · " + new Date().toLocaleTimeString("es-MX"));
       }
 
-      // GET /api/history/?limit=20 → tabla de historial
-      async function syncHistory() {
-        try {
-          const res = await fetch("/api/history/?limit=20", {
-            signal: AbortSignal.timeout(8000),
-          });
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          const data = await res.json();
+      const SIM_EVENTS = [
+        { time: "16:45", feederId: "ESF-01", feederName: "Gohan", species: "dog",   emoji: "🐶", label: "Perro", grams: 200, confidence: 96 },
+        { time: "16:21", feederId: "ESF-01", feederName: "Gohan", species: "cat",   emoji: "🐱", label: "Gato",  grams: 140, confidence: 91 },
+        { time: "15:58", feederId: "ESF-01", feederName: "Gohan", species: "dog",   emoji: "🐶", label: "Perro", grams: 185, confidence: 88 },
+        { time: "15:33", feederId: "ESF-01", feederName: "Gohan", species: "cat",   emoji: "🐱", label: "Gato",  grams: 130, confidence: 93 },
+        { time: "14:47", feederId: "ESF-01", feederName: "Gohan", species: "dog",   emoji: "🐶", label: "Perro", grams: 210, confidence: 97 },
+        { time: "13:12", feederId: "ESF-01", feederName: "Gohan", species: "dog",   emoji: "🐶", label: "Perro", grams: 175, confidence: 82 },
+        { time: "11:30", feederId: "ESF-01", feederName: "Gohan", species: "cat",   emoji: "🐱", label: "Gato",  grams: 120, confidence: 89 },
+        { time: "09:05", feederId: "ESF-01", feederName: "Gohan", species: "dog",   emoji: "🐶", label: "Perro", grams: 195, confidence: 95 },
+      ];
 
-          // ── Filtro de limpieza ──────────────────────────────────────────
-          // Si el usuario limpió el historial, guardamos en localStorage
-          // los "fingerprints" (hora+feeder) de cada evento visible.
-          // Al recargar, se saltan esos eventos específicos.
-          let hiddenFingerprints = [];
-          try {
-            hiddenFingerprints = JSON.parse(
-              localStorage.getItem("history_hidden_fps") || "[]",
-            );
-          } catch (e) {}
-
-          const _fp = (ev) => `${ev.time}|${ev.feederId}|${ev.species}`;
-          const eventos = hiddenFingerprints.length
-            ? data.events.filter((ev) => !hiddenFingerprints.includes(_fp(ev)))
-            : data.events;
-          // ──────────────────────────────────────────────────────────────
-
-          // Limpiar tablas (skeletons y filas viejas)
-          ["history-body", "history-body-extended"].forEach((id) => {
-            const tb = document.getElementById(id);
-            if (tb) tb.innerHTML = "";
-          });
-
-          if (eventos.length === 0) {
-            ["history-body", "history-body-extended"].forEach((id) => {
-              const tb = document.getElementById(id);
-              if (tb)
-                tb.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
-            });
-            _updateHistoryCounter();
-            return;
-          }
-          eventos.forEach(addHistoryEvent);
-          _updateHistoryCounter();
-        } catch (err) {
-          console.error("[syncHistory]", err);
-        }
+      function syncHistory() {
+        ["history-body", "history-body-extended"].forEach((id) => {
+          const tb = document.getElementById(id);
+          if (tb) tb.innerHTML = "";
+        });
+        SIM_EVENTS.forEach(addHistoryEvent);
+        _updateHistoryCounter();
       }
 
       function refreshData() {
         const btn = document.getElementById("refreshBtn");
         btn.textContent = "⏳ Actualizando…";
         btn.disabled = true;
-        Promise.all([syncDashboard(), syncHistory()]).finally(() => {
+        syncDashboard();
+        syncHistory();
+        setTimeout(() => {
           btn.textContent = "🔄 Actualizar";
           btn.disabled = false;
-        });
+        }, 600);
       }
 
       // ═══════════════════════════════════════════════
@@ -4629,17 +4395,12 @@
       let _currentEventData = null;
       let _selectedPhotoFile = null;
 
-      initMapSmall(); // mapa del resumen
-      renderNotifications(); // paneles de alertas vacíos
-      syncDashboard(); // carga inicial de feeders + gráficas
-      syncHistory(); // carga inicial del historial
-
-      // Polling: datos cada 30s, historial cada 15s
+      // ── SIMULADOR — sin polling, sin backend ──
+      initMapSmall();
+      renderNotifications();
       cargarSettings();
-      const _sd0 = parseInt(localStorage.getItem("cfg_sync_d") || "30");
-      const _sh0 = parseInt(localStorage.getItem("cfg_sync_h") || "15");
-      _syncDashInterval = setInterval(syncDashboard, _sd0 * 1000);
-      _syncHistInterval = setInterval(syncHistory, _sh0 * 1000);
+      syncDashboard();   // carga datos simulados
+      syncHistory();     // carga historial simulado
 
       // ═══════════════════════════════════════════════
       //  MODAL — BORRAR TODOS LOS DATOS
@@ -4675,46 +4436,18 @@
         }
       }
 
-      async function executeDelete() {
-        const btn = document.getElementById("delete-confirm-btn");
-        btn.textContent = "Borrando…";
-        btn.disabled = true;
-
-        try {
-          const res = await fetch("/api/data/delete-all/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": _getCookie("csrftoken"),
-            },
-          });
-          if (!res.ok) throw new Error("HTTP " + res.status);
-
-          closeDeleteModal();
-
-          // Limpiar UI inmediatamente
-          ["history-body", "history-body-extended"].forEach((id) => {
-            const tb = document.getElementById(id);
-            if (tb)
-              tb.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin eventos registrados.</td></tr>`;
-          });
-          notifStore.length = 0;
-          renderNotifications();
-
-          // Recargar datos frescos
-          await Promise.all([syncDashboard(), syncHistory()]);
-
-          _setSyncStatus(
-            "ok",
-            "Datos eliminados · " + new Date().toLocaleTimeString("es-MX"),
-          );
-        } catch (err) {
-          btn.textContent = "Borrar todo";
-          btn.disabled = false;
-          btn.classList.add("ready");
-          _showError("No se pudieron borrar los datos — " + err.message);
-          console.error("[executeDelete]", err);
-        }
+      function executeDelete() {
+        // Simulador: limpia UI y recarga datos simulados
+        closeDeleteModal();
+        ["history-body", "history-body-extended"].forEach((id) => {
+          const tb = document.getElementById(id);
+          if (tb) tb.innerHTML = "";
+        });
+        notifStore.length = 0;
+        renderNotifications();
+        syncDashboard();
+        syncHistory();
+        _setSyncStatus("ok", "Datos reiniciados · " + new Date().toLocaleTimeString("es-MX"));
       }
 
       // Cerrar modal al hacer clic fuera
@@ -4780,23 +4513,15 @@
       }
 
       function guardarIntervalos() {
-        const sd =
-          parseInt(document.getElementById("cfg-sync-dashboard").value) || 30;
-        const sh =
-          parseInt(document.getElementById("cfg-sync-history").value) || 15;
+        // Simulador: guarda la preferencia pero no inicia polling
+        const sd = parseInt(document.getElementById("cfg-sync-dashboard").value) || 30;
+        const sh = parseInt(document.getElementById("cfg-sync-history").value) || 15;
         localStorage.setItem("cfg_sync_d", sd);
         localStorage.setItem("cfg_sync_h", sh);
-        clearInterval(_syncDashInterval);
-        clearInterval(_syncHistInterval);
-        _syncDashInterval = setInterval(syncDashboard, sd * 1000);
-        _syncHistInterval = setInterval(syncHistory, sh * 1000);
         const btn = document.getElementById("btn-guardar-intervalos");
         btn.textContent = "✓ Aplicado";
         btn.style.background = "var(--ok)";
-        setTimeout(() => {
-          btn.textContent = "Aplicar";
-          btn.style.background = "";
-        }, 2000);
+        setTimeout(() => { btn.textContent = "Aplicar"; btn.style.background = ""; }, 2000);
       }
 
       // ════════════════════════════════════════
@@ -5127,53 +4852,18 @@
         _resetPhotoArea();
       }
 
-      async function submitEventWithPhoto() {
-        if (!_currentEventData) return;
-
+      function submitEventWithPhoto() {
+        // Simulador: simula envío exitoso
         const btn = document.getElementById("ev-send-btn");
         const status = document.getElementById("ev-send-status");
-
         btn.disabled = true;
         btn.innerHTML = "⏳ Enviando…";
-        status.textContent = "";
-        status.className = "ev-send-status";
-
-        try {
-          const formData = new FormData();
-          // Append all event fields
-          Object.entries(_currentEventData).forEach(([k, v]) => {
-            formData.append(k, v ?? "");
-          });
-          // Append photo if selected
-          if (_selectedPhotoFile) {
-            formData.append(
-              "photo",
-              _selectedPhotoFile,
-              _selectedPhotoFile.name,
-            );
-          }
-
-          const res = await fetch("/api/event/submit/", {
-            method: "POST",
-            headers: { "X-CSRFToken": getCookie("csrftoken") },
-            body: formData,
-          });
-
-          if (!res.ok) throw new Error("HTTP " + res.status);
-
+        setTimeout(() => {
           btn.innerHTML = "✅ Enviado";
-          status.textContent = _selectedPhotoFile
-            ? "Evento y foto enviados correctamente"
-            : "Evento enviado correctamente";
+          status.textContent = "Evento enviado correctamente (simulador)";
           status.className = "ev-send-status visible ok";
-
           setTimeout(() => closeEventModal(), 1800);
-        } catch (err) {
-          btn.disabled = false;
-          btn.innerHTML = "<span>📤</span> Reintentar";
-          status.textContent = "Error al enviar: " + err.message;
-          status.className = "ev-send-status visible err";
-        }
+        }, 800);
       }
 
       function getCookie(name) {
@@ -5187,160 +4877,7 @@
         if (e.key === "Escape") closeEventModal();
       });
 
-      // ════════════════════════════════════════
-      //  DONACIONES — Stripe via Django
-      // ════════════════════════════════════════
-      async function syncDonaciones() {
-        // Skeletons mientras carga
-        ["don-balance", "don-mes", "don-donadores", "don-pendiente"].forEach(
-          (id) => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = '<span class="skel skel-kpi"></span>';
-          },
-        );
 
-        try {
-          const res = await fetch("/api/donaciones/", {
-            headers: { Accept: "application/json" },
-            signal: AbortSignal.timeout(12000),
-          });
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          const d = await res.json();
-
-          // ── KPIs ──────────────────────────────────────
-          const fmt = (amt, cur) => {
-            const sym =
-              { mxn: "$", usd: "$", eur: "€" }[cur?.toLowerCase()] || "$";
-            return (
-              sym +
-              (amt / 100).toLocaleString("es-MX", { minimumFractionDigits: 2 })
-            );
-          };
-
-          document.getElementById("don-balance").textContent = fmt(
-            d.balance.available,
-            d.balance.currency,
-          );
-          document.getElementById("don-balance-sub").textContent =
-            "Balance disponible";
-          document.getElementById("don-mes").textContent = fmt(
-            d.mes.total,
-            d.balance.currency,
-          );
-          document.getElementById("don-mes-sub").textContent =
-            d.mes.count + " donación" + (d.mes.count !== 1 ? "es" : "");
-          document.getElementById("don-donadores").textContent = d.donadores;
-          document.getElementById("don-donadores-sub").textContent =
-            "clientes únicos";
-          document.getElementById("don-pendiente").textContent = fmt(
-            d.balance.pending,
-            d.balance.currency,
-          );
-          document.getElementById("don-pendiente-sub").textContent =
-            "en tránsito a tu cuenta";
-
-          // ── Tabla charges ──────────────────────────────
-          const subEl = document.getElementById("don-charges-sub");
-          if (subEl)
-            subEl.textContent =
-              "Últimos " + d.charges.length + " pagos · Stripe";
-
-          const STATUS_LABEL = {
-            succeeded: "✅ Pagado",
-            pending: "⏳ Pendiente",
-            failed: "❌ Fallido",
-          };
-          const METHOD_ICON = {
-            card: "💳",
-            bank_transfer: "🏦",
-            oxxo: "🏪",
-            link: "🔗",
-            cash: "💵",
-          };
-
-          const chargesBody = document.getElementById("don-charges-body");
-          if (chargesBody) {
-            if (d.charges.length === 0) {
-              chargesBody.innerHTML =
-                '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin donaciones registradas aún.</td></tr>';
-            } else {
-              chargesBody.innerHTML = d.charges
-                .map((c) => {
-                  const fecha = new Date(c.created * 1000).toLocaleDateString(
-                    "es-MX",
-                    { day: "2-digit", month: "short", year: "numeric" },
-                  );
-                  const hora = new Date(c.created * 1000).toLocaleTimeString(
-                    "es-MX",
-                    { hour: "2-digit", minute: "2-digit" },
-                  );
-                  const metodo = METHOD_ICON[c.payment_method_type] || "💳";
-                  return `<tr>
-                  <td><span style="font-size:.85rem">${fecha}</span><br><span style="font-size:.68rem;color:var(--light-mid)">${hora}</span></td>
-                  <td><span style="font-size:.82rem;color:var(--charcoal)">${c.customer_name || c.customer_email || "Anónimo"}</span>${c.customer_email && c.customer_name ? '<br><span style="font-size:.68rem;color:var(--light-mid)">' + c.customer_email + "</span>" : ""}</td>
-                  <td><strong style="color:var(--sage-dark)">${fmt(c.amount, c.currency)}</strong></td>
-                  <td><span class="method-icon">${metodo}</span> <span style="font-size:.75rem;color:var(--mid);text-transform:capitalize">${c.payment_method_type || "—"}</span></td>
-                  <td><span class="pay-badge ${c.status}">${STATUS_LABEL[c.status] || c.status}</span></td>
-                  <td style="font-size:.75rem;color:var(--mid)">${c.description || "—"}</td>
-                </tr>`;
-                })
-                .join("");
-            }
-          }
-
-          // ── Tabla payouts ──────────────────────────────
-          const PAYOUT_STATUS = {
-            paid: "✅ Depositado",
-            pending: "⏳ Pendiente",
-            in_transit: "🚀 En tránsito",
-            failed: "❌ Fallido",
-            canceled: "🚫 Cancelado",
-          };
-          const payoutsBody = document.getElementById("don-payouts-body");
-          if (payoutsBody) {
-            if (d.payouts.length === 0) {
-              payoutsBody.innerHTML =
-                '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--light-mid);font-size:.78rem">Sin transferencias aún.</td></tr>';
-            } else {
-              payoutsBody.innerHTML = d.payouts
-                .map((p) => {
-                  const fecha = new Date(p.created * 1000).toLocaleDateString(
-                    "es-MX",
-                    { day: "2-digit", month: "short", year: "numeric" },
-                  );
-                  const fechaArr = p.arrival_date
-                    ? new Date(p.arrival_date * 1000).toLocaleDateString(
-                        "es-MX",
-                        { day: "2-digit", month: "short" },
-                      )
-                    : "—";
-                  return `<tr>
-                  <td>${fecha}</td>
-                  <td><strong style="color:var(--sage-dark)">${fmt(p.amount, p.currency)}</strong></td>
-                  <td><span class="pay-badge ${p.status}">${PAYOUT_STATUS[p.status] || p.status}</span></td>
-                  <td style="font-size:.82rem;color:var(--mid)">${fechaArr}</td>
-                  <td style="font-size:.75rem;color:var(--mid)">${p.description || p.statement_descriptor || "—"}</td>
-                </tr>`;
-                })
-                .join("");
-            }
-          }
-        } catch (err) {
-          ["don-balance", "don-mes", "don-donadores", "don-pendiente"].forEach(
-            (id) => {
-              const el = document.getElementById(id);
-              if (el) el.textContent = "—";
-            },
-          );
-          const cb = document.getElementById("don-charges-body");
-          if (cb)
-            cb.innerHTML =
-              '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--danger);font-size:.78rem">⚠️ Error al cargar datos de Stripe — ' +
-              err.message +
-              "</td></tr>";
-          console.error("[syncDonaciones]", err);
-        }
-      }
     </script>
 
     <!-- MODAL DETALLE DE EVENTO + FOTO -->
