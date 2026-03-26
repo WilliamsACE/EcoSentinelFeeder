@@ -1,2 +1,3 @@
-# EcoSentinelFeeder
-EcoSentinel Feeder is a smart feeding station designed to support stray dogs and cats. It uses sensors and AI to detect the animal, dispense the right portion of food, and track usage data to reduce waste and improve resource management.
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=EcoSentinel%20Feeder%20🐾&fontSize=70&animation=fadeIn" />
+</p>
