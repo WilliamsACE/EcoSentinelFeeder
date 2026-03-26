@@ -1,0 +1,398 @@
+:root {
+  --paper:      #f7f2ea;
+  --paper2:     #f0ebe0;
+  --paper3:     #e8e1d4;
+  --ink:        #221c14;
+  --ink2:       #4a4030;
+  --ink3:       #7a6e5e;
+  --ink4:       #a89e90;
+  --rule:       #d8d0c2;
+  --rule2:      #c8bfaf;
+  --sage:       #5d8c62;
+  --sage-light: #8cb890;
+  --terra:      #b8612a;
+  --terra-light:#d4834e;
+  --danger:     #a02020;
+  --danger-bg:  rgba(160,32,32,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Fondo decorativo ── */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-grid svg {
+  width: 100%; height: 100%;
+  opacity: 0.22;
+}
+
+.bg-blob {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob-1 {
+  width: 640px; height: 640px;
+  top: -200px; right: -160px;
+  background: radial-gradient(circle, rgba(184,97,42,0.14) 0%, transparent 65%);
+}
+.blob-2 {
+  width: 480px; height: 480px;
+  bottom: -160px; left: -100px;
+  background: radial-gradient(circle, rgba(93,140,98,0.12) 0%, transparent 65%);
+}
+
+/* ── Layout ── */
+.page {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ── LEFT — brand side ── */
+.brand-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 64px;
+  border-right: 1px solid var(--rule);
+  position: relative;
+}
+
+.brand-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink4);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand-tag::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: var(--rule2);
+}
+
+.brand-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.brand-logo em {
+  color: var(--terra);
+  font-style: italic;
+}
+.brand-logo .sub {
+  display: block;
+  font-size: 0.45em;
+  font-weight: 400;
+  color: var(--ink3);
+  letter-spacing: 0.04em;
+  font-style: normal;
+  margin-top: 4px;
+}
+
+.brand-desc {
+  font-size: 0.95rem;
+  color: var(--ink3);
+  line-height: 1.8;
+  max-width: 360px;
+  margin-top: 28px;
+  margin-bottom: 48px;
+}
+
+/* Stats row */
+.brand-stats {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  overflow: hidden;
+  background: white;
+  max-width: 380px;
+}
+.bs-item {
+  flex: 1;
+  padding: 18px 16px;
+  border-right: 1px solid var(--rule);
+  text-align: center;
+}
+.bs-item:last-child { border-right: none; }
+.bs-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  display: block;
+  margin-bottom: 4px;
+}
+.bs-val.tc { color: var(--terra); }
+.bs-val.sg { color: var(--sage); }
+.bs-val.sk { color: #4a86a8; }
+.bs-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink4);
+}
+
+/* Feed ticker */
+
+
+@keyframes tickIn {
+  from { opacity:0; transform:translateX(-8px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+.ticker-item .ti-feeder {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--ink4);
+  flex-shrink: 0;
+}
+.ticker-item .ti-event { flex: 1; }
+.ticker-item .ti-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--ink4);
+}
+
+/* ── RIGHT — login side ── */
+.login-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 64px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink4);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.login-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.login-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.1;
+}
+.login-sub {
+  font-size: 0.85rem;
+  color: var(--ink4);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+/* Form */
+.form-field {
+  margin-bottom: 18px;
+}
+.field-label {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+  font-weight: 500;
+  margin-bottom: 7px;
+}
+.field-input {
+  width: 100%;
+  background: white;
+  border: 1.5px solid var(--rule);
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field-input::placeholder { color: var(--ink4); }
+.field-input:focus {
+  border-color: var(--terra);
+  box-shadow: 0 0 0 3px rgba(184,97,42,0.1);
+}
+.field-input.error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(160,32,32,0.08);
+}
+
+/* Password wrapper */
+.pass-wrap { position: relative; }
+.pass-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink4);
+  font-size: 0.78rem;
+  padding: 4px;
+  transition: color 0.2s;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+}
+.pass-toggle:hover { color: var(--ink2); }
+
+/* Error message */
+.error-msg {
+  background: var(--danger-bg);
+  border: 1px solid rgba(160,32,32,0.18);
+  border-radius: 9px;
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  color: var(--danger);
+  margin-bottom: 18px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  animation: fadeUp 0.3s ease;
+}
+.error-msg.visible { display: flex; }
+
+/* Submit */
+.btn-submit {
+  width: 100%;
+  background: var(--ink);
+  color: white;
+  padding: 15px 24px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-submit:hover { background: var(--ink2); }
+.btn-submit:active { transform: scale(0.99); }
+.btn-submit.loading { pointer-events: none; opacity: 0.7; }
+
+/* Forgot */
+.form-footer {
+  margin-top: 18px;
+  text-align: center;
+}
+.forgot-link {
+  font-size: 0.75rem;
+  color: var(--ink4);
+  text-decoration: none;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.forgot-link:hover { color: var(--terra); }
+
+/* Divider */
+.form-divider {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 28px 0;
+}
+
+/* Security note */
+.security-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  color: var(--ink4);
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+/* ── FOOTER ── */
+.page-footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--rule);
+  padding: 14px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.68rem;
+  color: var(--ink4);
+  background: var(--paper2);
+}
+.pf-right { display: flex; gap: 16px; }
+.pf-right a { color: var(--ink4); text-decoration: none; transition: color 0.2s; }
+.pf-right a:hover { color: var(--terra); }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.login-card { animation: fadeUp 0.55s ease both; }
+.brand-side > * { animation: fadeUp 0.55s ease both; }
+.brand-side > *:nth-child(2) { animation-delay: 0.05s; }
+.brand-side > *:nth-child(3) { animation-delay: 0.1s; }
+.brand-side > *:nth-child(4) { animation-delay: 0.15s; }
+.brand-side > *:nth-child(5) { animation-delay: 0.2s; }
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .page { grid-template-columns: 1fr; }
+  .brand-side { display: none; }
+  .login-side { padding: 48px 28px; }
+  .login-card { max-width: 100%; }
+}
