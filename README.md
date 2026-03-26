@@ -25,6 +25,9 @@ EcoSentinel Feeder is an intelligent system designed to provide **smart nutritio
 <br />
 
 <h2 align="center">Stay Connected With Us 🚀</h2>
+<p align="center">
+  📧 <b>Contact us:</b> <code style="color: #ff79c6;">ecosentinelfeeder@gmail.com</code>
+</p>
 <div align="center">
   <a href="https://www.instagram.com/ecosentinelfeeder/">
     <img height="50" src="https://www.svgrepo.com/show/303145/instagram-2-1-logo.svg"/>
@@ -37,4 +40,11 @@ EcoSentinel Feeder is an intelligent system designed to provide **smart nutritio
   <a href="mailto:ecosentinelfeeder@gmail.com">
     <img height="50" src="https://github.com/WilliamsACE/EcoSentinelFeeder/blob/master/GithubImages/Emaillogo.png?raw=true"/>
   </a>
+  
 </div>
+
+---
+
+<p align="center">
+  Made with ❤️ by EcoSentinel Team
+</p>
