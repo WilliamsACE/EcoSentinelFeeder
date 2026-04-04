@@ -3,6 +3,7 @@ main.py
 """
 
 import time
+import sys
 import threading
 import cv2
 import uvicorn
@@ -24,11 +25,21 @@ def sensor_triggered() -> bool:
 
 
 def open_camera(index: int):
-    backends = [
-        (cv2.CAP_DSHOW, "DirectShow (Windows)"),
-        (cv2.CAP_V4L2,  "V4L2 (Linux/Pi)"),
-        (cv2.CAP_ANY,   "auto"),
-    ]
+    if sys.platform == "win32":
+        backends = [
+            (cv2.CAP_DSHOW,        "DirectShow (Windows)"),
+            (cv2.CAP_ANY,          "auto"),
+        ]
+    elif sys.platform == "darwin":
+        backends = [
+            (cv2.CAP_AVFOUNDATION, "AVFoundation (Mac)"),
+            (cv2.CAP_ANY,          "auto"),
+        ]
+    else:
+        backends = [
+            (cv2.CAP_V4L2,         "V4L2 (Linux/Pi)"),
+            (cv2.CAP_ANY,          "auto"),
+        ]
     for backend, name in backends:
         cap = cv2.VideoCapture(index, backend)
         if cap.isOpened():
