@@ -6,6 +6,7 @@ urlpatterns = [
     path('',                      views.home,         name='home'),
     path('donar/',            views.donar,         name='donar'),
     path('dashboardDocs/', views.dashboardDocs, name='dashboardDocs'),
+    path('docs/', views.docs, name='docs'),
     path('dashboardSimulator/', views.dashboardSimulator, name='dashboardSimulator'),
 
 

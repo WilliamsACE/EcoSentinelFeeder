@@ -1,0 +1,223 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoSentinel Feeder — Próximamente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="shortcut icon" href="{% static 'images/EcoSentinelIcon.ico' %}"/>
+  <style>
+    :root {
+      --cream: #fdf8f0;
+      --sage: #7a9e7e;
+      --sage-light: #a8c5ac;
+      --sage-dark: #4d7a52;
+      --terracotta: #c97b4b;
+      --charcoal: #2d3a2e;
+      --mid: #5a6b5b;
+      --light-mid: #8a9f8b;
+      --border: #e2d9cc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: "DM Sans", sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 650px; height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(168,197,172,0.2) 0%, transparent 65%);
+      pointer-events: none;
+      animation: drift 16s ease-in-out infinite alternate;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      bottom: -160px; left: -100px;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,123,75,0.1) 0%, transparent 65%);
+      pointer-events: none;
+      animation: drift 20s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(24px,16px) scale(1.05); }
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px 24px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .logo {
+      font-family: "Playfair Display", serif;
+      font-size: 1.15rem;
+      color: var(--sage-dark);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s ease forwards;
+    }
+    .logo span { color: var(--terracotta); font-style: italic; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      color: var(--light-mid);
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 72px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s ease forwards;
+    }
+    .bdot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--sage);
+      animation: pulse 2.2s ease infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.3; transform:scale(0.7); }
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2.8rem, 8vw, 4.6rem);
+      line-height: 1.06;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.3s ease forwards;
+    }
+    h1 em { font-style: italic; color: var(--sage-dark); }
+
+    .sub {
+      font-size: 0.97rem;
+      color: var(--mid);
+      line-height: 1.8;
+      max-width: 380px;
+      margin: 0 auto 48px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.4s ease forwards;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 0 auto 48px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.45s ease forwards;
+    }
+
+    .cta {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.5s ease forwards;
+    }
+    .btn-primary {
+      background: var(--sage-dark);
+      color: white;
+      padding: 12px 26px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 500;
+      font-family: "DM Sans", sans-serif;
+      transition: background 0.25s, transform 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-primary:hover { background: var(--charcoal); transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--mid);
+      padding: 12px 26px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 400;
+      font-family: "DM Sans", sans-serif;
+      border: 1px solid var(--border);
+      transition: border-color 0.25s, color 0.25s, transform 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--sage-light); color: var(--sage-dark); transform: translateY(-2px); }
+
+    .footer-note {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: var(--light-mid);
+      letter-spacing: 0.06em;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.8s ease forwards;
+      white-space: nowrap;
+    }
+    .footer-note a { color: var(--light-mid); text-decoration: none; transition: color 0.2s; }
+    .footer-note a:hover { color: var(--sage-dark); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .logo { margin-bottom: 48px; }
+      .cta { flex-direction: column; }
+      .btn-primary, .btn-secondary { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <a href="/" class="logo">Eco<span>Sentinel</span> Feeder</a>
+    <div class="badge"><div class="bdot"></div>Próximamente</div>
+    <h1>Estamos en<br><em>construcción</em></h1>
+    <p class="sub">Esta sección estará lista muy pronto. Mientras tanto, puedes explorar el proyecto o escribirnos.</p>
+    <div class="divider"></div>
+    <div class="cta">
+      <a href="/" class="btn-primary">← Volver al inicio</a>
+      <a href="mailto:ecosentinelfeeder@gmail.com" class="btn-secondary">Contactar</a>
+    </div>
+  </div>
+
+  <p class="footer-note">© EcoSentinel Feeder &nbsp;·&nbsp; <a href="https://github.com/WilliamsACE/EcoSentinelFeeder" target="_blank">GitHub</a></p>
+
+</body>
+</html>

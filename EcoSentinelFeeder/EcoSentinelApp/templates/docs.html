@@ -1,0 +1,1247 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoSentinel Feeder — Documentación v1.0</title>
+    <link rel="shortcut icon" href="{% static 'images/EcoSentinelIcon.ico' %}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Lora:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream: #fdf8f0;
+        --warm-white: #fffcf7;
+        --warm-white2: #fff9f2;
+        --sage: #7a9e7e;
+        --sage-light: #a8c5ac;
+        --sage-dark: #4d7a52;
+        --terracotta: #c97b4b;
+        --terracotta-light: #e8a97a;
+        --sky: #a8c8e8;
+        --sky-dark: #5a9bc0;
+        --charcoal: #2d3a2e;
+        --mid: #5a6b5b;
+        --light-mid: #8a9f8b;
+        --border: #e2d9cc;
+        --border2: #d4c9ba;
+        --ok: #4d8c52;
+        --warn: #b86a1a;
+        --danger: #c03030;
+        --code-bg: #f4efe6;
+        --code-border: #ddd0be;
+        --sidebar-w: 228px;
+        --topnav-h: 60px;
+        --proto-blue: #4a6fa5;
+        --proto-blue-light: #7ba7d4;
+        --proto-green: #3d7a54;
+        --proto-yellow: #b8962a;
+        --proto-red: #b84040;
+        --proto-purple: #7060b0;
+      }
+
+      *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--cream);
+        color: var(--charcoal);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        line-height: 1.7;
+        min-height: 100vh;
+      }
+      body::before {
+        content: "";
+        position: fixed; inset: 0;
+        pointer-events: none; z-index: 9999; opacity: 0.016;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+      }
+
+      /* ── TOP NAV ── */
+      .topnav {
+        position: fixed; top:0; left:0; right:0; z-index:300;
+        height: var(--topnav-h);
+        background: rgba(253,248,240,.95);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 28px 0 24px; gap: 20px;
+      }
+      .nav-brand { display:flex; align-items:baseline; gap:10px; text-decoration:none; }
+      .nav-logo { font-family:"Playfair Display",serif; font-size:1.05rem; color:var(--sage-dark); letter-spacing:.02em; }
+      .nav-logo span { color:var(--terracotta); font-style:italic; }
+      .nav-right { display:flex; align-items:center; gap:10px; }
+      .nav-version {
+        font-family:"DM Mono",monospace; font-size:.65rem; letter-spacing:.06em;
+        color:var(--sage-dark); font-weight:500;
+        background:rgba(77,122,82,.1); border:1px solid rgba(77,122,82,.22);
+        padding:3px 10px; border-radius:100px;
+      }
+      .nav-badge {
+        font-size:.58rem; text-transform:uppercase; letter-spacing:.14em;
+        color:var(--light-mid); font-weight:500;
+        background:var(--border); padding:3px 9px; border-radius:100px;
+      }
+      .nav-menu-btn {
+        display:none; background:none; border:none; cursor:pointer; padding:6px;
+        border-radius:8px; color:var(--mid); font-size:1.1rem; transition:background .16s;
+      }
+      .nav-menu-btn:hover { background:rgba(122,158,126,.1); }
+
+      /* ── LAYOUT ── */
+      .shell { display:flex; padding-top:var(--topnav-h); min-height:100vh; }
+
+      /* ── SIDEBAR ── */
+      .doc-sidebar {
+        position:fixed; top:var(--topnav-h); left:0; bottom:0;
+        width:var(--sidebar-w);
+        background:var(--warm-white); border-right:1px solid var(--border);
+        overflow-y:auto; display:flex; flex-direction:column; z-index:200;
+        padding-bottom:32px;
+      }
+      .sb-section { padding:20px 18px 6px; }
+      .sb-section-label {
+        font-size:.55rem; text-transform:uppercase; letter-spacing:.18em;
+        color:var(--light-mid); font-weight:600;
+        padding:0 4px 8px; display:block;
+        border-bottom:1px solid var(--border); margin-bottom:4px;
+      }
+      .sb-link {
+        display:flex; align-items:center; gap:8px;
+        padding:7px 8px; border-radius:8px;
+        font-size:.79rem; color:var(--mid);
+        text-decoration:none; cursor:pointer; transition:all .16s;
+        border-left:2px solid transparent; user-select:none;
+      }
+      .sb-link:hover { color:var(--charcoal); background:rgba(122,158,126,.07); }
+      .sb-link.active { color:var(--sage-dark); border-left-color:var(--sage-dark); background:rgba(77,122,82,.07); font-weight:500; }
+      .sb-link .sb-icon { font-size:.8rem; width:18px; text-align:center; flex-shrink:0; }
+      .sidebar-overlay {
+        display:none; position:fixed; inset:0;
+        background:rgba(45,58,46,.35); backdrop-filter:blur(2px); z-index:199;
+      }
+      .sidebar-overlay.visible { display:block; }
+
+      /* ── MAIN ── */
+      .main-content { margin-left:var(--sidebar-w); flex:1; min-width:0; }
+
+      /* ── HERO ── */
+      .hero { padding:56px 56px 0; max-width:820px; }
+      .hero-top { display:flex; align-items:center; gap:12px; margin-bottom:22px; flex-wrap:wrap; }
+      .hero-eyebrow {
+        display:inline-flex; align-items:center; gap:7px;
+        font-size:.63rem; text-transform:uppercase; letter-spacing:.16em;
+        color:var(--sage-dark); font-weight:600;
+        background:rgba(77,122,82,.08); border:1px solid rgba(77,122,82,.2);
+        padding:4px 12px; border-radius:100px;
+      }
+      .hero-eyebrow::before { content:"📡"; font-size:.8rem; }
+      .hero-version-badge {
+        display:inline-flex; align-items:center; gap:6px;
+        font-family:"DM Mono",monospace; font-size:.63rem; letter-spacing:.05em;
+        color:var(--terracotta); font-weight:500;
+        background:rgba(201,123,75,.08); border:1px solid rgba(201,123,75,.25);
+        padding:4px 12px; border-radius:100px;
+      }
+      .hero-version-badge::before { content:"🏷️"; font-size:.75rem; }
+      .hero h1 {
+        font-family:"Playfair Display",serif;
+        font-size:clamp(2.2rem,4vw,3.4rem); font-weight:700;
+        line-height:1.1; color:var(--charcoal); margin-bottom:6px;
+      }
+      .hero h1 em { color:var(--terracotta); font-style:italic; }
+      .hero-sub { font-size:.98rem; color:var(--mid); font-weight:300; max-width:520px; margin-top:14px; line-height:1.72; }
+
+      /* ── MODE SWITCHER (2 tabs) ── */
+      .mode-switcher-wrap { padding:30px 56px 46px; }
+      .mode-switcher {
+        display:inline-flex; background:var(--warm-white);
+        border:1px solid var(--border); border-radius:14px;
+        padding:5px; gap:4px;
+        box-shadow:0 2px 12px rgba(45,58,46,.06);
+      }
+      .mode-btn {
+        padding:10px 22px; border-radius:10px; border:none;
+        font-family:"DM Sans",sans-serif; font-size:.86rem; font-weight:500;
+        cursor:pointer; transition:all .22s;
+        display:flex; align-items:center; gap:8px;
+        color:var(--mid); background:transparent;
+      }
+      .mode-btn .mb-icon { font-size:.95rem; }
+      .mode-btn .mb-label { font-weight:500; }
+      .mode-btn .mb-desc { font-size:.68rem; font-weight:300; color:var(--light-mid); display:block; text-align:left; margin-top:1px; }
+      .mode-btn:hover { color:var(--charcoal); }
+      .mode-btn.active { background:var(--sage-dark); color:#fff; box-shadow:0 4px 16px rgba(77,122,82,.28); }
+      .mode-btn.active .mb-desc { color:rgba(255,255,255,.6); }
+      .mode-btn.proto-active { background:var(--proto-blue); box-shadow:0 4px 16px rgba(74,111,165,.28); }
+      .mode-btn.proto-active .mb-desc { color:rgba(255,255,255,.6); }
+
+      /* ── PANELS ── */
+      .panel { display:none; }
+      .panel.active { display:block; }
+      .doc-wrap { padding:0 56px 100px; max-width:860px; }
+
+      /* ── SECTION LABEL ── */
+      .section-label {
+        display:flex; align-items:center; gap:10px;
+        font-size:.58rem; text-transform:uppercase; letter-spacing:.18em;
+        color:var(--light-mid); font-weight:600;
+        margin-bottom:32px; padding-bottom:12px;
+        border-bottom:1px solid var(--border);
+      }
+      .section-label::before {
+        content:""; width:26px; height:1.5px;
+        background:var(--terracotta); border-radius:2px; flex-shrink:0;
+      }
+      .section-label.proto::before { background:var(--proto-blue); }
+
+      /* ── DOC BLOCK ── */
+      .doc-block { margin-bottom:68px; animation:fadeUp .45s ease both; }
+      .doc-block:nth-child(1){animation-delay:.04s}
+      .doc-block:nth-child(2){animation-delay:.09s}
+      .doc-block:nth-child(3){animation-delay:.14s}
+      .doc-block:nth-child(4){animation-delay:.19s}
+      .doc-block:nth-child(5){animation-delay:.24s}
+      .doc-block:nth-child(6){animation-delay:.29s}
+
+      .doc-block-header { display:flex; align-items:flex-start; gap:16px; margin-bottom:16px; }
+      .db-icon {
+        width:44px; height:44px; border-radius:12px;
+        background:var(--warm-white); border:1px solid var(--border);
+        display:flex; align-items:center; justify-content:center;
+        font-size:1.2rem; flex-shrink:0; margin-top:3px;
+      }
+      .db-icon.proto { background:rgba(74,111,165,.07); border-color:rgba(74,111,165,.2); }
+      .db-title { font-family:"Playfair Display",serif; font-size:1.42rem; font-weight:600; color:var(--charcoal); line-height:1.25; margin-bottom:4px; }
+      .db-sub { font-size:.72rem; color:var(--light-mid); text-transform:uppercase; letter-spacing:.1em; font-weight:500; }
+      .db-body { font-size:.93rem; color:var(--mid); line-height:1.75; margin-bottom:22px; }
+      .db-body strong { color:var(--charcoal); font-weight:500; }
+      .db-body em { color:var(--terracotta); font-style:normal; font-weight:500; }
+      .db-body code { font-family:"DM Mono",monospace; font-size:.82rem; background:var(--code-bg); border:1px solid var(--code-border); padding:1px 6px; border-radius:5px; color:var(--sage-dark); }
+
+      /* ── IMAGE WRAPPER ── */
+      .doc-img-wrap {
+        position:relative; width:100%; aspect-ratio:16/10;
+        margin-bottom:8px; border-radius:16px; overflow:hidden;
+        background:var(--warm-white); border:1.5px dashed var(--border2);
+      }
+      .doc-img-wrap::before {
+        content:""; position:absolute; inset:0;
+        background:repeating-linear-gradient(45deg,transparent,transparent 24px,rgba(122,158,126,.022) 24px,rgba(122,158,126,.022) 25px);
+        pointer-events:none;
+      }
+      .doc-img-wrap img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; border-radius:15px; }
+      .img-fallback { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; position:absolute; inset:0; pointer-events:none; }
+      .img-fallback .if-icon { font-size:1.7rem; opacity:.28; }
+      .img-fallback .if-name { font-family:"DM Mono",monospace; font-size:.68rem; color:var(--sage-dark); background:rgba(77,122,82,.1); border:1px solid rgba(77,122,82,.2); padding:3px 12px; border-radius:100px; letter-spacing:.04em; }
+      .img-fallback .if-dims { font-size:.58rem; color:var(--border2); font-family:"DM Mono",monospace; }
+      .doc-img-wrap img.loaded + .img-fallback { display:none; }
+      .img-caption { font-size:.71rem; color:var(--light-mid); font-style:italic; margin-bottom:0; }
+
+      /* ── FEATURE LIST ── */
+      .feature-list { list-style:none; display:flex; flex-direction:column; gap:10px; margin:18px 0 0; }
+      .feature-list li { display:flex; align-items:flex-start; gap:12px; font-size:.9rem; color:var(--mid); line-height:1.55; }
+      .feature-list li::before {
+        content:attr(data-icon); width:24px; height:24px;
+        background:rgba(77,122,82,.08); border:1px solid rgba(77,122,82,.15);
+        border-radius:7px; display:flex; align-items:center; justify-content:center;
+        font-size:.8rem; flex-shrink:0; margin-top:1px;
+      }
+      .feature-list li strong { color:var(--charcoal); font-weight:500; }
+
+      /* ── CALLOUT ── */
+      .callout { border-radius:13px; padding:16px 20px; font-size:.87rem; line-height:1.65; margin:18px 0; display:flex; gap:13px; align-items:flex-start; }
+      .callout-icon { font-size:1.15rem; flex-shrink:0; margin-top:1px; }
+      .callout.info { background:rgba(90,155,192,.08); border:1px solid rgba(90,155,192,.2); color:var(--sky-dark); }
+      .callout.warn { background:rgba(201,123,75,.08); border:1px solid rgba(201,123,75,.22); color:var(--warn); }
+      .callout.tip { background:rgba(77,122,82,.08); border:1px solid rgba(77,122,82,.18); color:var(--sage-dark); }
+      .callout.proto-note { background:rgba(74,111,165,.07); border:1px solid rgba(74,111,165,.2); color:var(--proto-blue); }
+      .callout p { color:var(--charcoal); font-weight:400; }
+      .callout strong { color:inherit; font-weight:600; }
+
+      /* ── STEP FLOW ── */
+      .step-flow { display:flex; flex-direction:column; gap:0; margin:22px 0; position:relative; }
+      .step-flow::before {
+        content:""; position:absolute; left:19px; top:40px; bottom:40px;
+        width:1.5px; background:linear-gradient(to bottom,var(--sage-light),transparent);
+      }
+      .step { display:flex; gap:16px; align-items:flex-start; padding:14px 0; }
+      .step-num {
+        width:38px; height:38px; border-radius:50%;
+        background:var(--warm-white); border:1.5px solid var(--border2);
+        display:flex; align-items:center; justify-content:center;
+        font-family:"Lora",serif; font-weight:700; font-size:.88rem;
+        color:var(--sage-dark); flex-shrink:0; position:relative; z-index:1;
+      }
+      .step-num.proto { color:var(--proto-blue); border-color:rgba(74,111,165,.35); background:rgba(74,111,165,.05); }
+      .step-title { font-weight:500; font-size:.93rem; color:var(--charcoal); margin-bottom:3px; }
+      .step-desc { font-size:.84rem; color:var(--mid); line-height:1.6; }
+      .step-desc code { font-family:"DM Mono",monospace; font-size:.78rem; background:var(--code-bg); border:1px solid var(--code-border); padding:1px 5px; border-radius:4px; color:var(--sage-dark); }
+
+      /* ── CODE BLOCK ── */
+      .code-block { background:var(--code-bg); border:1px solid var(--code-border); border-radius:13px; overflow:hidden; margin:18px 0; font-size:.82rem; }
+      .code-header { background:rgba(210,198,182,.3); border-bottom:1px solid var(--code-border); padding:7px 15px; display:flex; align-items:center; justify-content:space-between; }
+      .code-lang { font-family:"DM Mono",monospace; font-size:.62rem; text-transform:uppercase; letter-spacing:.1em; color:var(--light-mid); font-weight:500; }
+      .code-dots { display:flex; gap:5px; }
+      .code-dot { width:10px; height:10px; border-radius:50%; }
+      .code-dot:nth-child(1){background:#ff5f56}
+      .code-dot:nth-child(2){background:#ffbd2e}
+      .code-dot:nth-child(3){background:#27c93f}
+      pre { padding:16px 20px; overflow-x:auto; color:var(--charcoal); font-family:"DM Mono",monospace; line-height:1.7; font-size:.82rem; }
+      .kw{color:#4d7a52;font-weight:500} .str{color:#c97b4b} .cmt{color:#9aad9b;font-style:italic} .num{color:#5a9bc0} .fn{color:#7984f5} .prop{color:#b86a1a}
+
+      /* ── ARCH GRID ── */
+      .arch-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:22px 0; }
+      .arch-node { background:var(--warm-white); border:1px solid var(--border); border-radius:13px; padding:16px; text-align:center; position:relative; }
+      .arch-node::after { content:"→"; position:absolute; right:-14px; top:50%; transform:translateY(-50%); color:var(--border2); font-size:.88rem; }
+      .arch-node:last-child::after { display:none; }
+      .an-icon { font-size:1.5rem; margin-bottom:7px; }
+      .an-title { font-size:.8rem; font-weight:600; color:var(--charcoal); margin-bottom:3px; }
+      .an-desc { font-size:.67rem; color:var(--light-mid); line-height:1.4; }
+
+      /* ── PROP TABLE ── */
+      .prop-table-wrap { overflow-x:auto; border-radius:13px; border:1px solid var(--border); margin:18px 0; }
+      .prop-table { width:100%; border-collapse:collapse; font-size:.82rem; }
+      .prop-table th { text-align:left; font-size:.6rem; text-transform:uppercase; letter-spacing:.12em; color:var(--light-mid); font-weight:600; padding:8px 14px; border-bottom:1.5px solid var(--border); background:var(--warm-white2); }
+      .prop-table td { padding:10px 14px; border-bottom:1px solid var(--border); color:var(--mid); vertical-align:top; line-height:1.5; }
+      .prop-table tr:last-child td { border-bottom:none; }
+      .prop-table td:first-child { font-family:"DM Mono",monospace; font-size:.77rem; color:var(--sage-dark); width:30%; max-width:180px; word-break:break-word; }
+      .prop-table td:nth-child(2) { font-family:"DM Mono",monospace; font-size:.73rem; color:var(--terracotta); }
+      .prop-table td:nth-child(3) { color:var(--charcoal); }
+      .type-badge { display:inline-block; font-family:"DM Mono",monospace; font-size:.63rem; background:rgba(90,155,192,.1); color:var(--sky-dark); border:1px solid rgba(90,155,192,.25); padding:1px 7px; border-radius:4px; }
+
+      /* ── PILLS ── */
+      .pills { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+      .pill { font-size:.71rem; font-weight:500; padding:4px 12px; border-radius:100px; border:1px solid; }
+      .pill.green{background:rgba(77,140,82,.1);border-color:rgba(77,140,82,.3);color:var(--ok)}
+      .pill.orange{background:rgba(184,106,26,.1);border-color:rgba(184,106,26,.3);color:var(--warn)}
+      .pill.red{background:rgba(192,48,48,.1);border-color:rgba(192,48,48,.3);color:var(--danger)}
+      .pill.blue{background:rgba(74,111,165,.1);border-color:rgba(74,111,165,.3);color:var(--proto-blue)}
+
+      /* ── SIMULATOR CTA ── */
+      .simulator-cta {
+        margin:0 56px 52px;
+        background:linear-gradient(135deg,rgba(77,122,82,.07) 0%,rgba(201,123,75,.06) 100%);
+        border:1px solid rgba(77,122,82,.2); border-radius:18px;
+        padding:28px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+      }
+      .cta-eyebrow { font-size:.6rem; text-transform:uppercase; letter-spacing:.16em; color:var(--sage-dark); font-weight:600; margin-bottom:6px; }
+      .cta-title { font-family:"Playfair Display",serif; font-size:1.15rem; font-weight:600; color:var(--charcoal); line-height:1.3; margin-bottom:4px; }
+      .cta-desc { font-size:.82rem; color:var(--mid); }
+      .cta-btn {
+        display:inline-flex; align-items:center; gap:9px;
+        background:var(--sage-dark); color:#fff;
+        font-family:"DM Sans",sans-serif; font-size:.85rem; font-weight:500;
+        padding:12px 24px; border-radius:11px; text-decoration:none; border:none; cursor:pointer;
+        box-shadow:0 4px 18px rgba(77,122,82,.28); transition:all .2s; white-space:nowrap; flex-shrink:0;
+      }
+      .cta-btn:hover { background:#3d6342; transform:translateY(-1px); box-shadow:0 6px 22px rgba(77,122,82,.36); }
+      .cta-btn .cta-arrow { font-size:.75rem; opacity:.8; transition:transform .2s; }
+      .cta-btn:hover .cta-arrow { transform:translateX(3px); }
+
+      /* ── SECTION DIVIDER ── */
+      .section-divider { height:1px; background:linear-gradient(to right,transparent,var(--border),transparent); margin:52px 0; }
+
+      /* ── PROTO FLOW DIAGRAM ── */
+      .proto-flow-wrap {
+        margin:24px 0; border-radius:16px; overflow:hidden;
+        border:1.5px solid rgba(74,111,165,.18);
+        background:linear-gradient(135deg,rgba(74,111,165,.04) 0%,rgba(77,122,82,.03) 100%);
+      }
+      .proto-flow-header {
+        padding:10px 18px; border-bottom:1px solid rgba(74,111,165,.15);
+        display:flex; align-items:center; gap:10px;
+        background:rgba(74,111,165,.06);
+      }
+      .proto-flow-header span { font-size:.62rem; text-transform:uppercase; letter-spacing:.12em; color:var(--proto-blue); font-weight:600; font-family:"DM Mono",monospace; }
+      .proto-flow-svg-wrap { padding:24px 20px; overflow-x:auto; }
+
+      /* ── FILE BADGE ── */
+      .file-badge {
+        display:inline-flex; align-items:center; gap:5px;
+        font-family:"DM Mono",monospace; font-size:.67rem;
+        background:rgba(121,132,245,.1); border:1px solid rgba(121,132,245,.25);
+        color:#6670e0; padding:2px 9px; border-radius:5px; font-weight:500;
+      }
+
+      /* ── ENDPOINT CARD ── */
+      .endpoint-card { border-radius:12px; border:1px solid var(--border); overflow:hidden; margin:14px 0; }
+      .endpoint-card-header {
+        display:flex; align-items:center; gap:12px;
+        padding:12px 16px; background:var(--warm-white2); border-bottom:1px solid var(--border);
+      }
+      .method-badge {
+        font-family:"DM Mono",monospace; font-size:.68rem; font-weight:600;
+        padding:3px 10px; border-radius:6px; letter-spacing:.04em;
+      }
+      .method-badge.post { background:rgba(77,122,82,.12); color:var(--sage-dark); border:1px solid rgba(77,122,82,.25); }
+      .method-badge.get  { background:rgba(74,111,165,.12); color:var(--proto-blue); border:1px solid rgba(74,111,165,.25); }
+      .endpoint-path { font-family:"DM Mono",monospace; font-size:.82rem; color:var(--charcoal); font-weight:500; }
+      .endpoint-desc { font-size:.78rem; color:var(--mid); margin-left:auto; }
+      .endpoint-card-body { padding:14px 16px; }
+
+      /* ── HARDWARE SPECS GRID ── */
+      .hw-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:18px 0; }
+      .hw-card {
+        border-radius:12px; border:1px solid var(--border);
+        padding:16px; background:var(--warm-white);
+        display:flex; gap:12px; align-items:flex-start;
+      }
+      .hw-icon { font-size:1.4rem; flex-shrink:0; margin-top:2px; }
+      .hw-name { font-weight:600; font-size:.87rem; color:var(--charcoal); margin-bottom:3px; }
+      .hw-desc { font-size:.76rem; color:var(--mid); line-height:1.5; }
+      .hw-spec { font-family:"DM Mono",monospace; font-size:.67rem; color:var(--proto-blue); margin-top:4px; }
+
+      /* ── GH LINK ── */
+      .gh-link { display:inline-flex; align-items:center; gap:9px; font-size:.83rem; font-weight:500; color:var(--charcoal); text-decoration:none; background:var(--warm-white); border:1px solid var(--border); padding:9px 18px; border-radius:10px; transition:all .18s; }
+      .gh-link:hover { border-color:var(--border2); background:var(--warm-white2); box-shadow:0 2px 10px rgba(45,58,46,.08); }
+
+      /* ── CONFIG TABLE ── */
+      .config-table-wrap { overflow-x:auto; border-radius:13px; border:1px solid var(--border); margin:18px 0; }
+      .config-table { width:100%; border-collapse:collapse; font-size:.82rem; }
+      .config-table th { text-align:left; font-size:.6rem; text-transform:uppercase; letter-spacing:.12em; color:var(--light-mid); font-weight:600; padding:8px 14px; border-bottom:1.5px solid var(--border); background:var(--warm-white2); }
+      .config-table td { padding:10px 14px; border-bottom:1px solid var(--border); color:var(--mid); vertical-align:top; line-height:1.5; }
+      .config-table tr:last-child td { border-bottom:none; }
+      .config-table td:first-child { font-family:"DM Mono",monospace; font-size:.77rem; color:var(--sage-dark); }
+      .config-table td:nth-child(2) { font-family:"DM Mono",monospace; font-size:.77rem; color:var(--terracotta); }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+      @keyframes heartFloat {
+        0%{opacity:1;transform:translateY(0) scale(1) rotate(var(--rot))}
+        15%{opacity:1;transform:translateY(-18px) scale(1.15) rotate(var(--rot))}
+        80%{opacity:.7}
+        100%{opacity:0;transform:translateY(var(--travel)) scale(.6) rotate(var(--rot2))}
+      }
+      .heart-particle { position:fixed; pointer-events:none; z-index:99999; font-size:1.1rem; line-height:1; animation:heartFloat var(--dur) ease-out forwards; user-select:none; }
+      #neko-cat { transition:transform .15s ease; }
+      #neko-cat:active { transform:scale(.9); }
+
+      /* ── FOOTER ── */
+      footer {
+        margin-left:var(--sidebar-w); border-top:1px solid var(--border);
+        padding:26px 56px; font-size:.74rem; color:var(--light-mid);
+        position:relative; display:flex; align-items:center;
+      }
+      .footer-text { padding-right:100px; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      footer strong { color:var(--sage-dark); font-weight:500; }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width:960px) {
+        .doc-wrap{padding:0 32px 80px}
+        .hero{padding:40px 32px 0}
+        .mode-switcher-wrap{padding:24px 32px 36px}
+        .simulator-cta{margin:0 32px 40px}
+        .hw-grid{grid-template-columns:1fr}
+      }
+      @media (max-width:720px) {
+        :root{--sidebar-w:0px}
+        .nav-menu-btn{display:flex;align-items:center;justify-content:center}
+        .doc-sidebar{width:260px;transform:translateX(-100%);transition:transform .28s ease}
+        .doc-sidebar.open{transform:translateX(0);box-shadow:4px 0 32px rgba(45,58,46,.18)}
+        .main-content{margin-left:0}
+        .hero{padding:32px 20px 0}
+        .hero h1{font-size:2rem}
+        .hero-sub{font-size:.9rem}
+        .mode-switcher-wrap{padding:20px 20px 28px}
+        .mode-switcher{flex-direction:column;width:100%}
+        .mode-btn{width:100%;justify-content:flex-start;padding:10px 16px}
+        .simulator-cta{margin:0 20px 36px;padding:20px;flex-direction:column;align-items:flex-start;gap:16px}
+        .cta-btn{width:100%;justify-content:center}
+        .doc-wrap{padding:0 20px 80px}
+        .arch-grid{grid-template-columns:1fr}
+        .arch-node::after{display:none}
+        .hw-grid{grid-template-columns:1fr}
+        pre{white-space:pre-wrap;word-break:break-all}
+        footer{margin-left:0;padding:20px}
+        .footer-text{padding-right:80px;font-size:.68rem}
+        #neko-cat{height:50px}
+        .nav-gh-label{display:none}
+        .prop-table td { padding:8px 10px; font-size:.78rem; }
+        .prop-table th { padding:6px 10px; }
+        .prop-table td:first-child { font-size:.72rem; width:35%; max-width:130px; }
+        .prop-table td:nth-child(2) { font-size:.7rem; }
+        .prop-table-wrap { border-radius:9px; }
+        .config-table td { padding:8px 10px; font-size:.78rem; }
+        .config-table th { padding:6px 10px; }
+      }
+      @media (max-width:400px) {
+        .hero h1{font-size:1.7rem}
+        .db-title{font-size:1.08rem}
+        .mode-btn .mb-desc{display:none}
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- TOP NAV -->
+    <nav class="topnav">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="nav-menu-btn" onclick="toggleSidebar()" aria-label="Menú">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <a class="nav-brand" href="/">
+          <span class="nav-logo">Eco<span>Sentinel</span> Feeder</span>
+        </a>
+      </div>
+      <div class="nav-right">
+        <a href="https://github.com/WilliamsACE/EcoSentinelFeeder" class="gh-link" target="_blank" rel="noopener" style="padding:6px 14px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span class="nav-gh-label">GitHub</span>
+        </a>
+        <span class="nav-version">v1.0</span>
+        <span class="nav-badge">Docs</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="shell">
+      <!-- SIDEBAR -->
+      <aside class="doc-sidebar" id="doc-sidebar">
+
+        <!-- Usuario -->
+        <div id="sb-user">
+          <div class="sb-section">
+            <span class="sb-section-label">Guía de usuario</span>
+            <a class="sb-link active" data-target="intro" onclick="scrollToBlock('intro',this)"><span class="sb-icon">🌿</span>Introducción</a>
+            <a class="sb-link" data-target="mapa-sec" onclick="scrollToBlock('mapa-sec',this)"><span class="sb-icon">🗺️</span>Mapa de dispositivos</a>
+            <a class="sb-link" data-target="feeders-sec" onclick="scrollToBlock('feeders-sec',this)"><span class="sb-icon">📡</span>Todos los feeders</a>
+            <a class="sb-link" data-target="historial-sec" onclick="scrollToBlock('historial-sec',this)"><span class="sb-icon">📋</span>Historial de eventos</a>
+            <a class="sb-link" data-target="alertas-sec" onclick="scrollToBlock('alertas-sec',this)"><span class="sb-icon">🔔</span>Centro de alertas</a>
+            <a class="sb-link" data-target="config-sec" onclick="scrollToBlock('config-sec',this)"><span class="sb-icon">⚙️</span>Configuración</a>
+          </div>
+        </div>
+
+        <!-- Prototipo -->
+        <div style="display:none" id="sb-proto">
+          <div class="sb-section">
+            <span class="sb-section-label">Prototipo físico</span>
+            <a class="sb-link active" data-target="proto-overview" onclick="scrollToBlock('proto-overview',this)"><span class="sb-icon">🔬</span>Visión general</a>
+            <a class="sb-link" data-target="proto-hardware" onclick="scrollToBlock('proto-hardware',this)"><span class="sb-icon">🖥️</span>Hardware</a>
+            <a class="sb-link" data-target="proto-config" onclick="scrollToBlock('proto-config',this)"><span class="sb-icon">⚙️</span>Configuración dinámica</a>
+            <a class="sb-link" data-target="proto-loop" onclick="scrollToBlock('proto-loop',this)"><span class="sb-icon">🔁</span>Loop principal</a>
+            <a class="sb-link" data-target="proto-deteccion" onclick="scrollToBlock('proto-deteccion',this)"><span class="sb-icon">👁️</span>Detector MOG2</a>
+            <a class="sb-link" data-target="proto-yolo" onclick="scrollToBlock('proto-yolo',this)"><span class="sb-icon">🤖</span>YOLO Worker</a>
+            <a class="sb-link" data-target="proto-dispenser" onclick="scrollToBlock('proto-dispenser',this)"><span class="sb-icon">🔧</span>Dispensador</a>
+            <a class="sb-link" data-target="proto-api" onclick="scrollToBlock('proto-api',this)"><span class="sb-icon">🔗</span>API local (FastAPI)</a>
+            <a class="sb-link" data-target="proto-scripts" onclick="scrollToBlock('proto-scripts',this)"><span class="sb-icon">📁</span>Scripts del sistema</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="main-content">
+        <!-- HERO -->
+        <header class="hero">
+          <div class="hero-top">
+            <div class="hero-eyebrow">Documentación oficial</div>
+            <div class="hero-version-badge">Versión 1.0 del sistema</div>
+          </div>
+          <h1>Panel de control<br><em>EcoSentinel Feeder</em></h1>
+          <p class="hero-sub">Documentación completa del ecosistema: desde la interfaz web hasta el prototipo físico con Raspberry Pi. Elige tu perfil para ver la sección correcta.</p>
+        </header>
+
+        <!-- MODE SWITCHER (2 tabs) -->
+        <div class="mode-switcher-wrap">
+          <div class="mode-switcher">
+            <button class="mode-btn active" onclick="switchMode('user')" id="btn-user">
+              <span class="mb-icon">👤</span>
+              <div><span class="mb-label">Usuario</span><span class="mb-desc">Guía visual paso a paso</span></div>
+            </button>
+            <button class="mode-btn" onclick="switchMode('proto')" id="btn-proto">
+              <span class="mb-icon">🔬</span>
+              <div><span class="mb-label">Prototipo</span><span class="mb-desc">Para developers</span></div>
+            </button>
+          </div>
+        </div>
+
+        <!-- SIMULATOR CTA -->
+        <div class="simulator-cta">
+          <div class="cta-left">
+            <div class="cta-eyebrow">Modo interactivo</div>
+            <div class="cta-title">¿Quieres ver el panel en acción?</div>
+            <div class="cta-desc">Prueba el simulador con datos en vivo — sin necesidad de un feeder físico.</div>
+          </div>
+          <a href="/dashboardSimulator" class="cta-btn">Abrir simulador <span class="cta-arrow">→</span></a>
+        </div>
+
+        <!-- ══════════════════════════ PANEL USUARIO ══════════════════════════ -->
+        <div id="panel-user" class="panel active">
+          <div class="doc-wrap">
+            <div class="section-label">Introducción · Para usuarios</div>
+
+            <div class="doc-block" id="intro">
+              <div class="doc-block-header">
+                <div class="db-icon">🌿</div>
+                <div class="db-meta">
+                  <div class="db-title">¿Qué es este panel?</div>
+                  <div class="db-sub">Visión general del sistema · v1.0</div>
+                </div>
+              </div>
+              <p class="db-body">Este panel es la <strong>extensión web del dispositivo EcoSentinel Feeder</strong> — el comedero físico inteligente instalado en la ciudad. La pantalla de inicio muestra el estado global de la red en <strong>4 tarjetas KPI</strong>:</p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <tbody>
+                    <tr><td>🐾 Animales detectados hoy</td><td>Visitas de perros y gatos en el día.</td></tr>
+                    <tr><td>⚖️ Comida dispensada</td><td>Kilogramos totales repartidos en todos los feeders.</td></tr>
+                    <tr><td>📡 Feeders en línea</td><td>Comederos activos y reportando.</td></tr>
+                    <tr><td>⚠️ Alertas activas</td><td>Feeders con batería baja, comida agotada o sin conexión.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="db-body" style="margin-top:14px">Debajo encontrarás un <strong>mapa mini</strong> y una tabla con los últimos 5 eventos. Haz clic en cualquier fila para ver el detalle completo.</p>
+              <div class="doc-img-wrap">
+                <img src="{% static 'images/docs/dashboard-resumen.png' %}" alt="Resumen general" onload="this.classList.add('loaded')" onerror="this.style.display='none'"/>
+                <div class="img-fallback"><span class="if-icon">📊</span><span class="if-name">dashboard-resumen.png</span><span class="if-dims">1280 × 800 px</span></div>
+              </div>
+              <p class="img-caption">Pantalla de inicio con KPIs, mapa mini y últimos eventos detectados</p>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label">Secciones del panel</div>
+
+            <div class="doc-block" id="mapa-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">🗺️</div>
+                <div class="db-meta"><div class="db-title">Mapa de dispositivos</div><div class="db-sub">Sección · Mapa</div></div>
+              </div>
+              <p class="db-body">Muestra la <strong>ubicación de cada feeder</strong> en un mapa interactivo. Los colores de los pins indican el estado:</p>
+              <div class="pills"><span class="pill green">🟢 En línea</span><span class="pill orange">🟡 Alerta</span><span class="pill red">🔴 Sin conexión</span></div>
+              <p class="db-body" style="margin-top:14px">Haz clic en un pin para ver una tarjeta con el nombre, última sincronización y niveles actuales del feeder.</p>
+              <div class="doc-img-wrap">
+                <img src="{% static 'images/docs/dashboard-mapa.png' %}" alt="Mapa de dispositivos" onload="this.classList.add('loaded')" onerror="this.style.display='none'"/>
+                <div class="img-fallback"><span class="if-icon">🗺️</span><span class="if-name">dashboard-mapa.png</span><span class="if-dims">1280 × 800 px</span></div>
+              </div>
+              <p class="img-caption">Mapa con popup abierto mostrando el estado de un feeder</p>
+            </div>
+
+            <div class="doc-block" id="feeders-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">📡</div>
+                <div class="db-meta"><div class="db-title">Todos los feeders</div><div class="db-sub">Sección · Feeders</div></div>
+              </div>
+              <p class="db-body">Tarjetas individuales por cada feeder físico, con <strong>4 gauges circulares</strong> en tiempo real:</p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <tbody>
+                    <tr><td>🔋 Batería</td><td>Se vuelve rojo al bajar del 20 %.</td></tr>
+                    <tr><td>🦴 Dog food</td><td>Nivel de comida para perros.</td></tr>
+                    <tr><td>🐟 Cat food</td><td>Nivel de comida para gatos.</td></tr>
+                    <tr><td>💧 Agua</td><td>Nivel del depósito.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="db-body" style="margin-top:14px">Cada tarjeta también muestra visitas de animales del día y la <strong>precisión del modelo de IA</strong>.</p>
+              <div class="doc-img-wrap">
+                <img src="{% static 'images/docs/dashboard-feeders.png' %}" alt="Tarjetas feeders" onload="this.classList.add('loaded')" onerror="this.style.display='none'"/>
+                <div class="img-fallback"><span class="if-icon">📡</span><span class="if-name">dashboard-feeders.png</span><span class="if-dims">1280 × 800 px</span></div>
+              </div>
+              <p class="img-caption">Cada feeder tiene su propia tarjeta con gauges SVG animados en tiempo real</p>
+            </div>
+
+            <div class="doc-block" id="historial-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">📋</div>
+                <div class="db-meta"><div class="db-title">Historial de eventos</div><div class="db-sub">Sección · Historial</div></div>
+              </div>
+              <p class="db-body">Registro completo de cada detección hecha por el feeder físico:</p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <tbody>
+                    <tr><td>🕐 Hora</td><td>Momento de la detección.</td></tr>
+                    <tr><td>📡 Feeder</td><td>Qué unidad lo registró.</td></tr>
+                    <tr><td>🐾 Especie</td><td>Perro 🐶 o gato 🐱 identificados por IA.</td></tr>
+                    <tr><td>⚖️ Cantidad</td><td>Gramos dispensados.</td></tr>
+                    <tr><td>🎯 Confianza IA</td><td>Certeza del modelo en esa detección.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="db-body" style="margin-top:14px">Clic en una fila para <strong>expandir el detalle</strong>, agregar foto o eliminar el registro.</p>
+              <div class="doc-img-wrap">
+                <img src="{% static 'images/docs/dashboard-historial.png' %}" alt="Historial de eventos" onload="this.classList.add('loaded')" onerror="this.style.display='none'"/>
+                <div class="img-fallback"><span class="if-icon">📋</span><span class="if-name">dashboard-historial.png</span><span class="if-dims">1280 × 800 px</span></div>
+              </div>
+              <p class="img-caption">Vista del historial completo; clic en una fila muestra el detalle inline</p>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label">Alertas y configuración</div>
+
+            <div class="doc-block" id="alertas-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">🔔</div>
+                <div class="db-meta"><div class="db-title">Centro de alertas</div><div class="db-sub">Sección · Alertas</div></div>
+              </div>
+              <p class="db-body">Cuando un feeder entra en estado crítico, el panel genera una alerta automática. La <strong>campana</strong> en la barra superior muestra un punto rojo si hay alertas pendientes.</p>
+              <div class="callout warn"><span class="callout-icon">⚠️</span><p>Se activan cuando batería, comida o agua caen por debajo del <strong>20 %</strong>, o cuando un feeder pierde la conexión.</p></div>
+              <ul class="feature-list">
+                <li data-icon="🔋">Batería crítica.</li>
+                <li data-icon="🦴">Comida agotada.</li>
+                <li data-icon="💧">Agua baja.</li>
+                <li data-icon="📶">Sin conexión.</li>
+              </ul>
+              <div class="doc-img-wrap">
+                <img src="{% static 'images/docs/dashboard-alertas.png' %}" alt="Centro de alertas" onload="this.classList.add('loaded')" onerror="this.style.display='none'"/>
+                <div class="img-fallback"><span class="if-icon">🔔</span><span class="if-name">dashboard-alertas.png</span><span class="if-dims">1280 × 800 px</span></div>
+              </div>
+              <p class="img-caption">Centro de alertas con todas las notificaciones pendientes agrupadas por tipo</p>
+            </div>
+
+            <div class="doc-block" id="config-sec">
+              <div class="doc-block-header">
+                <div class="db-icon">⚙️</div>
+                <div class="db-meta"><div class="db-title">Configuración y temas</div><div class="db-sub">Sección · Configuración</div></div>
+              </div>
+              <p class="db-body">Gestiona la red de feeders y personaliza la apariencia del panel. El <strong>cambio de tema visual</strong> tiene 4 opciones:</p>
+              <ul class="feature-list">
+                <li data-icon="☀️"><strong>Claro</strong> — paleta crema, ideal para uso diurno.</li>
+                <li data-icon="🌙"><strong>Oscuro</strong> — estilo Discord, menos fatiga de noche.</li>
+                <li data-icon="🌆"><strong>Dim</strong> — término medio.</li>
+                <li data-icon="🔄"><strong>Sistema</strong> — sigue la preferencia de tu OS automáticamente.</li>
+              </ul>
+              <div class="callout tip"><span class="callout-icon">💡</span><p>La preferencia se guarda en el navegador y se aplica al instante en cada visita.</p></div>
+              <div class="doc-img-wrap">
+                <img src="{% static 'images/docs/dashboard-configuracion.png' %}" alt="Configuración" onload="this.classList.add('loaded')" onerror="this.style.display='none'"/>
+                <div class="img-fallback"><span class="if-icon">⚙️</span><span class="if-name">dashboard-configuracion.png</span><span class="if-dims">1280 × 800 px</span></div>
+              </div>
+              <p class="img-caption">Sección de configuración con el selector de los 4 temas disponibles</p>
+            </div>
+          </div>
+        </div><!-- /panel-user -->
+
+        <!-- ══════════════════════════ PANEL PROTOTIPO ══════════════════════════ -->
+        <div id="panel-proto" class="panel">
+          <div class="doc-wrap">
+            <div class="section-label proto">Arquitectura del sistema físico</div>
+
+            <!-- VISIÓN GENERAL -->
+            <div class="doc-block" id="proto-overview">
+              <div class="doc-block-header">
+                <div class="db-icon proto">🔬</div>
+                <div class="db-meta">
+                  <div class="db-title">Visión general del prototipo</div>
+                  <div class="db-sub">Raspberry Pi · IA · Dispensador</div>
+                </div>
+              </div>
+              <p class="db-body">El prototipo físico es la <strong>unidad de campo</strong> del sistema EcoSentinel. Corre íntegramente en una Raspberry Pi e integra un sensor PIR, una cámara, detección de movimiento por MOG2, clasificación de especie con YOLO y un dispensador de comida. La arquitectura combina <strong>dos procesos separados</strong> (proceso principal + YOLO worker) con un <strong>hilo de API local</strong> para configuración en tiempo real.</p>
+
+              <div class="callout proto-note"><span class="callout-icon">⚙️</span><p>Todos los parámetros del sistema (confianza, cooldown, fotos por evento, etc.) se gestionan a través de <strong><code>config.py</code></strong> con acceso thread-safe. La FastAPI local en el puerto 8000 permite modificarlos sin reiniciar el sistema.</p></div>
+
+              <!-- Diagrama de arquitectura SVG actualizado -->
+              <div class="doc-img-wrap" style="aspect-ratio:16/7">
+                <img src="{% static 'images/docs/proto-arquitectura.png' %}" alt="Arquitectura de procesos" onload="this.classList.add('loaded')" onerror="this.style.display='none'"/>
+                <div class="img-fallback"><span class="if-icon">🗺️</span><span class="if-name">proto-arquitectura.png</span><span class="if-dims">Diagrama de arquitectura de procesos</span></div>
+              </div>
+              <p class="img-caption">Arquitectura de procesos — main_pi.py · detector.py · yolo_worker.py · dispenser.py</p>
+
+              <div class="prop-table-wrap" style="margin-top:18px">
+                <table class="prop-table">
+                  <thead><tr><th>Característica</th><th>Detalle</th></tr></thead>
+                  <tbody>
+                    <tr><td>🔀 Dos procesos separados</td><td>El proceso principal (con su hilo FastAPI) y el YOLO worker se comunican exclusivamente por una <code>multiprocessing.Queue</code>.</td></tr>
+                    <tr><td>⏱️ Cooldown configurable</td><td>Por defecto 5 s entre eventos, controlado en el loop principal para evitar procesamiento redundante.</td></tr>
+                    <tr><td>📸 Almacenamiento de fotos</td><td>Los eventos confirmados se guardan en <code>events_photos/</code>. Las imágenes temporales se eliminan tras la inferencia.</td></tr>
+                    <tr><td>⚙️ config.py centralizado</td><td>Fuente única de verdad para todos los parámetros del sistema, accesible con bloqueo thread-safe desde cualquier proceso.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label proto">Hardware del sistema</div>
+
+            <!-- HARDWARE -->
+            <div class="doc-block" id="proto-hardware">
+              <div class="doc-block-header">
+                <div class="db-icon proto">🖥️</div>
+                <div class="db-meta"><div class="db-title">Componentes de hardware</div><div class="db-sub">Raspberry Pi · Sensores · Actuadores</div></div>
+              </div>
+              <p class="db-body">El prototipo se construye alrededor de una <strong>Raspberry Pi 4</strong> como unidad de cómputo central. La cámara corre a <strong>320×240 px</strong> con backend V4L2 (Linux) para reducir la carga de CPU.</p>
+              <div class="hw-grid">
+                <div class="hw-card">
+                  <div class="hw-icon">🖥️</div>
+                  <div>
+                    <div class="hw-name">Raspberry Pi 4</div>
+                    <div class="hw-desc">Unidad central. Ejecuta el proceso principal, el YOLO worker y el hilo FastAPI simultáneamente.</div>
+                    <div class="hw-spec">main_pi.py · Process + Thread</div>
+                  </div>
+                </div>
+                <div class="hw-card">
+                  <div class="hw-icon">📷</div>
+                  <div>
+                    <div class="hw-name">Módulo de cámara</div>
+                    <div class="hw-desc">320×240 px @30 fps vía V4L2. Captura 4 fotos por evento, vaciando el buffer con 3 <code>cap.grab()</code> previos a cada captura.</div>
+                    <div class="hw-spec">OpenCV · CAP_V4L2 o CAP_ANY</div>
+                  </div>
+                </div>
+                <div class="hw-card">
+                  <div class="hw-icon">🔴</div>
+                  <div>
+                    <div class="hw-name">Sensor PIR</div>
+                    <div class="hw-desc">Conectado al pin GPIO 17 (BCM). El loop principal lo lee cada 50 ms. Al detectar HIGH se lanza el pipeline.</div>
+                    <div class="hw-spec">GPIO 17 · POLL_INTERVAL 50 ms</div>
+                  </div>
+                </div>
+                <div class="hw-card">
+                  <div class="hw-icon">⚙️</div>
+                  <div>
+                    <div class="hw-name">Dispensador</div>
+                    <div class="hw-desc">Se activa desde <code>requestDispenser(label)</code> cuando el YOLO worker confirma la especie. Controla el servo y la cantidad de comida a dispensar.</div>
+                    <div class="hw-spec">dispenser.py · requestDispenser(label)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label proto">Configuración del sistema</div>
+
+            <!-- CONFIG.PY -->
+            <div class="doc-block" id="proto-config">
+              <div class="doc-block-header">
+                <div class="db-icon proto">⚙️</div>
+                <div class="db-meta">
+                  <div class="db-title">Configuración dinámica — config.py</div>
+                  <div class="db-sub">Thread-safe · Mutable en tiempo de ejecución</div>
+                </div>
+              </div>
+              <p class="db-body"><span class="file-badge">config.py</span> centraliza todos los parámetros operativos del sistema en un diccionario protegido con <code>threading.Lock</code>. Tanto el proceso principal como el YOLO worker y la API local pueden leer y escribir sin race conditions.</p>
+
+              <div class="config-table-wrap">
+                <table class="config-table">
+                  <thead><tr><th>Parámetro</th><th>Valor por defecto</th><th>Descripción</th></tr></thead>
+                  <tbody>
+                    <tr><td>min_confidence</td><td>0.5</td><td>Umbral mínimo de confianza YOLO para considerar una detección válida.</td></tr>
+                    <tr><td>min_confirmations</td><td>2</td><td>Número mínimo de fotos que deben confirmar la especie para activar el dispensador.</td></tr>
+                    <tr><td>min_contour_area</td><td>3000</td><td>Área mínima de contorno MOG2 en px² para considerar que hay movimiento real.</td></tr>
+                    <tr><td>cooldown</td><td>5.0 s</td><td>Tiempo de espera entre eventos, evita procesamiento redundante del mismo animal.</td></tr>
+                    <tr><td>capture_interval</td><td>0.5 s</td><td>Intervalo entre capturas de fotos dentro de un mismo evento.</td></tr>
+                    <tr><td>total_photos</td><td>4</td><td>Número de fotos tomadas por evento para enviar al YOLO worker.</td></tr>
+                    <tr><td>debug</td><td>False</td><td>Muestra la vista en vivo de la cámara (requiere pantalla conectada a la Pi).</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Python · config.py</span></div>
+                <pre><span class="kw">import</span> threading
+
+_lock = threading.<span class="fn">Lock</span>()
+_cfg  = {
+    <span class="str">"min_confidence"</span>:    <span class="num">0.5</span>,
+    <span class="str">"min_confirmations"</span>: <span class="num">2</span>,
+    <span class="str">"min_contour_area"</span>:  <span class="num">3000</span>,
+    <span class="str">"cooldown"</span>:          <span class="num">5.0</span>,
+    <span class="str">"capture_interval"</span>:  <span class="num">0.5</span>,
+    <span class="str">"total_photos"</span>:      <span class="num">4</span>,
+    <span class="str">"debug"</span>:             <span class="kw">False</span>,
+}
+
+<span class="kw">def</span> <span class="fn">get</span>(key):
+    <span class="kw">with</span> _lock: <span class="kw">return</span> _cfg[key]
+
+<span class="kw">def</span> <span class="fn">update</span>(values):
+    <span class="kw">with</span> _lock:
+        <span class="kw">for</span> k, v <span class="kw">in</span> values.<span class="fn">items</span>():
+            <span class="kw">if</span> k <span class="kw">in</span> _cfg: _cfg[k] = v</pre>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label proto">Flujo de software</div>
+
+            <!-- LOOP PRINCIPAL -->
+            <div class="doc-block" id="proto-loop">
+              <div class="doc-block-header">
+                <div class="db-icon proto">🔁</div>
+                <div class="db-meta">
+                  <div class="db-title">Loop principal — main_pi.py</div>
+                  <div class="db-sub">PIR · Cooldown · Debug mode · event_id</div>
+                </div>
+              </div>
+              <p class="db-body">El proceso <span class="file-badge">main_pi.py</span> es el punto de entrada. Al arrancar lanza el <strong>hilo FastAPI</strong> (daemon) y el <strong>proceso YOLO worker</strong>, abre la cámara y entra en el loop principal que poll-ea el sensor PIR cada <strong>50 ms</strong>.</p>
+
+              <div class="step-flow">
+                <div class="step"><div class="step-num proto">1</div><div class="step-content"><div class="step-title">Iniciar FastAPI como hilo daemon</div><div class="step-desc"><code>uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)</code> en un <code>Thread(daemon=True)</code>. Disponible en <code>/docs</code>.</div></div></div>
+                <div class="step"><div class="step-num proto">2</div><div class="step-content"><div class="step-title">Iniciar YOLO Worker como proceso separado</div><div class="step-desc"><code>Process(target=yolo_worker, args=(input_q,), daemon=True).start()</code>. Comparte la Queue con el proceso principal.</div></div></div>
+                <div class="step"><div class="step-num proto">3</div><div class="step-content"><div class="step-title">Abrir cámara (V4L2 → auto)</div><div class="step-desc">Prueba <code>CAP_V4L2</code> y luego <code>CAP_ANY</code>. Fija resolución a 320×240 @30 fps para aliviar la CPU de la Pi.</div></div></div>
+                <div class="step"><div class="step-num proto">4</div><div class="step-content"><div class="step-title">Loop: modo debug</div><div class="step-desc">Si <code>config.get("debug")</code> es True, muestra la cámara en vivo con <code>cv2.imshow</code>. Si no hay display disponible, desactiva debug automáticamente y continúa.</div></div></div>
+                <div class="step"><div class="step-num proto">5</div><div class="step-content"><div class="step-title">Loop: verificar cooldown</div><div class="step-desc">Si <code>cooldown - (now - last_event_time) &gt; 0</code> → sleep 50 ms y continuar. Evita eventos repetidos del mismo animal.</div></div></div>
+                <div class="step"><div class="step-num proto">6</div><div class="step-content"><div class="step-title">Loop: leer PIR</div><div class="step-desc">Si <code>GPIO.input(PIR_PIN) != HIGH</code> → sleep 50 ms y continuar.</div></div></div>
+                <div class="step"><div class="step-num proto">7</div><div class="step-content"><div class="step-title">Sensor activo → llamar detect()</div><div class="step-desc">Registra <code>event_start = time.time()</code>, llama <code>detect(cap, input_q, event_id, event_start)</code>. Si retorna <code>True</code> incrementa <code>event_id</code>.</div></div></div>
+              </div>
+
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Python · main_pi.py (loop principal)</span></div>
+                <pre><span class="cmt"># Al iniciar:</span>
+api_thread = threading.<span class="fn">Thread</span>(
+    target=<span class="kw">lambda</span>: uvicorn.<span class="fn">run</span>(fastapi_app, host=<span class="str">"0.0.0.0"</span>, port=<span class="num">8000</span>),
+    daemon=<span class="kw">True</span>
+)
+api_thread.<span class="fn">start</span>()
+
+input_q = <span class="fn">Queue</span>()
+worker  = <span class="fn">Process</span>(target=yolo_worker, args=(input_q,), daemon=<span class="kw">True</span>)
+worker.<span class="fn">start</span>()
+
+event_id        = <span class="num">0</span>
+last_event_time = <span class="num">0.0</span>
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    now = time.<span class="fn">time</span>()
+
+    <span class="kw">if</span> config.<span class="fn">get</span>(<span class="str">"debug"</span>):
+        <span class="cmt"># mostrar cámara en vivo; skip resto del loop</span>
+        ...
+        <span class="kw">continue</span>
+
+    <span class="kw">if</span> config.<span class="fn">get</span>(<span class="str">"cooldown"</span>) - (now - last_event_time) > <span class="num">0</span>:
+        time.<span class="fn">sleep</span>(POLL_INTERVAL)
+        <span class="kw">continue</span>
+
+    <span class="kw">if not</span> <span class="fn">sensor_triggered</span>():   <span class="cmt"># GPIO.input(PIR_PIN) == HIGH</span>
+        time.<span class="fn">sleep</span>(POLL_INTERVAL)
+        <span class="kw">continue</span>
+
+    event_start     = time.<span class="fn">time</span>()
+    last_event_time = event_start
+    triggered = <span class="fn">detect</span>(cap, input_q, event_id, event_start)
+    <span class="kw">if</span> triggered:
+        event_id += <span class="num">1</span></pre>
+              </div>
+            </div>
+
+            <!-- DETECTOR -->
+            <div class="doc-block" id="proto-deteccion">
+              <div class="doc-block-header">
+                <div class="db-icon proto">👁️</div>
+                <div class="db-meta">
+                  <div class="db-title">Detector de movimiento — detector.py</div>
+                  <div class="db-sub">MOG2 · Contornos · Captura con flush de buffer</div>
+                </div>
+              </div>
+              <p class="db-body">El módulo <span class="file-badge">detector.py</span> mantiene un <strong>sustractor de fondo MOG2 global</strong> (<code>history=500, varThreshold=50</code>) que persiste entre llamadas. La función <code>detect()</code> analiza un frame, filtra contornos y si hay movimiento real captura las fotos para el YOLO worker.</p>
+
+              <div class="callout tip"><span class="callout-icon">💡</span><p>Antes de cada captura se ejecutan <strong>3 <code>cap.grab()</code></strong> para vaciar el buffer de la cámara y obtener el frame más reciente. <code>grab()</code> es mucho más rápido que <code>read()</code> porque no decodifica el frame.</p></div>
+
+              <div class="step-flow">
+                <div class="step"><div class="step-num proto">1</div><div class="step-content"><div class="step-title">Leer frame y aplicar MOG2</div><div class="step-desc"><code>cap.read()</code> → <code>_back_sub.apply(frame)</code> → máscara de primer plano <code>fg_mask</code>.</div></div></div>
+                <div class="step"><div class="step-num proto">2</div><div class="step-content"><div class="step-title">Encontrar contornos</div><div class="step-desc"><code>cv2.findContours(fg_mask, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)</code>. Calcula el área de cada contorno.</div></div></div>
+                <div class="step"><div class="step-num proto">3</div><div class="step-content"><div class="step-title">Filtrar por área mínima</div><div class="step-desc">Solo los contornos con área &gt; <code>config.get("min_contour_area")</code> (3000 px²) son significativos. Sin ellos → <code>return False</code>.</div></div></div>
+                <div class="step"><div class="step-num proto">4</div><div class="step-content"><div class="step-title">Capturar total_photos fotos</div><div class="step-desc">Por cada foto: 3× <code>cap.grab()</code> + <code>cap.retrieve()</code>, guarda en <code>tempfile.mktemp(".jpg")</code>, pone la tupla en la Queue. Espera <code>capture_interval</code> entre fotos.</div></div></div>
+                <div class="step"><div class="step-num proto">5</div><div class="step-content"><div class="step-title">Retornar True</div><div class="step-desc">El proceso principal registra el evento como válido e incrementa <code>event_id</code>.</div></div></div>
+              </div>
+
+
+            </div>
+
+            <!-- YOLO WORKER -->
+            <div class="doc-block" id="proto-yolo">
+              <div class="doc-block-header">
+                <div class="db-icon proto">🤖</div>
+                <div class="db-meta">
+                  <div class="db-title">YOLO Worker — yolo_worker.py</div>
+                  <div class="db-sub">YOLOv5n · Doble pasada · Early exit · Confirmaciones</div>
+                </div>
+              </div>
+              <p class="db-body">El <span class="file-badge">yolo_worker.py</span> corre como proceso independiente y consume la Queue indefinidamente. Carga <strong>YOLOv5n.pt</strong> una sola vez al arrancar. Para cada foto realiza <strong>dos inferencias</strong>: una RAW (sin filtro, para logging) y una filtrada (con umbral de confianza y clases objetivo). Mantiene contadores por <code>event_id</code> para implementar la lógica de confirmaciones y <em>early exit</em>.</p>
+
+              <div class="callout proto-note"><span class="callout-icon">⚡</span><p><strong>Early exit:</strong> si el número de confirmaciones alcanza <code>min_confirmations</code> (2) antes de procesar las 4 fotos, llama a <code>requestDispenser()</code> inmediatamente y marca el evento como <em>dispatched</em> para no repetir la dispensación.</p></div>
+
+              <div class="step-flow">
+                <div class="step"><div class="step-num proto">1</div><div class="step-content"><div class="step-title">Cargar modelo (una sola vez)</div><div class="step-desc"><code>model = YOLO("yolov5n.pt")</code>. Clases objetivo: <code>[0=person, 15=cat, 16=dog]</code>.</div></div></div>
+                <div class="step"><div class="step-num proto">2</div><div class="step-content"><div class="step-title">Pasada RAW — todas las clases</div><div class="step-desc"><code>model(img_path, verbose=False)</code> sin filtro de confianza ni clases. Solo para logging de todas las detecciones presentes en el frame.</div></div></div>
+                <div class="step"><div class="step-num proto">3</div><div class="step-content"><div class="step-title">Pasada filtrada — clases objetivo</div><div class="step-desc"><code>model(img_path, conf=min_confidence, classes=[0,15,16])</code>. Si detecta: incrementa <code>confirmations[event_id]</code>. Guarda la primera foto confirmada en <code>events_photos/</code>.</div></div></div>
+                <div class="step"><div class="step-num proto">4</div><div class="step-content"><div class="step-title">Eliminar imagen temporal</div><div class="step-desc"><code>os.remove(img_path)</code> en el bloque <code>finally</code>. Ocurre siempre, independientemente del resultado.</div></div></div>
+                <div class="step"><div class="step-num proto">5</div><div class="step-content"><div class="step-title">Early exit: ¿confirmaciones ≥ min_confirmations?</div><div class="step-desc">Si <code>confirmations[event_id] &gt;= 2</code> y aún no se ha dispensado → <code>requestDispenser(label)</code>, marcar <code>dispatched=True</code>. No espera las fotos restantes.</div></div></div>
+                <div class="step"><div class="step-num proto">6</div><div class="step-content"><div class="step-title">Evento completo: limpiar estado</div><div class="step-desc">Cuando <code>received == total_photos</code>: limpia todos los dicts del evento (<code>confirmations</code>, <code>dispatched</code>, <code>received</code>, <code>saved_photo</code>, <code>event_starts</code>, <code>last_label</code>).</div></div></div>
+              </div>
+
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Python · yolo_worker.py (lógica principal)</span></div>
+                <pre><span class="cmt"># Dicts por event_id (defaultdict)</span>
+confirmations = <span class="fn">defaultdict</span>(int)
+dispatched    = <span class="fn">defaultdict</span>(bool)
+received      = <span class="fn">defaultdict</span>(int)
+last_label    = <span class="fn">defaultdict</span>(str)
+saved_photo   = <span class="fn">defaultdict</span>(bool)
+event_starts  = {}
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    event_id, photo_index, total_photos, img_path, event_start = input_q.<span class="fn">get</span>()
+
+    <span class="cmt"># Pasada RAW (logging)</span>
+    results_all = <span class="fn">model</span>(img_path, verbose=<span class="kw">False</span>)
+
+    <span class="cmt"># Pasada filtrada</span>
+    min_conf = config.<span class="fn">get</span>(<span class="str">"min_confidence"</span>)
+    results  = <span class="fn">model</span>(img_path, conf=min_conf,
+                     classes=[<span class="num">0</span>,<span class="num">15</span>,<span class="num">16</span>], verbose=<span class="kw">False</span>)
+    detected = <span class="fn">any</span>(len(r.boxes) > <span class="num">0</span> <span class="kw">for</span> r <span class="kw">in</span> results)
+
+    <span class="kw">if</span> detected:
+        confirmations[event_id] += <span class="num">1</span>
+        <span class="kw">if not</span> saved_photo[event_id]:
+            shutil.<span class="fn">copy</span>(img_path, EVENTS_SAVE_DIR)
+            saved_photo[event_id] = <span class="kw">True</span>
+
+    os.<span class="fn">remove</span>(img_path)      <span class="cmt"># siempre en finally</span>
+    received[event_id] += <span class="num">1</span>
+
+    <span class="cmt"># Early exit</span>
+    min_conf_n = config.<span class="fn">get</span>(<span class="str">"min_confirmations"</span>)
+    <span class="kw">if not</span> dispatched[event_id] <span class="kw">and</span> confirmations[event_id] >= min_conf_n:
+        <span class="fn">requestDispenser</span>(last_label[event_id])
+        dispatched[event_id] = <span class="kw">True</span>
+
+    <span class="cmt"># Limpiar al completar evento</span>
+    <span class="kw">if</span> received[event_id] == total_photos:
+        <span class="kw">del</span> confirmations[event_id], dispatched[event_id], ...</pre>
+              </div>
+            </div>
+
+            <!-- DISPENSER -->
+            <div class="doc-block" id="proto-dispenser">
+              <div class="doc-block-header">
+                <div class="db-icon proto">🔧</div>
+                <div class="db-meta">
+                  <div class="db-title">Dispensador — dispenser.py</div>
+                  <div class="db-sub">servo · sensores de altura · cálculo de gramos</div>
+                </div>
+              </div>
+              <p class="db-body">El módulo <span class="file-badge">dispenser.py</span> define la interfaz <code>requestDispenser(animal)</code> que el YOLO Worker invoca cuando confirma una especie. Actualmente es un <strong>stub sin implementación</strong>: la función recibe el label pero no ejecuta ninguna acción de hardware.</p>
+
+              <div class="callout info"><span class="callout-icon">🔧</span><p>La función recibe el <code>label</code> de la especie (<code>"cat"</code>, <code>"dog"</code> o <code>"person"</code>) y ejecuta la lógica de servo y sensores para servir la cantidad correcta de comida.</p></div>
+
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Python · dispenser.py (estado actual)</span></div>
+                <pre><span class="kw">from</span> typing <span class="kw">import</span> Literal
+
+<span class="kw">def</span> <span class="fn">requestDispenser</span>(animal: Literal[<span class="str">"cat"</span>, <span class="str">"dog"</span>, <span class="str">"person"</span>]) -> <span class="kw">None</span>:
+    <span class="str">"""
+    Activa el dispensador para el animal detectado.
+    Parámetros:
+        animal : "cat", "dog" o "person"
+    """</span>
+    <span class="kw">pass</span>   <span class="cmt"># activar servo según label recibido</span></pre>
+              </div>
+
+              <div class="prop-table-wrap" style="margin-top:18px">
+                <table class="prop-table">
+                  <thead><tr><th>Detalle</th><th>Valor</th></tr></thead>
+                  <tbody>
+                    <tr><td>Firma</td><td><code>requestDispenser(animal: Literal["cat", "dog", "person"]) → None</code></td></tr>
+                    <tr><td>Origen del label</td><td><code>last_label[event_id]</code> — tomado de <code>LABEL_MAP = {0: "person", 15: "cat", 16: "dog"}</code></td></tr>
+                    <tr><td>Contexto de ejecución</td><td>Corre dentro del proceso YOLO worker. Cualquier bloqueo de hardware debe considerarse en ese contexto de proceso.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+            <div class="section-label proto">API local del dispositivo</div>
+
+            <!-- API LOCAL (FastAPI) -->
+            <div class="doc-block" id="proto-api">
+              <div class="doc-block-header">
+                <div class="db-icon proto">🔗</div>
+                <div class="db-meta">
+                  <div class="db-title">API local — FastAPI en puerto 8000</div>
+                  <div class="db-sub">uvicorn · Configuración en tiempo real · /docs</div>
+                </div>
+              </div>
+              <p class="db-body">La Raspberry Pi expone una <strong>API REST local</strong> gestionada por FastAPI y servida con uvicorn en el puerto 8000. Corre como <strong>hilo daemon</strong> dentro del proceso principal, por lo que no bloquea el loop del sensor. Su función principal es permitir leer y modificar los parámetros de <code>config.py</code> sin reiniciar el sistema.</p>
+
+              <div class="callout info"><span class="callout-icon">📖</span><p>La documentación interactiva de la API está disponible en <strong><code>http://&lt;ip-raspberry&gt;:8000/docs</code></strong> mientras el dispositivo esté encendido.</p></div>
+
+              <div class="endpoint-card">
+                <div class="endpoint-card-header">
+                  <span class="method-badge get">GET</span>
+                  <span class="endpoint-path">/config</span>
+                  <span class="endpoint-desc">Leer configuración actual</span>
+                </div>
+                <div class="endpoint-card-body">
+                  <p style="font-size:.85rem;color:var(--mid)">Devuelve un snapshot thread-safe del diccionario <code>_cfg</code> completo con todos los parámetros del sistema en su valor actual.</p>
+                </div>
+              </div>
+
+              <div class="endpoint-card">
+                <div class="endpoint-card-header">
+                  <span class="method-badge post">POST</span>
+                  <span class="endpoint-path">/config</span>
+                  <span class="endpoint-desc">Actualizar parámetros</span>
+                </div>
+                <div class="endpoint-card-body">
+                  <p style="font-size:.85rem;color:var(--mid);margin-bottom:12px">Acepta un JSON con uno o más parámetros a modificar. Los cambios surten efecto de inmediato en el siguiente ciclo del loop sin reiniciar ningún proceso.</p>
+                  <div class="code-block" style="margin:0">
+                    <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">JSON — Ejemplo de actualización</span></div>
+                    <pre>{
+  <span class="prop">"min_confidence"</span>:    <span class="num">0.6</span>,
+  <span class="prop">"min_confirmations"</span>: <span class="num">3</span>,
+  <span class="prop">"cooldown"</span>:          <span class="num">10.0</span>
+}</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="callout tip"><span class="callout-icon">💡</span><p>Puedes ajustar <code>debug: true</code> vía API para activar la visualización de la cámara en vivo sin tocar el código. Si la Pi no tiene display conectado, el sistema desactiva el modo debug automáticamente.</p></div>
+            </div>
+
+            <!-- SCRIPTS -->
+            <div class="doc-block" id="proto-scripts">
+              <div class="doc-block-header">
+                <div class="db-icon proto">📁</div>
+                <div class="db-meta">
+                  <div class="db-title">Mapa de scripts del sistema</div>
+                  <div class="db-sub">Árbol de archivos · Responsabilidades</div>
+                </div>
+              </div>
+              <p class="db-body">El firmware del prototipo está organizado en módulos Python con responsabilidades bien delimitadas:</p>
+              <div class="prop-table-wrap">
+                <table class="prop-table">
+                  <thead><tr><th>Archivo</th><th>Rol</th><th>Descripción</th></tr></thead>
+                  <tbody>
+                    <tr><td>main_pi.py</td><td><span class="type-badge">Entry point</span></td><td>Lanza FastAPI (hilo daemon), YOLO worker (proceso), abre cámara y ejecuta el loop de sensor PIR con cooldown y modo debug.</td></tr>
+                    <tr><td>detector.py</td><td><span class="type-badge">Visión</span></td><td>MOG2 global persistente. Verifica contornos, captura fotos con flush de buffer y las encola para el YOLO worker.</td></tr>
+                    <tr><td>yolo_worker.py</td><td><span class="type-badge">IA</span></td><td>Proceso paralelo. Doble inferencia YOLO (RAW + filtrada). Confirmaciones por event_id con early exit y limpieza de dicts.</td></tr>
+                    <tr><td>dispenser.py</td><td><span class="type-badge">Actuador</span></td><td>Implementa <code>requestDispenser(animal)</code>. Controla el servo y los sensores de altura para calcular y dispensar la cantidad correcta de comida.</td></tr>
+                    <tr><td>config.py</td><td><span class="type-badge">Configuración</span></td><td>Diccionario mutable thread-safe con <code>get()</code>, <code>update()</code> y <code>snapshot()</code>. Fuente única de verdad para todos los módulos.</td></tr>
+                    <tr><td>api.py</td><td><span class="type-badge">Red</span></td><td>FastAPI app expuesta en puerto 8000. Endpoints GET/POST <code>/config</code> para leer y modificar parámetros en tiempo real.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="code-block">
+                <div class="code-header"><div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div><span class="code-lang">Árbol de archivos</span></div>
+                <pre>ecosentinel-feeder/
+├── <span class="prop">main_pi.py</span>       <span class="cmt"># entrada · loop PIR · lanza FastAPI y YOLO worker</span>
+├── <span class="prop">detector.py</span>      <span class="cmt"># MOG2 global · captura fotos · encola</span>
+├── <span class="prop">yolo_worker.py</span>   <span class="cmt"># proceso YOLO · doble inferencia · early exit</span>
+├── <span class="prop">dispenser.py</span>     <span class="cmt"># requestDispenser() · servo · sensores</span>
+├── <span class="prop">config.py</span>        <span class="cmt"># config thread-safe · get/update/snapshot</span>
+├── <span class="prop">api.py</span>           <span class="cmt"># FastAPI app · GET|POST /config</span>
+└── events_photos/
+    └── ev_*.jpg     <span class="cmt"># primera foto confirmada por evento</span></pre>
+              </div>
+
+              <div class="callout tip"><span class="callout-icon">📂</span><p>Las fotos de cada evento se almacenan en <code>/events_photos/</code> con el formato <code>evento{id}_{label}_foto{n}.jpg</code> y pueden consultarse desde el historial del dashboard.</p></div>
+            </div>
+
+          </div>
+        </div><!-- /panel-proto -->
+
+      </div><!-- /main-content -->
+    </div><!-- /shell -->
+
+    <footer>
+      <span class="footer-text">
+        <strong>EcoSentinel Feeder</strong> · Documentación v1.0
+        <br><span style="font-size:.68rem;opacity:.7">25/03/2026</span>
+      </span>
+      <img src="{% static 'images/docs/neko-cat.gif' %}" id="neko-cat"
+        style="height:60px;position:absolute;right:16px;bottom:50%;transform:translateY(50%);cursor:pointer"
+        onclick="spawnHearts(event)"/>
+    </footer>
+
+    <script>
+      // ── SIDEBAR TOGGLE ──
+      function toggleSidebar() {
+        const sb = document.getElementById('doc-sidebar');
+        const ov = document.getElementById('sidebar-overlay');
+        const open = sb.classList.contains('open');
+        sb.classList.toggle('open', !open);
+        ov.classList.toggle('visible', !open);
+        document.body.style.overflow = open ? '' : 'hidden';
+      }
+      document.querySelectorAll('.sb-link').forEach(l => {
+        l.addEventListener('click', () => {
+          if (window.innerWidth <= 720) {
+            document.getElementById('doc-sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('visible');
+            document.body.style.overflow = '';
+          }
+        });
+      });
+
+      // ── MODE SWITCHER (2 tabs: user | proto) ──
+      function switchMode(mode) {
+        ['user', 'proto'].forEach(m => {
+          const isActive = m === mode;
+          document.getElementById('panel-' + m).classList.toggle('active', isActive);
+          const btn = document.getElementById('btn-' + m);
+          btn.classList.remove('active', 'proto-active');
+          if (isActive) btn.classList.add(m === 'proto' ? 'proto-active' : 'active');
+          document.getElementById('sb-' + m).style.display = isActive ? 'block' : 'none';
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const firstLink = document.querySelector('#sb-' + mode + ' .sb-link');
+        document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+        if (firstLink) firstLink.classList.add('active');
+      }
+
+      // ── SIDEBAR SCROLL SPY ──
+      function scrollToBlock(id, el) {
+        const target = document.getElementById(id);
+        if (!target) return;
+        const panel = el.closest('#sb-user, #sb-proto');
+        if (panel) panel.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+        el.classList.add('active');
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+      }
+
+      const targets = {
+        user:  ['intro', 'mapa-sec', 'feeders-sec', 'historial-sec', 'alertas-sec', 'config-sec'],
+        proto: ['proto-overview', 'proto-hardware', 'proto-config', 'proto-loop', 'proto-deteccion', 'proto-yolo', 'proto-dispenser', 'proto-api', 'proto-scripts']
+      };
+
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY + 110;
+        const mode = ['user', 'proto'].find(m =>
+          document.getElementById('panel-' + m).classList.contains('active')
+        );
+        if (!mode) return;
+        const list = targets[mode];
+        const sb = document.getElementById('sb-' + mode);
+        let current = list[0];
+        for (const id of list) {
+          const el = document.getElementById(id);
+          if (el && el.getBoundingClientRect().top + window.scrollY <= scrollY) current = id;
+        }
+        sb.querySelectorAll('.sb-link').forEach(l =>
+          l.classList.toggle('active', l.dataset.target === current)
+        );
+      }, { passive: true });
+
+      // ── NEKO HEARTS ──
+      const HEARTS = ['❤️','🧡','💛','💚','💙','💜','🩷','🤍'];
+      function spawnHearts(e) {
+        const cat = document.getElementById('neko-cat');
+        const rect = cat.getBoundingClientRect();
+        const originX = rect.left + rect.width * 0.35;
+        const originY = rect.top - rect.height * 0.3;
+        const count = 3 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement('span');
+          el.className = 'heart-particle';
+          el.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+          const spreadX = (Math.random() - .5) * 50;
+          const travelY = -(60 + Math.random() * 100) + 'px';
+          const rot  = (Math.random() - .5) * 30 + 'deg';
+          const rot2 = (Math.random() - .5) * 60 + 'deg';
+          const dur  = (.7 + Math.random() * .6).toFixed(2) + 's';
+          const delay = (i * .045).toFixed(2) + 's';
+          const size  = (.85 + Math.random() * .65).toFixed(2);
+          el.style.cssText = `left:${originX+spreadX}px;top:${originY}px;font-size:${size}rem;--rot:${rot};--rot2:${rot2};--travel:${travelY};--dur:${dur};animation-delay:${delay}`;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), (parseFloat(dur) + parseFloat(delay)) * 1000 + 100);
+        }
+      }
+    </script>
+  </body>
+</html>

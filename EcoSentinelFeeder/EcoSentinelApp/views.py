@@ -41,6 +41,9 @@ def dashboardDocs(request):
 def dashboardSimulator(request):
     return render(request, 'dashboardSimulator.html')
 
+def docs(request):
+    return render(request, 'docs.html')
+
 @csrf_exempt
 @require_POST
 def receive_status(request):
